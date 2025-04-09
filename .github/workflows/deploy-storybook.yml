@@ -1,9 +1,15 @@
-name: Deploy Storybook to GitHub Pages
+name: 협업을 위한 스토리북을 깃헙페이지로 배포
 
 on:
   push:
     branches:
       - main  # main 브랜치에 push될 때마다 실행
+  # 안정화되면 'push' => 'pr'로 수정한다(너무 많은 빌드 방지)
+  # pull_request:
+  #   branches:
+  #     - main
+  #   types:
+  #     - closed
 
 permissions:
   contents: write 
