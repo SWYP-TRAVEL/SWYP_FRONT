@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Link
+
+[컴포넌트와 페이지 확인 링크](https://swyp-travel.github.io/SWYP_FRONT)
 
 ## Getting Started
 
