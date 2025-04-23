@@ -2,6 +2,13 @@
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
+    screens: {
+      xs: "375px",
+      sm: "768px",
+      md: "992px",
+      lg: "1200px",
+      xl: "1600px",
+    },
     extend: {
       fontSize: {
         display1: ["56px", { lineHeight: "72px", letterSpacing: "-0.0316em" }],
