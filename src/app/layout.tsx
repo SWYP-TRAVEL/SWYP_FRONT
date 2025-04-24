@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import RecoilRootWrapper  from "@/components/RecoilWrapper";
 
 export const metadata: Metadata = {
   title: "Momentier",
@@ -9,9 +8,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <RecoilRootWrapper >
           {children}
-        </RecoilRootWrapper >
       </body>
     </html>
   );

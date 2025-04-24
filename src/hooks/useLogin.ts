@@ -1,11 +1,10 @@
 import { useMutation } from '@tanstack/react-query'
-import { useSetRecoilState } from 'recoil'
-import { authState } from '@/recoil/authState'
 import { useRouter } from 'next/navigation'
 import { login } from '@/api/auth/login'
+import { useAuthStore } from '@/store/useAuthStore'
 
 export function useLogin() {
-  const setAuth = useSetRecoilState(authState)
+  const loginState = useAuthStore((state) => state.login)
   const router = useRouter()
 
   return useMutation({
@@ -16,11 +15,8 @@ export function useLogin() {
       const data = await res.json()
 
       if (data.user) {
-        setAuth({
-          isLoggedIn: true,
-          user: data.user,
-        })
-        router.push('/') // 예: 홈으로 이동
+        loginState(data.user) // Zustand의 login() 호출
+        router.push('/')
       } else {
         alert('토큰 디코딩 실패')
       }
