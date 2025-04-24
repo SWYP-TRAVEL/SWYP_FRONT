@@ -1,12 +1,11 @@
-'use client'; // 👈 이거 반드시 필요!
+'use client';
 
-import { useRecoilValue } from 'recoil';
-import { authState } from '@/recoil/authState';
-import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/store/useAuthStore';
 
 export function useAuthGuard() {
-  const { isLoggedIn } = useRecoilValue(authState);
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const router = useRouter();
 
   useEffect(() => {
