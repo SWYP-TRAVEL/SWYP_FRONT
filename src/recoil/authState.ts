@@ -1,12 +1,20 @@
-import { atom } from 'recoil'
+import { atom,selector } from 'recoil'
 
-export const authState = atom<{
-  isLoggedIn: boolean
-  user: { username: string } | null
-}>({
+export const authState = atom({
   key: 'authState',
   default: {
     isLoggedIn: false,
-    user: null,
+    user: {
+      username: ''
+    },
   },
+})
+
+export const getUser = selector({
+  key: 'getUser',
+  get: ({get}) => {
+    const auth = get(authState);
+
+    return auth.user;
+  }
 })

@@ -15,7 +15,7 @@ export default function LoginPage() {
     loginMutation.mutate(
       { username, password },
       {
-        onSuccess: () => router.push('/dashboard'),
+        onSuccess: () => router.push('/protected'),
         onError: () => alert('로그인 실패'),
       }
     )
