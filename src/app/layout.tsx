@@ -1,15 +1,14 @@
-import type { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Momentier",
-  description: "순간(Moment) + Engineer 감정 기반 여행 큐레이팅",
-};
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+import { ReactNode, useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+export default function RootLayout({ children }: { children: ReactNode }) {
+  const [queryClient] = useState(() => new QueryClient());
+
   return (
-    <html lang="en">
-      <body>
-          {children}
-      </body>
-    </html>
+    <QueryClientProvider client={queryClient}>
+      {children}
+    </QueryClientProvider>
   );
 }
