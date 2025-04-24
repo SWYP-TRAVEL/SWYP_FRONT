@@ -1,8 +1,10 @@
 'use client'
 
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function ProtectedPageClient() {
+  useAuthGuard();
   const user = useAuthStore((state) => state.user);
 
   if (!user) return <p className="p-4">인증 확인 중...</p>;
