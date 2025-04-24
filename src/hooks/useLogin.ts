@@ -1,11 +1,8 @@
-'use client' 
-
 import { useMutation } from '@tanstack/react-query'
-import { login } from '@/api/auth/login'
 import { useSetRecoilState } from 'recoil'
 import { authState } from '@/recoil/authState'
-import { getDecodedToken } from '@/utils/auth'
 import { useRouter } from 'next/navigation'
+import { login } from '@/api/auth/login'
 
 export function useLogin() {
   const setAuth = useSetRecoilState(authState)
@@ -13,15 +10,17 @@ export function useLogin() {
 
   return useMutation({
     mutationFn: login,
-    onSuccess: () => {
-      // ✅ 로그인 성공 후 쿠키에 있는 토큰 디코딩
-      const decoded = getDecodedToken<{ username: string }>()
+    onSuccess: async () => {
+      // 로그인 성공 후 /api/me에서 사용자 정보 가져오기
+      const res = await fetch('/api/me')
+      const data = await res.json()
 
-      if (decoded) {
+      if (data.user) {
         setAuth({
           isLoggedIn: true,
-          user: { username: decoded.username },
+          user: data.user,
         })
+        router.push('/') // 예: 홈으로 이동
       } else {
         alert('토큰 디코딩 실패')
       }

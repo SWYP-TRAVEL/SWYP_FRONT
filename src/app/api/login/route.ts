@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { signJWT } from '@/lib/jwt'
 import { cookies } from 'next/headers'
 
+export const dynamic = 'force-dynamic'; // ✅ 동적 렌더링으로 강제 설정
+
 export async function POST(req: Request) {
   const { username, password } = await req.json()
 
