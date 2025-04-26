@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8fba8e1 ([ADD] 타이포그라피 명명 변경 및 컬러 테마 적용)
 @theme {
   --color-semantic-static-white: #ffffff;
   --color-semantic-static-black: #000000;
@@ -12,6 +16,11 @@
   --color-component-fill-alternative: #f8f8f8;
 }
 
+<<<<<<< HEAD
+=======
+>>>>>>> 41466cb ([ADD] auth 추가 작업 진행 중)
+=======
+>>>>>>> 8fba8e1 ([ADD] 타이포그라피 명명 변경 및 컬러 테마 적용)
 body {
   font-family: "Pretendard";
 }
