@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+@theme {
+  --color-semantic-static-white: #ffffff;
+  --color-semantic-static-black: #000000;
+  --color-semantic-primary-normal: #9a77ff;
+  --color-semantic-primary-strong: #7c49ff;
+  --color-semantic-primary-heavy: #5f23eb;
+  --color-semantic-label-alternative: #858588;
+  --color-semantic-label-assistive: #c7c8c9;
+  --color-semantic-line-normalneutral: #e8e8ea;
+  --color-component-fill-alternative: #f8f8f8;
+}
+
 body {
   font-family: "Pretendard";
 }

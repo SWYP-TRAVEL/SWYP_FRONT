@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import Typography from "../components/Typography";
+import Text from "../components/Text";
 
 const meta = {
   title: "Foundations/Typography",
-  component: Typography,
+  component: Text,
   tags: ["autodocs"],
   argTypes: {
     as: {
@@ -59,29 +59,43 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Typography>;
+} satisfies Meta<typeof Text>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Display1: Story = {
-  args: { textStyle: "display1", children: "역시 마찬가지로," },
+  args: {
+    textStyle: "display1",
+    children: "역시 마찬가지로,",
+    className: "bg-semantic-primary-heavy text-semantic-static-white",
+  },
 };
 export const Display2: Story = {
-  args: { textStyle: "display2", children: "단순히 고통이라는 이유" },
+  args: {
+    textStyle: "display2",
+    children: "단순히 고통이라는 이유",
+    className: "text-semantic-primary-normal",
+  },
 };
 export const Title1: Story = {
-  args: { textStyle: "title1", children: "때문에 고통 그 자체를 사랑하거나" },
+  args: {
+    textStyle: "title1",
+    children: "때문에 고통 그 자체를 사랑하거나",
+    className: "bg-semantic-primary-heavy text-semantic-static-white",
+  },
 };
 export const Title2: Story = {
   args: {
     textStyle: "title2",
     children: "추구하거나 소유하려는 자는 없다. 다만",
+    className: "text-semantic-primary-strong",
   },
 };
 export const Title3: Story = {
   args: {
     textStyle: "title3",
     children: "노역과 고통이 아주 큰 즐거움을 선사하는 상황이",
+    className: "text-semantic-label-alternative",
   },
 };
 export const Heading1: Story = {
