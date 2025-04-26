@@ -1,6 +1,6 @@
 import { ElementType, ReactNode } from "react";
 
-const textStyles = {
+const TEXT_STYLES = {
   display1: "text-[56px] leading-[72px] tracking-[-0.0316em]",
   display2: "text-[40px] leading-[52px] tracking-[-0.0282em]",
   title1: "text-[36px] leading-[48px] tracking-[-0.0272em]",
@@ -21,27 +21,27 @@ const textStyles = {
   caption2: "text-[10px] leading-[14px] tracking-[0.0137em]",
 };
 
-type TextStyle = keyof typeof textStyles;
+type TextStyle = keyof typeof TEXT_STYLES;
 
-type TypographyProps<T extends ElementType = "span"> = {
+type TextProps<T extends ElementType = "span"> = {
   as?: T;
   textStyle?: TextStyle;
   className?: string;
   children: ReactNode;
 } & React.ComponentPropsWithoutRef<T>;
 
-export default function Typography<T extends ElementType = "span">({
+export default function Text<T extends ElementType = "span">({
   as,
   textStyle = "body1",
   className = "",
   children,
   ...props
-}: TypographyProps<T>) {
+}: TextProps<T>) {
   const Component = as || "span";
 
   return (
     <Component
-      className={`${textStyles[textStyle] || ""} ${className}`}
+      className={`${TEXT_STYLES[textStyle] || ""} ${className}`}
       {...props}
     >
       {children}
