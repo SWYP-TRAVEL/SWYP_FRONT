@@ -45,7 +45,7 @@ export default function TravelRecommendPage() {
       </section>
 
       {/* 버튼 */}
-      <Button variant="gradation" textStyle="label2">
+      <Button variant="default" textStyle="label2">
       다른 여행지를 추천받고 싶어요
       </Button>
 
