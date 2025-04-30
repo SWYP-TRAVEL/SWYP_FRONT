@@ -66,13 +66,13 @@ export default function MyPage() {
 
     return (
         <div className="w-full max-w-[1100px] mx-auto px-6 pt-[60px] pb-[60px] space-y-[84px]">
-            <Text as="h1" textStyle="title2">
+            <Text as="h1" textStyle="heading1">
                 📘 마이페이지
             </Text>
 
             <section className="space-y-4">
                 <div className="flex items-center gap-2">
-                    <Text as="h2" textStyle="headline1">
+                    <Text textStyle="heading2">
                         저장한 추천 여행코스
                     </Text>
                 </div>
@@ -101,10 +101,10 @@ export default function MyPage() {
             </section>
 
             <section className="space-y-4">
-                <Text as="h2" textStyle="headline1">
+                <Text textStyle="heading2">
                     모먼티어 사용경험은 어땠나요?
                 </Text>
-                <Text as="p" textStyle="body2Reading" className="text-[#666]">
+                <Text textStyle="body1" className="text-[#666]">
                     사용하시면서 느낀 점이나 바라는 점을 자유롭게 들려주세요.
                     여러분의 소중한 의견이 더 나은 모먼티어를 만듭니다.
                 </Text>
