@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { ReactNode } from 'react';
 import QueryProvider from '@/components/QueryProvider';
+import "./globals.css"; 
 
 export const metadata: Metadata = {
   title: 'Momentier',
