@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@theme {
+:root {
   --color-semantic-static-white: #ffffff;
   --color-semantic-static-black: #000000;
   --color-semantic-primary-normal: #9a77ff;

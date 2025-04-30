@@ -14,7 +14,7 @@ const CARD_STYLES = {
 type CardSize = keyof typeof CARD_STYLES;
 
 type CardProps = {
-  imageUrl: string;
+  imageUrl?: string;
   region: string;
   distanceInfo: string;
   size?: CardSize;
@@ -22,14 +22,14 @@ type CardProps = {
 };
 
 export default function Card({
-  imageUrl,
+  imageUrl = "https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=5dc87836-b647-45ef-ae17-e3247f91b8b4",
   region,
   distanceInfo,
   size = "large",
   as: Component = "div",
 }: CardProps) {
   return (
-    <Component className={`${CARD_STYLES[size]} relative overflow-hidden`}>
+    <Component className={`${CARD_STYLES[size]} relative overflow-hidden  cursor-pointer `}>
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${imageUrl})` }}

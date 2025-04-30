@@ -6,7 +6,7 @@ const meta: Meta<typeof Button> = {
   component: Button,
   tags: ["autodocs"],
   argTypes: {
-    type: {
+    variant: {
       control: { type: "select" },
       options: ["normal", "gradation", "purple"],
       description: "버튼 스타일 타입",
@@ -33,21 +33,24 @@ type Story = StoryObj<typeof Button>;
 
 export const Normal: Story = {
   args: {
-    type: "normal",
+    variant: "normal",
+    textStyle: "label2",
     children: "기본 버튼",
   },
 };
 
 export const Gradation: Story = {
   args: {
-    type: "gradation",
+    variant: "gradation",
+    textStyle: "label2",
     children: "시작하기",
   },
 };
 
 export const Purple: Story = {
   args: {
-    type: "purple",
+    variant: "purple",
+    textStyle: "label2",
     children: "확인",
   },
 };
