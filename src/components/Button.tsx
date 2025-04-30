@@ -1,41 +1,45 @@
-import React from 'react';
+import { ElementType, ReactNode } from "react";
+import Text from "@/components/Text";
 
-import '@/stories/styles/button.css';
+type ButtonType = "normal" | "gradation" | "purple";
+type TextStyle = Parameters<typeof Text>[0]["textStyle"];
 
-export interface ButtonProps {
-  /** Is this the principal call to action on the page? */
-  primary?: boolean;
-  /** What background color to use */
-  backgroundColor?: string;
-  /** How large should the button be? */
-  size?: 'small' | 'medium' | 'large';
-  /** Button contents */
-  label: string;
-  /** Optional click handler */
-  onClick?: () => void;
-}
+type ButtonProps<T extends ElementType = "button"> = {
+  as?: T;
+  type?: ButtonType;
+  textStyle?: TextStyle;
+  children: ReactNode;
+  className?: string;
+} & React.ComponentPropsWithoutRef<T>;
 
-/** Primary UI component for user interaction */
-export const Button = ({
-  primary = false,
-  size = 'medium',
-  backgroundColor,
-  label,
+const BUTTON_TYPE_STYLES: Record<ButtonType, string> = {
+  normal:
+    "min-w-[268px] h-[56px] rounded-[28px] px-6 py-4 gap-[10px] bg-[#000000] text-white",
+  gradation:
+    "min-w-[268px] h-[50px] rounded-[25px] px-6 py-4 gap-2 bg-[linear-gradient(125.9deg,_#9A77FF_23.39%,_#214BFF_104.52%)] text-white",
+  purple:
+    "min-w-[268px] h-[56px] rounded-[28px] px-6 py-4 gap-[10px] bg-[#9A77FF] text-white",
+};
+
+export default function Button<T extends ElementType = "button">({
+  as,
+  type = "normal",
+  textStyle = "heading1",
+  children,
+  className = "",
   ...props
-}: ButtonProps) => {
-  const mode = primary ? 'storybook-button--primary' : 'storybook-button--secondary';
+}: ButtonProps<T>) {
+  const Component = as || "button";
+  const wrapper = BUTTON_TYPE_STYLES[type];
+
   return (
-    <button
-      type="button"
-      className={['storybook-button', `storybook-button--${size}`, mode].join(' ')}
+    <Component
+      className={`inline-flex items-center justify-center transition-all ${wrapper} ${className}`}
       {...props}
     >
-      {label}
-      <style jsx>{`
-        button {
-          background-color: ${backgroundColor};
-        }
-      `}</style>
-    </button>
+      <Text as="span" textStyle={textStyle}>
+        {children}
+      </Text>
+    </Component>
   );
-};
+}
