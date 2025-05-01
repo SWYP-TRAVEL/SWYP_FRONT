@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { ReactNode } from 'react';
 import QueryProvider from '@/components/QueryProvider';
-import "./globals.css"; 
+import "./globals.css";
+import AppLayout from '@/components/AppLayout';
 
 export const metadata: Metadata = {
   title: 'Momentier',
@@ -10,10 +11,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="ko">
       <body>
         <QueryProvider>
-          {children}
+          <AppLayout>
+            {children}
+          </AppLayout>
         </QueryProvider>
       </body>
     </html>
