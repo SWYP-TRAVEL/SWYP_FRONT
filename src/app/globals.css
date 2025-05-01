@@ -24,6 +24,21 @@
   --color-component-fill-alternative: #f8f8f8;
 }
 
+@layer utilities {
+  @keyframes marquee {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-marquee {
+    animation: marquee 75s linear infinite;
+  }
+}
+
 body {
   font-family: "Pretendard";
 }
