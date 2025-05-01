@@ -12,6 +12,6 @@ const config: StorybookConfig = {
     name: "@storybook/nextjs",
     options: {},
   },
-  // "staticDirs": ["..\\public"], // WARN: 개발서버가 구동이 안되어서 주석처리 FIXME:
+  staticDirs: ["../public"], // storybook에서 public 폴더를 사용하기 위해 추가
 };
 export default config;

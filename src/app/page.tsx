@@ -7,7 +7,7 @@ export default function Page() {
       <br />
       <a href="/mypage"> 마이페이지 </a>
       <br />
-      <a href="/travel/recommend"> 보호 페이지 </a>
+      <a href="/travel/recommend"> 여행추천지 리스트업 </a>
     </div>
   )
 }
