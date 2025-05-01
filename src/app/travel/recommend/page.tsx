@@ -3,6 +3,7 @@
 import Card from "@/components/Card";
 import Button from "@/components/Button";
 import Text from "@/components/Text";
+import Image from "next/image";
 
 const travelData = [
   {
@@ -21,9 +22,8 @@ const travelData = [
 
 export default function TravelRecommendPage() {
   return (
-    <main className="flex px-4 flex-col items-center w-full max-w-[1100px] mx-auto pt-[60px] gap-[84px]">
-      {/* 타이틀 영역 */}
-      <section className="flex flex-col items-start gap-3 self-stretch">
+    <main className="flex flex-col items-center w-full max-w-[1100px] px-4 pt-[60px] pb-[60px] mx-auto gap-[84px]">
+      <section className="flex flex-col items-start self-stretch gap-3">
         <Text as="h2" textStyle="display2" className="font-bold">
           떠나고 싶은 여행지를 선택해주세요!
         </Text>
@@ -32,27 +32,31 @@ export default function TravelRecommendPage() {
         </Text>
       </section>
 
-      {/* 카드 리스트 */}
       <section className="flex flex-row gap-6">
-        {travelData.map((data) => (
-          <Card
-            key={data.region}
-            region={data.region}
-            distanceInfo={data.distanceInfo}
-            size="large"
-          />
+        {travelData.map(({ region, distanceInfo }) => (
+          <Card key={region} region={region} distanceInfo={distanceInfo} size="large" />
         ))}
       </section>
 
-      {/* 버튼 */}
-      <Button variant="default" textStyle="label2">
-        다른 여행지를 추천받고 싶어요
-      </Button>
+      <div className="flex flex-col items-center gap-3">
+        <Button
+          variant="gradation"
+          className="flex items-center justify-center w-[287px] h-[50px] px-5 gap-2"
+        >
+          <Image src="/icons/Refresh.svg" alt="icon" width={24} height={24} />
+          <Text
+            as="span"
+            className="text-white font-[600] text-[16px] leading-[26.1px] tracking-[-0.0002em] font-['Pretendard_JP']"
+          >
+            다른 여행지를 추천받고 싶어요
+          </Text>
 
-      {/* 하단 설명 */}
-      <Text textStyle="caption1" className="text-gray-400">
-        여행지를 선택하면 기존 일정이 초기화돼요
-      </Text>
+        </Button>
+
+        <Text textStyle="caption1" className="text-gray-400">
+          다른 추천은 1회만 가능해요!
+        </Text>
+      </div>
     </main>
   );
 }
