@@ -1,4 +1,4 @@
-import { ElementType, ReactNode } from "react";
+import { ElementType, ReactNode, isValidElement } from "react";
 import clsx from "clsx";
 import Text from "@/components/Text";
 
@@ -9,9 +9,9 @@ type ButtonProps<T extends ElementType = "button"> = {
   as?: T;
   variant?: ButtonVariant;
   textStyle?: TextStyle;
-  children: ReactNode;
   className?: string;
   disabled?: boolean;
+  children: ReactNode;
 } & React.ComponentPropsWithoutRef<T>;
 
 const BUTTON_VARIANT_STYLES: Record<ButtonVariant, string> = {
@@ -28,9 +28,9 @@ export default function Button<T extends ElementType = "button">({
   as,
   variant = "default",
   textStyle = "label2",
-  children,
   className = "",
   disabled = false,
+  children,
   ...props
 }: ButtonProps<T>) {
   const Component = as || "button";
@@ -41,15 +41,18 @@ export default function Button<T extends ElementType = "button">({
     className
   );
 
+  const shouldWrapWithText =
+    typeof children === "string" || typeof children === "number";
+
   return (
-    <Component
-      className={wrapper}
-      disabled={disabled}
-      {...props}
-    >
-      <Text as="span" textStyle={textStyle}>
-        {children}
-      </Text>
+    <Component className={wrapper} disabled={disabled} {...props}>
+      {shouldWrapWithText ? (
+        <Text as="span" textStyle={textStyle}>
+          {children}
+        </Text>
+      ) : (
+        children
+      )}
     </Component>
   );
 }
