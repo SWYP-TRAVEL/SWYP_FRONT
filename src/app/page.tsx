@@ -8,6 +8,8 @@ export default function Page() {
       <a href="/mypage"> 마이페이지 </a>
       <br />
       <a href="/travel/recommend"> 여행추천지 리스트업 </a>
+      <br />
+      <a href="/main"> 메인페이지 </a>
     </div>
   )
 }
