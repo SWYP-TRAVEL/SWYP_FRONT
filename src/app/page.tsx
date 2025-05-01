@@ -10,6 +10,8 @@ export default function Page() {
       <a href="/travel/recommend"> 여행추천지 리스트업 </a>
       <br />
       <a href="/main"> 메인페이지 </a>
+      <br />
+      <a href="/userinputs"> 사용자정보입력 </a>
     </div>
   )
 }
