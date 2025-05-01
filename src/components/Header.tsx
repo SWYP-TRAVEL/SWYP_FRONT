@@ -1,56 +1,46 @@
 import React from 'react';
 
-import { Button } from './Button';
-import '@/stories/styles/header.css';
+import Text from './Text';
+import Image from 'next/image';
+import { type User } from '@/store/useAuthStore';
 
-type User = {
-  name: string;
-};
 
 export interface HeaderProps {
-  user?: User;
-  onLogin?: () => void;
-  onLogout?: () => void;
-  onCreateAccount?: () => void;
+  user: User | null;
+  onClickLogo: () => void;
+  onClickProfile?: () => void;
 }
 
-export const Header = ({ user, onLogin, onLogout, onCreateAccount }: HeaderProps) => (
-  <header>
-    <div className="storybook-header">
-      <div>
-        <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-          <g fill="none" fillRule="evenodd">
-            <path
-              d="M10 0h12a10 10 0 0110 10v12a10 10 0 01-10 10H10A10 10 0 010 22V10A10 10 0 0110 0z"
-              fill="#FFF"
+export default function Header({ user, onClickLogo, onClickProfile }: HeaderProps) {
+  return (
+    <header className="w-full bg-white shadow z-50">
+      <div className="mx-auto max-w-[1100px] px-4 h-[60px] flex items-center justify-between">
+        <div>
+          {/* 로고 TODO: 추후 로고이미지로 변경 */}
+          <Text
+            as='h1'
+            className='text-semantic-primary-normal cursor-pointer'
+            onClick={onClickLogo}
+          >
+            Momentier
+          </Text>
+        </div>
+
+        {/* 네비게이션 or 로그인 버튼 자리 (필요시 확장 가능) */}
+        {user ?
+          <div className="flex items-center gap-4">
+            {/* TODO: kakao 로그인 시 유저프로필 이미지 주는지 검토 */}
+            <Image
+              // src={user.imgPath || '/icons/Avatar.svg'}
+              src={'/icons/Avatar.svg'}
+              alt="유저프로필이미지"
+              width={40}
+              height={40}
+              onClick={onClickProfile}
             />
-            <path
-              d="M5.3 10.6l10.4 6v11.1l-10.4-6v-11zm11.4-6.2l9.7 5.5-9.7 5.6V4.4z"
-              fill="#555AB9"
-            />
-            <path
-              d="M27.2 10.6v11.2l-10.5 6V16.5l10.5-6zM15.7 4.4v11L6 10l9.7-5.5z"
-              fill="#91BAF8"
-            />
-          </g>
-        </svg>
-        <h1>Acme</h1>
+          </div>
+          : null}
       </div>
-      <div>
-        {user ? (
-          <>
-            <span className="welcome">
-              Welcome, <b>{user.name}</b>!
-            </span>
-            <Button size="small" onClick={onLogout} label="Log out" />
-          </>
-        ) : (
-          <>
-            <Button size="small" onClick={onLogin} label="Log in" />
-            <Button primary size="small" onClick={onCreateAccount} label="Sign up" />
-          </>
-        )}
-      </div>
-    </div>
-  </header>
-);
+    </header>
+  )
+}

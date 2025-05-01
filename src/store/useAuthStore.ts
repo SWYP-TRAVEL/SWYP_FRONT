@@ -1,7 +1,7 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-interface User {
+export interface User {
   username: string;
 }
 
@@ -25,7 +25,7 @@ export const useAuthStore = create<AuthState>()(
       logout: () => set({ isLoggedIn: false, user: null }),
     }),
     {
-      name: 'auth-storage',
+      name: "auth-storage",
       onRehydrateStorage: () => (state) => {
         state?.setHasHydrated(true);
       },
