@@ -54,7 +54,7 @@ export default function Main() {
   return (
     <div ref={mainRef} className="w-full">
       <main className="mt-[188px] text-center">
-        <Text as="h1" textStyle="display1">
+        <Text as="h1" textStyle="display1" className="font-bold">
           어디로 떠날지 고민 중이라면, <br />
           모먼티어가 도와드릴게요
         </Text>

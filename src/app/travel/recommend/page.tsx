@@ -24,10 +24,10 @@ export default function TravelRecommendPage() {
     <main className="flex px-4 flex-col items-center w-full max-w-[1100px] mx-auto pt-[60px] gap-[84px]">
       {/* 타이틀 영역 */}
       <section className="flex flex-col items-start gap-3 self-stretch">
-        <Text as="h2" textStyle="display2">
+        <Text as="h2" textStyle="display2" className="font-bold">
           떠나고 싶은 여행지를 선택해주세요!
         </Text>
-        <Text as="p" textStyle="heading2" className="text-gray-500">
+        <Text as="p" textStyle="heading2" className="text-gray-500 font-bold">
           유정님의 선호도에 맞춘 여행지입니다. 원하는 여행지를 선택하시고 새로운 일정을 짜드릴게요!
         </Text>
       </section>

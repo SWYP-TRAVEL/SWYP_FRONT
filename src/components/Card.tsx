@@ -52,9 +52,9 @@ export default function Card({
       <div className="absolute inset-0 bg-black/30" />
 
       <div className={`relative z-10 flex flex-col ${textAlignClass} h-full gap-2`}>
-        <Text textStyle={resolvedRegionTextStyle}>{region}</Text>
+        <Text textStyle={resolvedRegionTextStyle} className="font-bold">{region}</Text>
         {size !== "small" && (
-          <Text textStyle={resolvedInfoTextStyle} className="flex items-center gap-1">
+          <Text textStyle={resolvedInfoTextStyle} className="font-bold flex items-center gap-1">
             {distanceInfo}
             <span aria-hidden>↗</span>
           </Text>

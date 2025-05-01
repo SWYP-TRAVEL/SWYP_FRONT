@@ -27,7 +27,7 @@ export default function UserInputs() {
 
   return (
     <section className="max-w-[1100px] mx-auto px-[20px] mt-[60px]">
-      <Text as="h1" textStyle="display2" className="mb-3">
+      <Text as="h1" textStyle="display2" className="mb-3 font-bold">
         여행 준비, 간단하고 쉽게 시작하세요!
       </Text>
       <Text as="p" textStyle="body1" className="t mb-10 text-semantic-label-alternative">
@@ -36,7 +36,7 @@ export default function UserInputs() {
 
       {/* 동행자 선택 */}
       <div className="mt-[60px]">
-        <Text textStyle="title3" className="block mb-4">
+        <Text textStyle="title3" className="block mb-4 font-bold">
           누구와 함께 여행을 떠나시나요? <span className="text-[#9A77FF]">*</span>
         </Text>
         <ChipGroupSingle
@@ -48,7 +48,7 @@ export default function UserInputs() {
 
       {/* 여행 기간 선택 */}
       <div className="mt-[60px]">
-        <Text textStyle="title3" className="block mb-4">
+        <Text textStyle="title3" className="block mb-4 font-bold">
           며칠 동안 떠나고 싶으신가요? <span className="text-[#9A77FF]">*</span>
         </Text>
         <ChipGroupSingle
@@ -60,7 +60,7 @@ export default function UserInputs() {
 
       {/* 여행 스타일 입력 */}
       <div className="mt-[60px]">
-        <Text textStyle="title3" className="block mb-4">
+        <Text textStyle="title3" className="block mb-4 font-bold">
           어떤 여행을 꿈꾸고 계신가요? <span className="text-[#9A77FF]">*</span>
         </Text>
         <TextField

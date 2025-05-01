@@ -74,14 +74,14 @@ export default function MyPage() {
                     width={20}
                     height={20}
                 />
-                <Text as="h1" textStyle="heading1">
+                <Text as="h1" textStyle="heading1" className="font-bold">
                     마이페이지
                 </Text>
             </div>
 
             <section className="space-y-4 mb-5">
                 <div className="flex items-center gap-2 mb-5">
-                    <Text textStyle="heading2">
+                    <Text textStyle="heading2" className="font-bold">
                         저장한 추천 여행코스
                     </Text>
                 </div>
@@ -111,7 +111,7 @@ export default function MyPage() {
 
             <section className="space-y-4 mb-5">
                 <div className="flex flex-col gap-2 mb-5">
-                    <Text textStyle="heading2">
+                    <Text textStyle="heading2" className="font-bold">
                         모먼티어 사용경험은 어땠나요?
                     </Text>
                 </div>
@@ -121,7 +121,7 @@ export default function MyPage() {
                         placeholder="편했던 점, 아쉬웠던 점을 자유롭게 적어주세요."
                     />
                     <div className="flex justify-end">
-                        <Button variant="default" textStyle="label1">
+                        <Button variant="default" textStyle="label1" className="font-bold">
                             제출하기
                         </Button>
                     </div>
