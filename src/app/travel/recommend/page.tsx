@@ -21,10 +21,10 @@ const travelData = [
 
 export default function TravelRecommendPage() {
   return (
-    <main className="flex flex-col items-center w-full max-w-[1060px] mx-auto pt-[60px] gap-[84px]">
+    <main className="flex px-4 flex-col items-center w-full max-w-[1100px] mx-auto pt-[60px] gap-[84px]">
       {/* 타이틀 영역 */}
       <section className="flex flex-col items-start gap-3 self-stretch">
-      <Text as="h2" textStyle="display2">
+        <Text as="h2" textStyle="display2">
           떠나고 싶은 여행지를 선택해주세요!
         </Text>
         <Text as="p" textStyle="heading2" className="text-gray-500">
@@ -46,7 +46,7 @@ export default function TravelRecommendPage() {
 
       {/* 버튼 */}
       <Button variant="default" textStyle="label2">
-      다른 여행지를 추천받고 싶어요
+        다른 여행지를 추천받고 싶어요
       </Button>
 
       {/* 하단 설명 */}
