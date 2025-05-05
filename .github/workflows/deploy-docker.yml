@@ -23,11 +23,19 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Docker 이미지 빌드
-        run: docker build -t ${{ secrets.IMAGE_NAME }}:latest --build-arg NEXT_PUBLIC_KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }} --build-arg NEXT_PUBLIC_KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }} --build-arg NEXT_PUBLIC_KAKAO_BACKEND_URI=${{ secrets.KAKAO_BACKEND_URI }} .
-     
-      - name: Docker 이미지 푸시
-        run: docker push ${{ secrets.IMAGE_NAME }}:latest
+      - name: Docker Buildx 설치
+        uses: docker/setup-buildx-action@v3
+
+      - name: Docker 이미지 빌드 및 푸시
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.IMAGE_NAME }}:latest
+          build-args: |
+            NEXT_PUBLIC_KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}
+            NEXT_PUBLIC_KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}
+            NEXT_PUBLIC_KAKAO_BACKEND_URI=${{ secrets.KAKAO_BACKEND_URI }}
 
   deploy-to-server:
     name: 일반 서버에 배포
@@ -35,7 +43,7 @@ jobs:
     needs: build-and-push
 
     steps:
-      - name: 서버에 SSH 접속 및 docker-compose 배포 실행
+      - name: SSH 접속 및 docker-compose 배포
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SERVER_HOST }}
