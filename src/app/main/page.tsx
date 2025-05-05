@@ -2,6 +2,7 @@
 
 import Card from "@/components/Card"
 import Text from "@/components/Text"
+import { useLogin } from "@/hooks/useLogin";
 import { useEffect, useRef } from "react";
 
 // TODO: 타입핑 깨끗하게...
@@ -14,6 +15,7 @@ const cards: { size: 'small'; region: string; distanceInfo: string; }[] = Array.
 export default function Main() {
   const sliderRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
+  const { openPopupAndHandleLogin } = useLogin();
 
   useEffect(() => {
     const slider = sliderRef.current;
@@ -80,7 +82,7 @@ export default function Main() {
       </section>
 
       <section className="mt-8 flex justify-center">
-        <button className="flex px-5 py-[13px] bg-[#FFE812] rounded-full cursor-pointer">
+        <button className="flex px-5 py-[13px] bg-[#FFE812] rounded-full cursor-pointer" onClick={openPopupAndHandleLogin}>
           <img src="/icons/kakao.png"></img>
           <Text textStyle="headline1" className="ml-2 font-semibold">
             카카오로 시작하기
