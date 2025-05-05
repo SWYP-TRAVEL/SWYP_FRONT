@@ -15,6 +15,7 @@ const nextConfig = {
   },
   basePath: isProd ? '/SWYP_FRONT' : '',
   assetPrefix: isProd ? '/SWYP_FRONT/' : '',
+  output: 'standalone'
 }
 
 export default nextConfig;
