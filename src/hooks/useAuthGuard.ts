@@ -1,18 +1,22 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/useAuthStore';
 
-export function useAuthGuard() {
+export function useAuthGuard(publicPaths: string[] = []) {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const hasHydrated = useAuthStore((state) => state.hasHydrated);
+  const pathname = usePathname();
   const router = useRouter();
 
+  const isPublic = publicPaths.some((path) => pathname.startsWith(path));
+
   useEffect(() => {
-    if (!hasHydrated) return; // 아직 상태 복원 전이면 아무것도 하지 않음
+    if (!hasHydrated) return;
+    if (isPublic) return;
     if (!isLoggedIn) {
-      router.push('/main');
+      router.replace('/main');
     }
-  }, [hasHydrated, isLoggedIn, router]);
+  }, [hasHydrated, isLoggedIn, isPublic, router]);
 }
