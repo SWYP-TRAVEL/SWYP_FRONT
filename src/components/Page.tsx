@@ -1,22 +1,23 @@
 import React from 'react';
 
-import { Header } from './Header';
+import Header from './Header';
 import '@/stories/styles/page.css';
-
-type User = {
-  name: string;
-};
+import { User } from '@/store/useAuthStore';
+import router from 'next/router';
 
 export const Page: React.FC = () => {
-  const [user, setUser] = React.useState<User>();
+  const [user, setUser] = React.useState<User | null>(null);
+
+  const mockUser: User = {
+    username: 'Jane Doe',
+  };
 
   return (
     <article>
       <Header
         user={user}
-        onLogin={() => setUser({ name: 'Jane Doe' })}
-        onLogout={() => setUser(undefined)}
-        onCreateAccount={() => setUser({ name: 'Jane Doe' })}
+        onClickLogo={() => router.push('/')}
+        onClickProfile={() => router.push('/mypage')}
       />
 
       <section className="storybook-page">
