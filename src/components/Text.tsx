@@ -38,12 +38,10 @@ export default function Text<T extends ElementType = "span">({
   ...props
 }: TextProps<T>) {
   const Component = as || "span";
+  const styleClass = TEXT_STYLES[textStyle] ?? "";
 
   return (
-    <Component
-      className={`${TEXT_STYLES[textStyle] || ""} ${className}`}
-      {...props}
-    >
+    <Component className={`${styleClass} ${className}`} {...props}>
       {children}
     </Component>
   );

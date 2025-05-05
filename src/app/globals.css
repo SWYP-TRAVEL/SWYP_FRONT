@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+:root {
+  --color-semantic-static-white: #ffffff;
+  --color-semantic-static-black: #000000;
+  --color-semantic-primary-normal: #9a77ff;
+  --color-semantic-primary-strong: #7c49ff;
+  --color-semantic-primary-heavy: #5f23eb;
+  --color-semantic-label-alternative: #858588;
+  --color-semantic-label-assistive: #c7c8c9;
+  --color-semantic-line-normalneutral: #e8e8ea;
+  --color-component-fill-alternative: #f8f8f8;
+}
+
 @theme {
   --color-semantic-static-white: #ffffff;
   --color-semantic-static-black: #000000;
@@ -12,6 +24,30 @@
   --color-component-fill-alternative: #f8f8f8;
 }
 
+@layer utilities {
+  @keyframes marquee {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-marquee {
+    animation: marquee 75s linear infinite;
+  }
+}
+
 body {
   font-family: "Pretendard";
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
 }

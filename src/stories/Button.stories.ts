@@ -1,53 +1,85 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { fn } from '@storybook/test';
+import type { Meta, StoryObj } from "@storybook/react";
+import Button from "../components/Button";
 
-import { Button } from './Button';
-
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
-const meta = {
-  title: 'Example/Button',
+const meta: Meta<typeof Button> = {
+  title: "Components/Button",
   component: Button,
-  parameters: {
-    // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
-    layout: 'centered',
-  },
-  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
-  tags: ['autodocs'],
-  // More on argTypes: https://storybook.js.org/docs/api/argtypes
+  tags: ["autodocs"],
   argTypes: {
-    backgroundColor: { control: 'color' },
+    variant: {
+      control: { type: "select" },
+      options: ["default", "confirm", "gradation", "hover", "press"],
+      description: "버튼 스타일 타입",
+    },
+    textStyle: {
+      control: { type: "select" },
+      options: [
+        "display1", "display2", "title1", "title2", "title3",
+        "heading1", "heading2", "headline1", "headline2",
+        "body1", "body1Reading", "body2", "body2Reading",
+        "label1", "label1Reading", "label2", "caption1", "caption2"
+      ],
+      description: "텍스트 스타일",
+    },
+    children: {
+      control: "text",
+      description: "버튼 내부 텍스트",
+    },
+    disabled: {
+      control: "boolean",
+      description: "비활성화 상태 여부",
+    }
   },
-  // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
-  args: { onClick: fn() },
-} satisfies Meta<typeof Button>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Button>;
 
-// More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const Primary: Story = {
+export const Default: Story = {
   args: {
-    primary: true,
-    label: 'Button',
+    variant: "default",
+    textStyle: "label2",
+    children: "기본 버튼",
   },
 };
 
-export const Secondary: Story = {
+export const Confirm: Story = {
   args: {
-    label: 'Button',
+    variant: "confirm",
+    textStyle: "label2",
+    children: "확인",
   },
 };
 
-export const Large: Story = {
+export const Gradation: Story = {
   args: {
-    size: 'large',
-    label: 'Button',
+    variant: "gradation",
+    textStyle: "label2",
+    children: "시작하기",
   },
 };
 
-export const Small: Story = {
+export const Hover: Story = {
   args: {
-    size: 'small',
-    label: 'Button',
+    variant: "hover",
+    textStyle: "label2",
+    children: "호버 버튼",
+  },
+};
+
+export const Press: Story = {
+  args: {
+    variant: "press",
+    textStyle: "label2",
+    children: "프레스 버튼",
+  },
+};
+
+export const Disabled: Story = {
+  args: {
+    variant: "default",
+    textStyle: "label2",
+    children: "비활성 버튼",
+    disabled: true,
   },
 };
