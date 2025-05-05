@@ -29,8 +29,7 @@ jobs:
             --build-arg NEXT_PUBLIC_KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }} \
             --build-arg NEXT_PUBLIC_KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }} \
             --build-arg NEXT_PUBLIC_KAKAO_BACKEND_URI=${{ secrets.KAKAO_BACKEND_URI }} \
-            -t ${{ secrets.IMAGE_NAME }}:latest \
-            .
+            -t ${{ secrets.IMAGE_NAME }}:latest .
 
       - name: Docker 이미지 푸시
         run: docker push ${{ secrets.IMAGE_NAME }}:latest
