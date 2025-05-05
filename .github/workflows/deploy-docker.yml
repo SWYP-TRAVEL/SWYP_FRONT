@@ -55,7 +55,7 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: 22
           source: ".env"
-          target: "/home/${{ secrets.SERVER_USER }}/app"
+          target: "/home/swyp9/app"
 
       - name: 서버에 SSH 접속 및 Docker 실행
         uses: appleboy/ssh-action@v1.0.0
