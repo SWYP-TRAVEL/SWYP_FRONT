@@ -23,18 +23,17 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Docker Buildx 설치
-        uses: docker/setup-buildx-action@v3
-
-      - name: Docker 이미지 빌드 및 푸시
+      - name: Docker 이미지 빌드
         run: |
-          docker buildx build \
+          docker build \
             --build-arg NEXT_PUBLIC_KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }} \
             --build-arg NEXT_PUBLIC_KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }} \
             --build-arg NEXT_PUBLIC_KAKAO_BACKEND_URI=${{ secrets.KAKAO_BACKEND_URI }} \
-            --tag ${{ secrets.IMAGE_NAME }}:latest \
-            --push \
+            -t ${{ secrets.IMAGE_NAME }}:latest \
             .
+
+      - name: Docker 이미지 푸시
+        run: docker push ${{ secrets.IMAGE_NAME }}:latest
 
   deploy-to-server:
     name: 일반 서버에 배포
