@@ -1,28 +1,30 @@
-# 1단계: 빌드용 스테이지
+# 1단계: 빌드 스테이지
 FROM node:18-alpine AS builder
-
 WORKDIR /app
 
-# 패키지 설치 (dependencies + devDependencies)
+# 환경 변수 선언 (Next.js 빌드 시 사용)
+ARG NEXT_PUBLIC_KAKAO_CLIENT_ID
+ARG NEXT_PUBLIC_KAKAO_REDIRECT_URI
+ARG NEXT_PUBLIC_KAKAO_BACKEND_URI
+
+ENV NEXT_PUBLIC_KAKAO_CLIENT_ID=$NEXT_PUBLIC_KAKAO_CLIENT_ID
+ENV NEXT_PUBLIC_KAKAO_REDIRECT_URI=$NEXT_PUBLIC_KAKAO_REDIRECT_URI
+ENV NEXT_PUBLIC_KAKAO_BACKEND_URI=$NEXT_PUBLIC_KAKAO_BACKEND_URI
+
 COPY package*.json ./
 RUN npm install
 
-# 앱 전체 복사 및 빌드
 COPY . .
 RUN npm run build
 
-# 2단계: 실행용 스테이지 (경량 이미지)
+# 2단계: 런타임 스테이지
 FROM node:18-alpine AS runner
-
-# 환경 설정
-ENV NODE_ENV=production
 WORKDIR /app
+ENV NODE_ENV=production
 
-# 빌드된 결과만 복사 (standalone + public)
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/static ./.next/static
 
 EXPOSE 3000
-
 CMD ["node", "server.js"]

@@ -17,29 +17,16 @@ jobs:
       - name: GitHub 레포지토리 체크아웃
         uses: actions/checkout@v3
 
-      - name: Node 18 설정
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: 의존성 설치
-        run: npm ci
-
-      - name: Next.js 빌드
-        run: npm run build
-
       - name: DockerHub 로그인
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Docker 이미지 빌드 및 푸시
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: ${{ secrets.IMAGE_NAME }}:latest
+      - name: Docker 이미지 빌드 및 푸시 (docker-compose)
+        run: |
+          docker-compose -f docker-front-compose.yml build
+          docker-compose -f docker-front-compose.yml push
 
   deploy-to-server:
     name: 일반 서버에 배포
@@ -47,7 +34,7 @@ jobs:
     needs: build-and-push
 
     steps:
-      - name: 서버에 SSH 접속 및 Docker 실행
+      - name: 서버에 SSH 접속 및 docker-compose 배포 실행
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -55,15 +42,8 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: 22
           script: |
-            echo "📦 Docker 이미지 Pull"
-            docker pull ${{ secrets.IMAGE_NAME }}:latest
+            echo "📦 기존 컨테이너 중지 및 삭제"
+            docker compose -f /home/swyp9/docker-front-compose.yml down || true
 
-            echo "🧹 기존 컨테이너 정리"
-            docker stop app || true
-            docker rm app || true
-
-            echo "🚀 새 컨테이너 실행"
-            docker run -d -p 80:3000 \
-              --env-file /home/swyp9/app/.env \
-              --name app \
-              ${{ secrets.IMAGE_NAME }}:latest
+            echo "🚀 최신 이미지 pull 및 배포"
+            docker compose -f /home/swyp9/docker-front-compose.yml up -d --pull always --build
