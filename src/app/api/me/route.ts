@@ -1,21 +1,16 @@
-import { cookies } from 'next/headers';
-import { verifyJWT } from '@/lib/jwt';
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const cookieStore = cookies(); // ✅ 타입 생략 가능
 
-  // @ts-ignore
-  const token = cookieStore.get('token')?.value;
+  const mockUser = {
+    id: '12345',
+    nickname: '테스트유저',
+    email: 'test@example.com',
+    profileImage: '/images/default-profile.png',
+    createdAt: new Date().toISOString()
+  };
 
-  if (!token) return NextResponse.json({ user: null });
-
-  const decoded = verifyJWT(token);
-
-  if (!decoded) return NextResponse.json({ user: null });
-
-  return NextResponse.json({ user: decoded });
+  return NextResponse.json({ user: mockUser });
 }
-``
