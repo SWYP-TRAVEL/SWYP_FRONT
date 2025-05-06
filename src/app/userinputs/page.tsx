@@ -6,10 +6,10 @@ import TextField from '@/components/TextField';
 import { useState } from 'react';
 
 const companions = [
-  { label: '혼자', imageSrc: '/icons/alone.png' },
-  { label: '가족', imageSrc: '/icons/family.png' },
-  { label: '친구/지인', imageSrc: '/icons/friend.png' },
-  { label: '연인', imageSrc: '/icons/couple.png' },
+  { label: '혼자', imageSrc: './icons/alone.png' },
+  { label: '가족', imageSrc: './icons/family.png' },
+  { label: '친구/지인', imageSrc: './icons/friend.png' },
+  { label: '연인', imageSrc: './icons/couple.png' },
 ];
 
 const durations = [
@@ -70,7 +70,7 @@ export default function UserInputs() {
           variant="outlined"
         />
         <div className="mt-2 text-sm text-gray-400 flex items-center">
-          <img src='/icons/stars.svg' alt='추천을위한 별모양 아이콘' />
+          <img src='./icons/stars.svg' alt='추천을위한 별모양 아이콘' />
           <Text as='p' className='ml-2 text-semantic-label-alternative font-normal'>자세히 적어주시면 추천이 더 정확해져요!</Text>
         </div>
       </div>
@@ -80,7 +80,7 @@ export default function UserInputs() {
       <div className="mt-[60px]">
         <button className='flex justify-between w-[186px] text-[18px] text-semantic-static-white px-5 py-3 rounded-[25px] font-semibold bg-semantic-primary-normal'>
           다음
-          <img src="/icons/Arrow Right White.svg" alt="오른쪽을 가리키는 화살표" />
+          <img src="./icons/Arrow Right White.svg" alt="오른쪽을 가리키는 화살표" />
         </button>
       </div>
     </section>

@@ -69,7 +69,7 @@ export default function MyPage() {
         <div className="w-full max-w-[1100px] mx-auto px-4 pt-[60px] pb-[60px] space-y-[84px]">
             <div className="flex items-center gap-2 mb-8">
                 <Image
-                    src="/icons/Chevron Left Bold.svg"
+                    src="./icons/Chevron Left Bold.svg"
                     alt="chip icon"
                     width={20}
                     height={20}

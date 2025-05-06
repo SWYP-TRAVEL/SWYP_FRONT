@@ -43,7 +43,7 @@ export default function TravelRecommendPage() {
           variant="gradation"
           className="flex items-center justify-center w-[287px] h-[50px] px-5 gap-2"
         >
-          <Image src="/icons/Refresh.svg" alt="icon" width={24} height={24} />
+          <Image src="./icons/Refresh.svg" alt="icon" width={24} height={24} />
           <Text
             as="span"
             className="text-white font-[600] text-[16px] leading-[26.1px] tracking-[-0.0002em] font-['Pretendard_JP']"

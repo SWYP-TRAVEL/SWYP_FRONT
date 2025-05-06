@@ -31,8 +31,8 @@ export default function Header({ user, onClickLogo, onClickProfile }: HeaderProp
           <div className="flex items-center gap-4">
             {/* TODO: kakao 로그인 시 유저프로필 이미지 주는지 검토 */}
             <Image
-              // src={user.imgPath || '/icons/Avatar.svg'}
-              src={'/icons/Avatar.svg'}
+              // src={user.imgPath || './icons/Avatar.svg'}
+              src={'./icons/Avatar.svg'}
               alt="유저프로필이미지"
               width={40}
               height={40}
