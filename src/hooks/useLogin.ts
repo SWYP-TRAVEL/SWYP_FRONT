@@ -12,7 +12,7 @@ export function useLogin() {
 
   const loginMutation = useMutation({
     mutationFn: async () => {
-      const res = await fetch('/api/me');
+      const res = await fetch(`${window.location.origin}/SWYP_FRONT/api/me`);
       const data = await res.json();
 
       if (!data.user) throw new Error('유저 정보 없음');
