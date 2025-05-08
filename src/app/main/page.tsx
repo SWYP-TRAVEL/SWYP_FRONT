@@ -83,7 +83,7 @@ export default function Main() {
 
       <section className="mt-8 flex justify-center">
         <button className="flex px-5 py-[13px] bg-[#FFE812] rounded-full cursor-pointer" onClick={openPopupAndHandleLogin}>
-          <img src="./icons/kakao.png"></img>
+          <img src="/icons/kakao.png"></img>
           <Text textStyle="headline1" className="ml-2 font-semibold">
             카카오로 시작하기
           </Text>
