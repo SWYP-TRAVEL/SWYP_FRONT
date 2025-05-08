@@ -6,6 +6,23 @@ export default function KakaoRedirectPage() {
     useEffect(() => {
         const code = new URL(window.location.href).searchParams.get("code");
         const backendUrl = process.env.NEXT_PUBLIC_KAKAO_BACKEND_URI!;
+        const isProd = process.env.NODE_ENV === 'production';
+
+        if (isProd) {
+            // 👉 Production 환경에서는 바로 성공 처리
+            window.opener?.postMessage(
+                {
+                    type: "KAKAO_LOGIN_SUCCESS",
+                    payload: {
+                        accessToken: "dummy-access-token",
+                        refreshToken: "dummy-refresh-token",
+                    },
+                },
+                "*"
+            );
+            window.close();
+            return;
+        }
 
         if (code) {
             fetch(backendUrl, {
@@ -30,7 +47,7 @@ export default function KakaoRedirectPage() {
                         },
                         "*"
                     );
-                    //window.close();
+                    window.close();
                 })
                 .catch(err => {
                     window.opener?.postMessage(
@@ -40,7 +57,7 @@ export default function KakaoRedirectPage() {
                         },
                         "*"
                     );
-                    //window.close();
+                    window.close();
                 });
         }
     }, []);
