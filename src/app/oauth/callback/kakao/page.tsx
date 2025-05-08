@@ -8,8 +8,7 @@ export default function KakaoRedirectPage() {
         const backendUrl = process.env.NEXT_PUBLIC_KAKAO_BACKEND_URI!;
         const isProd = process.env.NODE_ENV === 'production';
 
-        if (isProd) {
-            // 👉 Production 환경에서는 바로 성공 처리
+        if (!isProd) {
             window.opener?.postMessage(
                 {
                     type: "KAKAO_LOGIN_SUCCESS",
