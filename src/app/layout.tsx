@@ -3,6 +3,7 @@ import { ReactNode } from 'react';
 import QueryProvider from '@/components/QueryProvider';
 import "./globals.css";
 import AppLayout from '@/components/AppLayout';
+import { ModalProvider } from '@/providers/ModalProvider';
 
 export const metadata: Metadata = {
   title: 'Momentier',
@@ -14,9 +15,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="ko">
       <body>
         <QueryProvider>
-          <AppLayout>
-            {children}
-          </AppLayout>
+          <ModalProvider>
+            <AppLayout>
+              {children}
+            </AppLayout>
+          </ModalProvider>
         </QueryProvider>
       </body>
     </html>
