@@ -9,7 +9,7 @@
     "start": "next start -p 3000 -H 0.0.0.0",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
+    "build-storybook": "cross-env STORYBOOK=true build-storybook",
     "deploy": "npm run build && gh-pages -d out"
   },
   "dependencies": {

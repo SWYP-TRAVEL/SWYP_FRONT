@@ -24,9 +24,6 @@ const DURATIONS = [
   { label: "4박 5일" },
 ];
 
-// FIXME: button type 추가 필요
-const ㅅ = 1;
-
 export default function UserInputs() {
   /**
    * 상태 선언
