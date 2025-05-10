@@ -57,7 +57,7 @@ const DetailCard: React.FC<DetailCardProps> = ({
                     </div>
                 </div>
             </div>
-
+            {/* 
             {travelWalkTime && (
                 <div className="flex items-center gap-2 w-full mt-2 pl-[60px] pr-[60px] py-[4px]">
                     <div className="w-[2px] h-[40px] bg-[url('/icons/DotLine.svg')] bg-repeat-y bg-center" />
@@ -85,7 +85,7 @@ const DetailCard: React.FC<DetailCardProps> = ({
                     </div>
 
                 </div>
-            )}
+            )} */}
         </>
     );
 };
