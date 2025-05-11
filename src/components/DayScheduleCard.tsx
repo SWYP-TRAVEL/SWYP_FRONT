@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState, useRef } from "react";
 import DetailCard from "./DetailCard";
 import Text from "./Text";
