@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { ReactNode } from 'react';
 import QueryProvider from '@/components/QueryProvider';
 import "./globals.css";
-import AppLayout from '@/components/AppLayout';
+import LayoutSelector from '@/components/layout/LayoutSelector';
 import { ModalProvider } from '@/providers/ModalProvider';
 
 export const metadata: Metadata = {
@@ -16,9 +16,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <QueryProvider>
           <ModalProvider>
-            <AppLayout>
+            <LayoutSelector>
               {children}
-            </AppLayout>
+            </LayoutSelector>
           </ModalProvider>
         </QueryProvider>
       </body>

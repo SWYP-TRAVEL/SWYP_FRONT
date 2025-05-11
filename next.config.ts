@@ -1,4 +1,3 @@
-const isProd = process.env.NODE_ENV === "production";
 const isStorybookExport = process.env.STORYBOOK === "true";
 
 const nextConfig = {
