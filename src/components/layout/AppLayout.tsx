@@ -32,7 +32,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         onClickLogo={() => router.push('/')}
         onClickProfile={() => router.push('/mypage')}
       />
-      <main>{children}</main>
+      <main className='max-w-[100vw] overflow-hidden'>{children}</main>
     </>
   );
 }
