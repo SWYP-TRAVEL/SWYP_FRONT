@@ -62,10 +62,10 @@ const TravelSchedulePage: React.FC = () => {
                 className='flex flex-col w-[980px] items-start py-[60px] px-[40px] gap-5 overflow-y-auto box-border'
             >
                 <section className='flex flex-col w-full mb-5'>
-                    <Text textStyle='headline1' className='text-gray-600'>
+                    <Text textStyle='headline1' className='mb-[8px] text-gray-600'>
                         강원도 강릉시
                     </Text>
-                    <Text textStyle='title2' className='font-bold mb-5'>
+                    <Text textStyle='title2' className='font-bold mb-[40px]'>
                         휴식이 필요한 유정님을 위한 강릉 1박 2일 여행코스
                     </Text>
                     <Text textStyle='title3' className='font-bold'>
