@@ -31,12 +31,14 @@ export default function ConfirmModal({
       ) : null}
       {children && <div className="mt-4">{children}</div>}
       <div className="flex justify-between mt-9">
-        <button
+        <Button
+          variant='cancel'
+          textStyle='body1'
+          className="w-[50%] mr-2.5"
           onClick={onCancel}
-          className="inline-flex items-center justify-center transition-all min-w-[90px] h-[44px] rounded-[28px] px-6 py-4 gap-[10px] bg-[#D9D9D9] text-white w-[50%] cursor-pointer mr-4"
         >
           {cancelText}
-        </button>
+        </Button>
         <Button
           variant='gradation'
           onClick={onConfirm}
@@ -46,6 +48,6 @@ export default function ConfirmModal({
           {confirmText}
         </Button>
       </div>
-    </BaseModal>
+    </BaseModal >
   );
 }

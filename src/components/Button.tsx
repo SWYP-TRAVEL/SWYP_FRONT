@@ -2,7 +2,7 @@ import { ElementType, ReactNode, isValidElement } from "react";
 import clsx from "clsx";
 import Text from "@/components/Text";
 
-type ButtonVariant = "default" | "confirm" | "gradation" | "hover" | "press";
+type ButtonVariant = "default" | "confirm" | "gradation" | "hover" | "press" | "cancel";
 type TextStyle = Parameters<typeof Text>[0]["textStyle"];
 
 type ButtonProps<T extends ElementType = "button"> = {
@@ -20,6 +20,7 @@ const BUTTON_VARIANT_STYLES: Record<ButtonVariant, string> = {
   gradation: "min-w-[90px] h-[48px] rounded-[25px] px-5 py-3 gap-2 bg-[linear-gradient(125.9deg,_#9A77FF_23.39%,_#214BFF_104.52%)] text-white",
   hover: "min-w-[90px] h-[48px] rounded-[28px] px-5 py-3 gap-[10px] bg-[#7C49FF] text-white",
   press: "min-w-[90px] h-[48px] rounded-[28px] px-5 py-3 gap-[10px] bg-[#5F23EB] text-white",
+  cancel: "min-w-[90px] h-[48px] rounded-[28px] px-5 py-3 gap-[10px] bg-[#F3EEFF] text-[#9A77FF]",
 };
 
 const BUTTON_DISABLED_STYLE = "min-w-[90px] h-[44px] rounded-[28px] px-6 py-4 gap-[10px] bg-[#D9D9D9] text-white cursor-not-allowed";
