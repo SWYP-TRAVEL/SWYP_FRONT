@@ -1,13 +1,13 @@
 'use client';
 
-import Text from '@/components/Text';
 import ChipGroupSingle from '@/components/ChipGroupSingle';
-import TextField from '@/components/TextField';
-import { useMemo, useState } from 'react';
-import { useModal } from '@/hooks/useModal';
-import ConfirmModal from '@/components/modals/ConfirmModal';
-import UserInputSummary from "@/components/UserInputSummary";
 import FullScreenLoader from '@/components/FullScreenLoader';
+import ConfirmModal from '@/components/modals/ConfirmModal';
+import Text from '@/components/Text';
+import TextField from '@/components/TextField';
+import UserInputSummary from "@/components/UserInputSummary";
+import { useModal } from '@/hooks/useModal';
+import { useMemo, useState } from 'react';
 
 const COMPANIONS = [
   { label: "혼자", imageSrc: "/icons/alone.png" },
@@ -45,7 +45,19 @@ export default function UserInputs() {
 
   /**
    * 함수 선언
+   * handleTravelRecommend : 여행지 리스트 추천 api call 및 데이터 후처리
    */
+  const handleTravelRecommend = async () => {
+    // TODO: api call
+    const params = {};
+    console.log('api call with', params);
+    // TODO: delete lines
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve("테스트용 더미 데이터")
+      }, 2000);
+    })
+  };
 
 
   /**
@@ -58,16 +70,12 @@ export default function UserInputs() {
     confirmRecommendModal.open();
   };
 
-  const onClickContinueRecommend = () => {
+  const onClickContinueRecommend = async () => {
     confirmRecommendModal.close();
-    // TODO: api call
-    const params = {};
-    console.log('api call with', params);
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      alert('테스트용입니다. 실제 프로덕트 레벨에서는 화면이동 합니다.');
-    }, 2000);
+    const result = await handleTravelRecommend();
+    alert(`테스트 결과 데이터: ${result}(실제 프로덕트 레벨에서는 화면이동 합니다.)`);
+    setIsLoading(false);
   };
 
   const onClickAutoFillInput = async () => {
