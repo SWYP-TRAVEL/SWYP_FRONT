@@ -2,29 +2,22 @@ import React from "react";
 import Text from "./Text";
 
 type DetailCardProps = {
-    iconUrl: string;
     title: string;
     subtitle: string;
     address: string;
     hours: string;
     rating: number;
     imageUrl: string;
-    travelWalkTime?: string;
-    travelCarTime?: string;
-    travelDistance?: string;
 };
 
 const DetailCard: React.FC<DetailCardProps> = ({
-    iconUrl,
     title,
     subtitle,
     address,
     hours,
     rating,
     imageUrl,
-    travelWalkTime,
-    travelCarTime,
-    travelDistance,
+
 }) => {
     return (
         <div className="flex flex-col border-2 border-gray-300 rounded-2xl shadow-lg bg-[#F8F8F8] w-[880px] h-[208px] hover:border-[#9A77FF] transition-colors duration-200">
