@@ -32,8 +32,5 @@ export const WithConnector: Story = {
     hours: "09:00 - 22:00",
     rating: 4.5,
     imageUrl,
-    travelWalkTime: "10분",
-    travelCarTime: "10분",
-    travelDistance: "900m",
   },
 };
