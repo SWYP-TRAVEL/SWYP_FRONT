@@ -1,8 +1,9 @@
-import React from 'react';
-import DayScheduleCard from '@/components/DayScheduleCard';
+'use client';
+
+import React, { useState } from 'react';
+import DayScheduleCard, { PlaceInfo } from '@/components/DayScheduleCard';
 import Text from '@/components/Text';
 import Button from '@/components/Button';
-import KakaoMap from '@/components/KakaoMap';
 
 const samplePlaces = [
     {
@@ -44,6 +45,17 @@ const samplePlaces = [
 ];
 
 const TravelSchedulePage: React.FC = () => {
+    const [places, setPlaces] = useState<PlaceInfo[]>(samplePlaces);
+
+    const handleReorder = (newOrder: PlaceInfo[]) => {
+        console.log("🔄 순서 변경됨:", newOrder);
+        setPlaces(newOrder);
+    };
+
+    const handleSave = () => {
+        console.log("🔄 저장된 일정 정보: ", places);
+    };
+
     return (
         <div className='flex h-[calc(100vh-60px)] max-w-[100vw] overflow-hidden'>
             <div
@@ -62,14 +74,21 @@ const TravelSchedulePage: React.FC = () => {
                 </section>
 
                 <section className='w-full flex flex-col gap-5'>
-                    <DayScheduleCard dayNumber={1} places={samplePlaces} />
-                    <DayScheduleCard dayNumber={2} places={samplePlaces} />
+                    {[1, 2].map((dayNumber) => (
+                        <DayScheduleCard
+                            key={dayNumber}
+                            dayNumber={dayNumber}
+                            places={places}
+                            onReorder={handleReorder}
+                        />
+                    ))}
                 </section>
 
                 <div className='w-full flex justify-end mt-5'>
                     <Button
                         variant='gradation'
                         className='text-white font-semibold text-[16px] !important leading-[24px] tracking-[0.091px] mx-auto'
+                        onClick={handleSave}
                     >
                         일정 저장하기
                     </Button>
