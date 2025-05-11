@@ -15,12 +15,12 @@ type ButtonProps<T extends ElementType = "button"> = {
 } & React.ComponentPropsWithoutRef<T>;
 
 const BUTTON_VARIANT_STYLES: Record<ButtonVariant, string> = {
-  default: "min-w-[90px] h-[44px] rounded-[28px] px-6 py-4 gap-[10px] bg-[#9A77FF] hover:bg-[#7C49FF] active:bg-[#5F23EB] text-white",
-  confirm: "min-w-[90px] h-[44px] rounded-[28px] px-6 py-4 gap-[10px] bg-black text-white",
-  gradation: "min-w-[90px] h-[44px] rounded-[25px] px-6 py-4 gap-2 bg-[linear-gradient(125.9deg,_#9A77FF_23.39%,_#214BFF_104.52%)] text-white",
-  hover: "min-w-[90px] h-[44px] rounded-[28px] px-6 py-4 gap-[10px] bg-[#7C49FF] text-white",
-  press: "min-w-[90px] h-[44px] rounded-[28px] px-6 py-4 gap-[10px] bg-[#5F23EB] text-white",
-  cancel: "min-w-[90px] h-[44px] rounded-[28px] px-6 py-4 gap-[10px] bg-[#F3EEFF] text-[#9A77FF]",
+  default: "min-w-[90px] h-[48px] rounded-[28px] px-5 py-3 gap-[10px] bg-[#9A77FF] hover:bg-[#7C49FF] active:bg-[#5F23EB] text-white",
+  confirm: "min-w-[90px] h-[48px] rounded-[28px] px-5 py-3 gap-[10px] bg-black text-white",
+  gradation: "min-w-[90px] h-[48px] rounded-[25px] px-5 py-3 gap-2 bg-[linear-gradient(125.9deg,_#9A77FF_23.39%,_#214BFF_104.52%)] text-white",
+  hover: "min-w-[90px] h-[48px] rounded-[28px] px-5 py-3 gap-[10px] bg-[#7C49FF] text-white",
+  press: "min-w-[90px] h-[48px] rounded-[28px] px-5 py-3 gap-[10px] bg-[#5F23EB] text-white",
+  cancel: "min-w-[90px] h-[48px] rounded-[28px] px-5 py-3 gap-[10px] bg-[#F3EEFF] text-[#9A77FF]",
 };
 
 const BUTTON_DISABLED_STYLE = "min-w-[90px] h-[44px] rounded-[28px] px-6 py-4 gap-[10px] bg-[#D9D9D9] text-white cursor-not-allowed";

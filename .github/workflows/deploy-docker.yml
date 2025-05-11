@@ -36,6 +36,7 @@ jobs:
             NEXT_PUBLIC_KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}
             NEXT_PUBLIC_KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}
             NEXT_PUBLIC_KAKAO_BACKEND_URI=${{ secrets.KAKAO_BACKEND_URI }}
+            NEXT_PUBLIC_KAKAO_MAP_API_KEY=${{ secrets.MAP_API_KEY }}
 
   deploy-to-server:
     name: 일반 서버에 배포
