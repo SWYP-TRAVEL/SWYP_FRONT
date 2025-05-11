@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import DayScheduleCard, { PlaceInfo } from '@/components/DayScheduleCard';
+import DayScheduleCard, { PlaceInfo } from '@/components/ScheduleCard';
 import Text from '@/components/Text';
 import Button from '@/components/Button';
 

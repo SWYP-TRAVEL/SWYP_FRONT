@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import DayScheduleCard from "@/components/DayScheduleCard";
+import DayScheduleCard from "@/components/ScheduleCard";
 
 const meta: Meta<typeof DayScheduleCard> = {
     title: "Example/DayScheduleCard",
