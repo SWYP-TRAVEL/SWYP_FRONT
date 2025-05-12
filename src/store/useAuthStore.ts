@@ -1,16 +1,14 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export interface User {
-  username: string;
-}
-
 interface AuthState {
   isLoggedIn: boolean;
-  user: User | null;
+  userName: string | null;
+  accessToken: string | null;
+  refreshToken: string | null;
   hasHydrated: boolean;
   setHasHydrated: (value: boolean) => void;
-  login: (user: User) => void;
+  login: (userName: string, accessToken: string, refreshToken: string) => void;
   logout: () => void;
 }
 
@@ -18,14 +16,28 @@ export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       isLoggedIn: false,
-      user: null,
+      userName: null,
+      accessToken: null,
+      refreshToken: null,
       hasHydrated: false,
       setHasHydrated: (value) => set({ hasHydrated: value }),
-      login: (user) => set({ isLoggedIn: true, user }),
-      logout: () => set({ isLoggedIn: false, user: null }),
+      login: (userName, accessToken, refreshToken) =>
+        set({
+          isLoggedIn: true,
+          userName,
+          accessToken,
+          refreshToken,
+        }),
+      logout: () =>
+        set({
+          isLoggedIn: false,
+          userName: null,
+          accessToken: null,
+          refreshToken: null,
+        }),
     }),
     {
-      name: "auth-storage",
+      name: "auth-storage", // localStorage의 key 값
       onRehydrateStorage: () => (state) => {
         state?.setHasHydrated(true);
       },

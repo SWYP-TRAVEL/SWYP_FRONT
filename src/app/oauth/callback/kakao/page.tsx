@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect } from "react";
+import { kakaoLogin } from "@/lib/api/auth";
 
 export default function KakaoRedirectPage() {
     useEffect(() => {
         const code = new URL(window.location.href).searchParams.get("code");
-        const backendUrl = process.env.NEXT_PUBLIC_KAKAO_BACKEND_URI!;
         const isProd = process.env.NODE_ENV === 'production';
 
         if (!isProd) {
@@ -15,6 +15,7 @@ export default function KakaoRedirectPage() {
                     payload: {
                         accessToken: "dummy-access-token",
                         refreshToken: "dummy-refresh-token",
+                        userName: "dummy-user-name",
                     },
                 },
                 "*"
@@ -24,31 +25,22 @@ export default function KakaoRedirectPage() {
         }
 
         if (code) {
-            fetch(backendUrl, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ code }),
-            })
-                .then(res => {
-                    if (!res.ok) throw new Error("카카오 로그인 실패");
-                    return res.json();
-                })
-                .then(data => {
+            kakaoLogin(code)
+                .then((data) => {
                     window.opener?.postMessage(
                         {
                             type: "KAKAO_LOGIN_SUCCESS",
                             payload: {
                                 accessToken: data.accessToken,
                                 refreshToken: data.refreshToken,
+                                userName: data.userName,
                             },
                         },
                         "*"
                     );
                     window.close();
                 })
-                .catch(err => {
+                .catch((err) => {
                     window.opener?.postMessage(
                         {
                             type: "KAKAO_LOGIN_FAILURE",
