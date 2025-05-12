@@ -98,7 +98,11 @@ export default function Main() {
                   size="small"
                   region={card.title}
                   distanceInfo="알 수 없음"
-                  imageUrl={card.image_url[0]}
+                  imageUrl={
+                    Array.isArray(card.image_url) && card.image_url.length > 0
+                      ? card.image_url[0]
+                      : "https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=5dc87836-b647-45ef-ae17-e3247f91b8b4"
+                  }
                 />
               </div>
             ))}

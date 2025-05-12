@@ -42,3 +42,36 @@ export const unlinkKakaoAccount = async (): Promise<UnlinkResponse> => {
         throw new Error(error.response?.data.message || "카카오 계정 탈퇴에 실패했습니다.");
     }
 };
+
+export interface Itinerary {
+    id: number;
+    title: string;
+    image_url: string[];
+}
+
+/**
+ * 공개된 여행 코스 일부를 반환
+ * @param limit 가져올 항목 수
+ * @returns Itinerary 리스트
+ */
+export const fetchItineraries = async (limit: number): Promise<Itinerary[]> => {
+    try {
+        const response = await axiosInstance.get<Itinerary[]>(`/api/itineraries/list?limit=${limit}`);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data.message || "여행 코스 불러오기에 실패했습니다.");
+    }
+};
+
+/**
+ * 관리자 토큰 정보 반환
+ * @returns AdminTokenResponse
+ */
+export const getAdminToken = async (): Promise<KakaoLoginResponse> => {
+    try {
+        const response = await axiosInstance.get<KakaoLoginResponse>("/auth/admin");
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data.message || "관리자 토큰 정보를 불러오지 못했습니다.");
+    }
+};
