@@ -30,7 +30,12 @@ export function useLogin() {
     const handleMessage = (event: MessageEvent) => {
       const { type, payload, error } = event.data || {};
       if (type === 'KAKAO_LOGIN_SUCCESS') {
-        loginState(payload.userName, payload.accessToken, payload.refreshToken);
+        loginState({
+          userName: payload.userName,
+          accessToken: payload.accessToken,
+          refreshToken: payload.refreshToken,
+          profileImage: payload.profileImage, // 혹시 있으면 추가
+        });
         router.push('/userinputs');
         window.removeEventListener('message', handleMessage);
         popupRef.current?.close();

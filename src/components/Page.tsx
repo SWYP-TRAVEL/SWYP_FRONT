@@ -9,7 +9,10 @@ export const Page: React.FC = () => {
   const [user, setUser] = React.useState<User | null>(null);
 
   const mockUser: User = {
-    username: 'Jane Doe',
+    userName: 'Jane Doe',
+    accessToken: 'dummy-access-token',
+    refreshToken: 'dummy-refresh-token',
+    profileImage: '/icons/Avatar.svg', // or 다른 이미지 URL
   };
 
   return (

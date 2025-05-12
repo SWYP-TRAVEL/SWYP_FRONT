@@ -2,7 +2,13 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 
 import Header from "@/components/Header";
-
+import { User } from "@/store/useAuthStore";
+const mockUser: User = {
+  userName: 'Jane Doe',
+  accessToken: 'dummy-access-token',
+  refreshToken: 'dummy-refresh-token',
+  profileImage: '/icons/Avatar.svg', // or 다른 이미지 URL
+};
 const meta = {
   title: "Layout/Header",
   component: Header,
@@ -35,10 +41,7 @@ type Story = StoryObj<typeof meta>;
 
 export const CASE_로그인: Story = {
   args: {
-    user: {
-      username: "모멘티어",
-      // imgPath: "/icons/Avatar.svg", // TODO: kakao 로그인 시 유저프로필 이미지 주는지 검토
-    },
+    user: mockUser,
   },
 };
 
