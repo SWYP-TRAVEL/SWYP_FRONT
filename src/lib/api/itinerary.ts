@@ -106,7 +106,7 @@ export const getPublicItineraries = async (
     limit: number
 ): Promise<PublicItinerary[]> => {
     try {
-        const response = await axiosInstance.get<PublicItinerary[]>(`/itinerary/list?limit=${limit}`);
+        const response = await axiosInstance.get<PublicItinerary[]>(`/itinerary/public?limit=${limit}`);
         return response.data;
     } catch (error: any) {
         throw new Error(error.response?.data.message || "공개된 여행 코스 목록을 불러오지 못했습니다.");
