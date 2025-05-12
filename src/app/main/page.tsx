@@ -3,19 +3,33 @@
 import Card from "@/components/Card"
 import Text from "@/components/Text"
 import { useLogin } from "@/hooks/useLogin";
-import { useEffect, useRef } from "react";
-
-// TODO: 타입핑 깨끗하게...
-const cards: { size: 'small'; region: string; distanceInfo: string; }[] = Array.from({ length: 15 }, (_, idx) => ({
-  size: "small",
-  region: `경상북도 경주시 ${idx + 1}박 코스`,
-  distanceInfo: "500km 거리",
-}));
+import { useEffect, useRef, useState } from "react";
+import { getPublicItineraries, PublicItinerary } from "@/lib/api/itinerary";
 
 export default function Main() {
+  const [cards, setCards] = useState<PublicItinerary[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const sliderRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
   const { openPopupAndHandleLogin } = useLogin();
+
+  useEffect(() => {
+    const fetchItineraries = async () => {
+      setLoading(true);
+      try {
+        const data = await getPublicItineraries(15);
+        setCards(data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchItineraries();
+  }, []);
 
   useEffect(() => {
     const slider = sliderRef.current;
@@ -66,29 +80,43 @@ export default function Main() {
       </main>
 
       <section className="relative group mt-[80px]">
-        <div
-          ref={sliderRef}
-          className="flex w-max gap-4 animate-marquee whitespace-nowrap group-hover:[animation-play-state:paused]"
-        >
-          {cards.map((card, idx) => (
-            <div
-              key={idx}
-              className="transition-transform duration-300 hover:scale-105"
-            >
-              <Card {...card} />
-            </div>
-          ))}
-        </div>
+        {loading ? (
+          <div className="text-center text-gray-500">로딩 중...</div>
+        ) : error ? (
+          <div className="text-center text-red-500">에러 발생: {error}</div>
+        ) : (
+          <div
+            ref={sliderRef}
+            className="flex w-max gap-4 animate-marquee whitespace-nowrap group-hover:[animation-play-state:paused]"
+          >
+            {cards.map((card) => (
+              <div
+                key={card.id}
+                className="transition-transform duration-300 hover:scale-105"
+              >
+                <Card
+                  size="small"
+                  region={card.title}
+                  distanceInfo="알 수 없음"
+                  imageUrl={card.image_url[0]}
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="mt-8 flex justify-center">
-        <button className="flex px-5 py-[13px] bg-[#FFE812] rounded-full cursor-pointer" onClick={openPopupAndHandleLogin}>
-          <img src="/icons/kakao.png"></img>
+        <button
+          className="flex px-5 py-[13px] bg-[#FFE812] rounded-full cursor-pointer"
+          onClick={openPopupAndHandleLogin}
+        >
+          <img src="/icons/kakao.png" alt="kakao icon" />
           <Text textStyle="headline1" className="ml-2 font-semibold">
             카카오로 시작하기
           </Text>
         </button>
       </section>
     </div>
-  )
+  );
 }

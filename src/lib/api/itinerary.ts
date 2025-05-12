@@ -48,7 +48,7 @@ export const getRecommendedDestinations = async (
     data: RecommendRequest
 ): Promise<RecommendResponse[]> => {
     try {
-        const response = await axiosInstance.post<RecommendResponse[]>("/itineraries/destination/recommend", data);
+        const response = await axiosInstance.post<RecommendResponse[]>("/itinerary/destination/recommend", data);
         return response.data;
     } catch (error: any) {
         throw new Error(error.response?.data.message || "추천 장소를 불러오지 못했습니다.");
@@ -83,7 +83,7 @@ export const createItinerary = async (
     data: CreateItineraryRequest
 ): Promise<CreateItineraryResponse> => {
     try {
-        const response = await axiosInstance.post<CreateItineraryResponse>("/itineraries/create", data);
+        const response = await axiosInstance.post<CreateItineraryResponse>("/itinerary/create", data);
         return response.data;
     } catch (error: any) {
         throw new Error(error.response?.data.message || "여행 일정을 생성하지 못했습니다.");
@@ -106,7 +106,7 @@ export const getPublicItineraries = async (
     limit: number
 ): Promise<PublicItinerary[]> => {
     try {
-        const response = await axiosInstance.get<PublicItinerary[]>(`/itineraries/list?limit=${limit}`);
+        const response = await axiosInstance.get<PublicItinerary[]>(`/itinerary/list?limit=${limit}`);
         return response.data;
     } catch (error: any) {
         throw new Error(error.response?.data.message || "공개된 여행 코스 목록을 불러오지 못했습니다.");
@@ -132,7 +132,7 @@ export const saveItinerary = async (
     data: SaveItineraryRequest
 ): Promise<SaveItineraryResponse> => {
     try {
-        const response = await axiosInstance.post<SaveItineraryResponse>("/itineraries/save", data);
+        const response = await axiosInstance.post<SaveItineraryResponse>("/itinerary/save", data);
         return response.data;
     } catch (error: any) {
         throw new Error(error.response?.data.message || "여행 코스 저장에 실패했습니다.");
