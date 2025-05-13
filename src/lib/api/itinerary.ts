@@ -77,7 +77,6 @@ export const getRecommendedDestinations = async (
     }
 };
 
-
 export interface CreateItineraryRequest {
     travelWith: string;
     startDate: string;
@@ -106,7 +105,6 @@ export const createItinerary = async (
     }
 };
 
-
 export interface PublicItinerary {
     id: number;
     title: string;
@@ -129,15 +127,7 @@ export const getPublicItineraries = async (
     }
 };
 
-
-export interface SaveItineraryRequest {
-    itineraries_id: number;
-}
-
-export interface SaveItineraryResponse {
-    success: boolean;
-    message: string;
-}
+export interface SaveItineraryResponse { }
 
 /**
  * 생성된 여행 코스를 저장
@@ -145,10 +135,10 @@ export interface SaveItineraryResponse {
  * @returns 저장 결과
  */
 export const saveItinerary = async (
-    data: SaveItineraryRequest
+    data: ItineraryDetail
 ): Promise<SaveItineraryResponse> => {
     try {
-        const response = await axiosInstance.post<SaveItineraryResponse>("/itinerary/save", data);
+        const response = await axiosInstance.patch<SaveItineraryResponse>("/itinerary", data);
         return response.data;
     } catch (error: any) {
         throw new Error(error.response?.data.message || "여행 코스 저장에 실패했습니다.");
