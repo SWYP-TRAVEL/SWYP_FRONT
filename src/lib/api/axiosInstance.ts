@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const backendUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -7,16 +8,14 @@ const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true, // 쿠키 정보 포함
+  withCredentials: true,
 });
 
-// ✅ 요청 인터셉터
 axiosInstance.interceptors.request.use(
   (config) => {
-    // 필요시 토큰 설정
-    const accessToken = localStorage.getItem("accessToken");
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
+    const { user } = useAuthStore.getState();
+    if (user?.accessToken) {
+      config.headers.Authorization = `Bearer ${user.accessToken}`;
     }
     return config;
   },
@@ -25,13 +24,12 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// ✅ 응답 인터셉터
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response.status === 401) {
-      // 인증 만료 시 처리 (예: 로그아웃)
       console.error("인증이 만료되었습니다.");
+      useAuthStore.getState().logout();
     }
     return Promise.reject(error);
   }
