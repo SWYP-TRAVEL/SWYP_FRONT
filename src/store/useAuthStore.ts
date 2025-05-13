@@ -4,7 +4,7 @@ import { persist } from "zustand/middleware";
 export interface User {
   userName: string;
   accessToken: string;
-  refreshToken: string;
+  expiresIn?: number;
   profileImage?: string;
 }
 
@@ -29,11 +29,12 @@ export const useAuthStore = create<AuthState>()(
           isLoggedIn: true,
           user,
         }),
-      logout: () =>
+      logout: () => {
         set({
           isLoggedIn: false,
           user: null,
-        }),
+        })
+      },
     }),
     {
       name: "auth-storage",

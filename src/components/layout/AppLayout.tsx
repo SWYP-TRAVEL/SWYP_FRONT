@@ -17,7 +17,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const isPublic = PUBLIC_PATHS.some((path) => pathname.startsWith(path));
 
   useAuthGuard(PUBLIC_PATHS);
-
   if (!hasHydrated || (!isPublic && !isLoggedIn)) {
     return (
       <div />
