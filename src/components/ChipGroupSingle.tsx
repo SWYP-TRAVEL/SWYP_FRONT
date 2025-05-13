@@ -3,6 +3,7 @@ import React, { useState } from "react";
 
 interface ChipItem {
   label: string;
+  value: string;
   imageSrc?: string;
 }
 
@@ -24,12 +25,12 @@ export default function ChipGroupSingle({ items, value, onChange, className = "f
 
   return (
     <div className={className}>
-      {items.map(({ label, imageSrc }) => (
+      {items.map(({ label, value: itemValue, imageSrc }) => (
         <Chip
-          key={label}
+          key={itemValue}
           imageSrc={imageSrc}
-          selected={selectedValue === label}
-          onClick={() => handleChange(label)}
+          selected={selectedValue === itemValue}
+          onClick={() => handleChange(itemValue)}
         >
           {label}
         </Chip>

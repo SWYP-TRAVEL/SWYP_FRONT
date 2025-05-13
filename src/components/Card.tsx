@@ -27,6 +27,7 @@ type CardProps = {
   infoTextStyle?: TextStyle;
   size?: CardSize;
   as?: ElementType;
+  onClick: () => void;
 };
 
 export default function Card({
@@ -36,6 +37,7 @@ export default function Card({
   regionTextStyle,
   infoTextStyle,
   size = "large",
+  onClick,
   as: Component = "div",
 }: CardProps) {
   const resolvedRegionTextStyle = regionTextStyle ?? CARD_TEXT_STYLES[size].region;
@@ -44,7 +46,10 @@ export default function Card({
   const textAlignClass = size === "small" ? "justify-start" : "justify-end";
 
   return (
-    <Component className={`${CARD_STYLES[size]} relative overflow-hidden cursor-pointer flex flex-col`}>
+    <Component
+      className={`${CARD_STYLES[size]} relative overflow-hidden cursor-pointer flex flex-col`}
+      onClick={onClick}
+    >
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${imageUrl})` }}
