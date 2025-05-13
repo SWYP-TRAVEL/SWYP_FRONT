@@ -1,14 +1,31 @@
 import axiosInstance from "./axiosInstance";
 
-export interface ItineraryDetail {
+interface Attraction {
     id: number;
-    type: string;
+    type: 'place' | 'meal' | 'ACTIVITY';
     name: string;
     address: string;
     description: string;
     coverImage: string;
     businessTime: string;
     rating: number;
+    latitude: number;
+    longitude: number;
+}
+
+interface DailyScheduleDtos {
+    dayDate: number;
+    attractions: Attraction[];
+}
+
+export interface ItineraryDetail {
+    id: number;
+    title: string;
+    createdBy: number;
+    createdAt: number;
+    isPublic: boolean;
+    isSaved: boolean;
+    dailyScheduleDtos: DailyScheduleDtos[];
 }
 
 /**
@@ -27,16 +44,19 @@ export const getItineraryDetails = async (id: number): Promise<ItineraryDetail[]
 
 
 export interface RecommendRequest {
-    travel_with: string;
-    start_date: string;
-    end_date: string;
+    travelWith: string;
+    startDate: string;
+    duration: number;
     description: string;
 }
 
 export interface RecommendResponse {
-    title: string;
-    description: string;
-    image_url: string;
+    address: string;
+    imageUrl: string;
+    latitude: number;
+    longitude: number;
+    name: string;
+    theme: string;
 }
 
 /**
@@ -48,7 +68,9 @@ export const getRecommendedDestinations = async (
     data: RecommendRequest
 ): Promise<RecommendResponse[]> => {
     try {
-        const response = await axiosInstance.post<RecommendResponse[]>("/itinerary/destination/recommend", data);
+        const response = await axiosInstance.get<RecommendResponse[]>("/itinerary/preview", {
+            params: data
+        });
         return response.data;
     } catch (error: any) {
         throw new Error(error.response?.data.message || "추천 장소를 불러오지 못했습니다.");
@@ -57,21 +79,13 @@ export const getRecommendedDestinations = async (
 
 
 export interface CreateItineraryRequest {
-    travel_with: string;
-    start_date: string;
-    end_date: string;
+    travelWith: string;
+    startDate: string;
+    duration: number;
     description: string;
-    selected_destination: string;
-}
-
-export interface CreateItineraryResponse {
-    id: number;
-    travel_with: string;
-    start_date: string;
-    end_date: string;
-    description: string;
-    selected_destination: string;
-    createdAt: string;
+    theme: string;
+    latitude: number;
+    longitude: number;
 }
 
 /**
@@ -81,9 +95,11 @@ export interface CreateItineraryResponse {
  */
 export const createItinerary = async (
     data: CreateItineraryRequest
-): Promise<CreateItineraryResponse> => {
+): Promise<ItineraryDetail> => {
     try {
-        const response = await axiosInstance.post<CreateItineraryResponse>("/itinerary/create", data);
+        const response = await axiosInstance.get<ItineraryDetail>("/itinerary/create", {
+            params: data
+        });
         return response.data;
     } catch (error: any) {
         throw new Error(error.response?.data.message || "여행 일정을 생성하지 못했습니다.");
@@ -138,3 +154,7 @@ export const saveItinerary = async (
         throw new Error(error.response?.data.message || "여행 코스 저장에 실패했습니다.");
     }
 };
+
+export const getRecommendText = async (params: string) => {
+
+}
