@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
 import { saveUserExperience, getUserItineraries, Itinerary } from "@/lib/api/user";
 import { unlinkKakaoAccount } from "@/lib/api/auth";
+import { useModal } from "@/hooks/useModal";
+import ConfirmModal from "@/components/modals/ConfirmModal";
 
 export default function MyPage() {
     const [courseList, setCourseList] = useState<Itinerary[]>([]);
@@ -83,15 +85,28 @@ export default function MyPage() {
     };
 
     const handleUnlink = async () => {
-        if (!confirm("정말로 카카오 계정을 탈퇴하시겠습니까?")) return;
+        confirmUnlinkModal.open();
+    };
 
+    const confirmUnlinkModal = useModal(() => (
+        <ConfirmModal
+            title="서비스를 탈퇴할까요?"
+            description="저장한 여행 일정은 모두 삭제되며, 복구할 수 없어요."
+            cancelText="탈퇴하기"
+            onCancel={onClickUnlink}
+            confirmText="유지하기"
+            onConfirm={confirmUnlinkModal.close}
+        />
+    ))
+
+    const onClickUnlink = async () => {
         try {
             await unlinkKakaoAccount();
-            alert("카카오 계정이 성공적으로 탈퇴되었습니다.");
+            // alert("카카오 계정이 성공적으로 탈퇴되었습니다."); // FIXME: figma에 안보여서 주석처리
             logout();
             router.push("/");
         } catch (err: any) {
-            alert("계정 탈퇴에 실패하였습니다.");
+            alert("계정 탈퇴에 실패하였습니다."); // TODO: window alert?
         }
     };
 

@@ -7,24 +7,30 @@ import Text from '@/components/Text';
 import TextField from '@/components/TextField';
 import UserInputSummary from "@/components/UserInputSummary";
 import { useModal } from '@/hooks/useModal';
+import { getRecommendedDestinations } from '@/lib/api/itinerary';
+import { useRecommendTravelListStore, useUserInputStore } from '@/store/useRecommendTravelStore';
+import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
 const COMPANIONS = [
-  { label: "혼자", imageSrc: "/icons/alone.png" },
-  { label: "가족", imageSrc: "/icons/family.png" },
-  { label: "친구/지인", imageSrc: "/icons/friend.png" },
-  { label: "연인", imageSrc: "/icons/couple.png" },
+  { value: 'alone', label: "혼자", imageSrc: "/icons/alone.png" },
+  { value: 'family', label: "가족", imageSrc: "/icons/family.png" },
+  { value: 'friends', label: "친구/지인", imageSrc: "/icons/friend.png" },
+  { value: 'lover', label: "연인", imageSrc: "/icons/couple.png" },
 ];
 
 const DURATIONS = [
-  { label: "당일치기" },
-  { label: "1박 2일" },
-  { label: "2박 3일" },
-  { label: "3박 4일" },
-  { label: "4박 5일" },
+  { value: '1', label: "당일치기" },
+  { value: '2', label: "1박 2일" },
+  { value: '3', label: "2박 3일" },
+  { value: '4', label: "3박 4일" },
+  { value: '5', label: "4박 5일" },
 ];
 
+
 export default function UserInputs() {
+  const router = useRouter();
+
   /**
    * 상태 선언
    * companion : 유저입력 동행자타입
@@ -48,15 +54,27 @@ export default function UserInputs() {
    * handleTravelRecommend : 여행지 리스트 추천 api call 및 데이터 후처리
    */
   const handleTravelRecommend = async () => {
-    // TODO: api call
-    const params = {};
-    console.log('api call with', params);
-    // TODO: delete lines
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve("테스트용 더미 데이터")
-      }, 2000);
-    })
+    try {
+      setIsLoading(true);
+
+      const params = {
+        travelWith: companion,
+        description: travelDescription,
+        duration: Number(duration),
+        startDate: '2025-05-13'
+      };
+      const result = await getRecommendedDestinations(params);
+      // store 저장
+      useRecommendTravelListStore.getState().setItems(result);
+      useUserInputStore.getState().setInputs(params);
+
+      return true;
+    } catch (err) {
+      // TODO:
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
 
@@ -72,33 +90,42 @@ export default function UserInputs() {
 
   const onClickContinueRecommend = async () => {
     confirmRecommendModal.close();
-    setIsLoading(true);
-    const result = await handleTravelRecommend();
-    alert(`테스트 결과 데이터: ${result}(실제 프로덕트 레벨에서는 화면이동 합니다.)`);
-    setIsLoading(false);
+    const isValid = await handleTravelRecommend();
+
+    if (isValid) {
+      router.push('/travel/recommend');
+    } else {
+      // TODO: 
+    }
   };
 
   const onClickAutoFillInput = async () => {
     // TODO: api call
+    const params = {};
+
   };
 
   // 여행지추천 컨펌 모달
-  const confirmRecommendModal = useModal(() => (
-    <ConfirmModal
-      title="이 정보로 여행지를 추천해드릴게요"
-      description="맞는지 한 번 더 확인해주세요!"
-      cancelText="다시 입력하기"
-      onCancel={confirmRecommendModal.close}
-      confirmText="계속 추천받기"
-      onConfirm={onClickContinueRecommend}
-    >
-      <UserInputSummary
-        companion={companion}
-        period={duration}
-        inputText={travelDescription}
-      />
-    </ConfirmModal>
-  ));
+  const confirmRecommendModal = useModal(() => {
+    const companionText = COMPANIONS.find(item => item.value === companion)?.label || '';
+    const durationText = DURATIONS.find(item => item.value === duration)?.label || '';
+    return (
+      <ConfirmModal
+        title="이 정보로 여행지를 추천해드릴게요"
+        description="맞는지 한 번 더 확인해주세요!"
+        cancelText="다시 입력하기"
+        onCancel={confirmRecommendModal.close}
+        confirmText="계속 추천받기"
+        onConfirm={onClickContinueRecommend}
+      >
+        <UserInputSummary
+          companion={companionText}
+          period={durationText}
+          inputText={travelDescription}
+        />
+      </ConfirmModal>
+    )
+  });
 
   /**
    * JSX 리턴(섹션별 설명 기재 요망)

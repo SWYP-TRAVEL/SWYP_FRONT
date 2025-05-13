@@ -1,26 +1,34 @@
 "use client";
 
-import Card from "@/components/Card";
 import Button from "@/components/Button";
+import Card from "@/components/Card";
 import Text from "@/components/Text";
+import { createItinerary, type RecommendResponse } from "@/lib/api/itinerary";
+import { useRecommendTravelListStore, useUserInputStore } from "@/store/useRecommendTravelStore";
 import Image from "next/image";
 
-const travelData = [
-  {
-    region: "경상북도 경주시",
-    distanceInfo: "내 위치로부터 3시간 소요",
-  },
-  {
-    region: "강원도 강릉시",
-    distanceInfo: "내 위치로부터 3시간 소요",
-  },
-  {
-    region: "제주특별시",
-    distanceInfo: "내 위치로부터 2시간 소요",
-  },
-];
-
 export default function TravelRecommendPage() {
+  const travelData = useRecommendTravelListStore((state) => state.items);
+  const userInputs = useUserInputStore((state) => state.inputs);
+
+  const onClickTravelCard = async (data: RecommendResponse) => {
+    try {
+      const params = {
+        travelWith: userInputs?.travelWith || '',
+        startDate: userInputs?.startDate || '',
+        duration: userInputs?.duration || -1,
+        description: userInputs?.description || '',
+        theme: data.theme,
+        latitude: data.latitude,
+        longitude: data.longitude,
+      };
+      const result = await createItinerary(params);
+      console.log('사용자 입력 바탕으로 여행 일정 생성 ::: ', result);
+    } catch (err) {
+      //
+    }
+  };
+
   return (
     <main className="flex flex-col items-center w-full max-w-[1100px] px-4 pt-[60px] pb-[60px] mx-auto gap-[84px]">
       <section className="flex flex-col items-start self-stretch gap-3">
@@ -33,8 +41,15 @@ export default function TravelRecommendPage() {
       </section>
 
       <section className="flex flex-row gap-6">
-        {travelData.map(({ region, distanceInfo }) => (
-          <Card key={region} region={region} distanceInfo={distanceInfo} size="large" />
+        {travelData.map((data) => (
+          <Card
+            key={data.address}
+            region={data.name}
+            distanceInfo={data.theme}
+            imageUrl={data.imageUrl}
+            size="large"
+            onClick={() => onClickTravelCard(data)}
+          />
         ))}
       </section>
 

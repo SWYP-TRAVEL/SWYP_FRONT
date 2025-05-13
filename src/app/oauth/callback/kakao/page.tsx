@@ -12,20 +12,18 @@ export default function KakaoRedirectPage() {
         // 테스트 또는 개발 환경일 때, Admin Token 가져오기
         if (!isProd || isTest) {
             getAdminToken()
-                .then(({ accessToken, refreshToken, userName }) => {
-
+                .then(({ accessToken, userName }) => {
                     window.opener?.postMessage(
                         {
                             type: "KAKAO_LOGIN_SUCCESS",
                             payload: {
                                 accessToken,
-                                refreshToken,
                                 userName,
                             },
                         },
                         "*"
                     );
-                    window.close();
+                    // window.close();
                 })
                 .catch((err) => {
                     window.opener?.postMessage(
@@ -35,7 +33,7 @@ export default function KakaoRedirectPage() {
                         },
                         "*"
                     );
-                    window.close();
+                    // window.close();
                 });
 
             return;
@@ -44,19 +42,18 @@ export default function KakaoRedirectPage() {
         // 프로덕션 환경일 때, Kakao 로그인 처리
         if (code) {
             kakaoLogin(code)
-                .then(({ accessToken, refreshToken, userName }) => {
+                .then(({ accessToken, userName }) => {
                     window.opener?.postMessage(
                         {
                             type: "KAKAO_LOGIN_SUCCESS",
                             payload: {
                                 accessToken,
-                                refreshToken,
                                 userName,
                             },
                         },
                         "*"
                     );
-                    window.close();
+                    // window.close();
                 })
                 .catch((err) => {
                     window.opener?.postMessage(
@@ -66,7 +63,7 @@ export default function KakaoRedirectPage() {
                         },
                         "*"
                     );
-                    window.close();
+                    // window.close();
                 });
         }
     }, []);
