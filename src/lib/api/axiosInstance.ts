@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useAuthStore } from "@/store/useAuthStore";
+import { reissueToken } from "@/lib/api/auth";
 
 const backendUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -26,13 +27,44 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response.status === 401) {
-      console.error("인증이 만료되었습니다.");
-      useAuthStore.getState().logout();
+  async (error) => {
+    const originalRequest = error.config;
+
+    // 🔍 만약 토큰 재발급 요청이면 인터셉터가 잡지 않도록 한다.
+    if (originalRequest.url.includes('/auth/token/reissue')) {
+      console.warn("🛑 토큰 재발급 요청은 인터셉터에서 무시합니다.");
+      return Promise.reject(error);
     }
+    // 🔍 로그아웃 상태면 중단
+    if (!useAuthStore.getState().isLoggedIn) {
+      console.warn("🔒 로그아웃 상태입니다. 요청 중단");
+      return Promise.reject(error);
+    }
+
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      console.warn("🔄 401 발생, 토큰 재발급 시도 중...");
+      const newAccessToken = await reissueToken();
+
+      if (newAccessToken) {
+        console.log(newAccessToken)
+        console.log("✅ 토큰 재발급 성공, 요청 재시도");
+
+        // ✅ 이 시점에는 상태가 업데이트되었으므로, 다시 읽어와서 적용
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        return axiosInstance(originalRequest);
+      } else {
+        console.log("Test")
+        console.error("❌ 토큰 재발급 실패, 로그아웃 처리");
+        useAuthStore.getState().logout();
+        window.location.href = "/main";
+      }
+    }
+
     return Promise.reject(error);
   }
 );
+
 
 export default axiosInstance;

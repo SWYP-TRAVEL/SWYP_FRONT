@@ -33,16 +33,16 @@ export function useLogin() {
         loginState({
           userName: payload.userName,
           accessToken: payload.accessToken,
-          refreshToken: payload.refreshToken,
+          expiresIn: payload.expiresIn,
           profileImage: payload.profileImage, // 혹시 있으면 추가
         });
         router.push('/userinputs');
         window.removeEventListener('message', handleMessage);
-        popupRef.current?.close();
+        // popupRef.current?.close();
       } else if (type === 'KAKAO_LOGIN_FAILURE') {
         alert('로그인 실패: ' + error);
         window.removeEventListener('message', handleMessage);
-        popupRef.current?.close();
+        // popupRef.current?.close();
       }
     };
 
