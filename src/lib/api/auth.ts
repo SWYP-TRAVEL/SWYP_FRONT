@@ -4,6 +4,7 @@ export interface KakaoLoginResponse {
     accessToken: string;
     refreshToken: string;
     userName: string;
+    expiresIn: number;
 }
 
 /**
@@ -22,8 +23,6 @@ export const kakaoLogin = async (code: string): Promise<KakaoLoginResponse> => {
         throw new Error(error.response?.data.message || "카카오 로그인 실패");
     }
 };
-
-
 
 export interface UnlinkResponse {
     success: boolean;
@@ -75,3 +74,16 @@ export const getAdminToken = async (): Promise<KakaoLoginResponse> => {
         throw new Error(error.response?.data.message || "관리자 토큰 정보를 불러오지 못했습니다.");
     }
 };
+
+/**
+ * refresh 토큰으로 accessToken 갱신
+ * @returns KakaoLoginResponse
+ */
+export const reissueToken = async (): Promise<KakaoLoginResponse> => {
+    try {
+        const result = await axiosInstance.post('/auth/token/reissue', {});
+        return result.data;
+    } catch (err: any) {
+        throw new Error(err.response?.data.message || "토큰 재발행에 실패했습니다.");
+    }
+}

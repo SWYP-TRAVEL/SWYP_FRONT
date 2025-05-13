@@ -27,7 +27,7 @@ type CardProps = {
   infoTextStyle?: TextStyle;
   size?: CardSize;
   as?: ElementType;
-  onClick: () => void;
+  onClick?: () => void;
 };
 
 export default function Card({
