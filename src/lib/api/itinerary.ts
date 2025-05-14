@@ -145,6 +145,20 @@ export const saveItinerary = async (
     }
 };
 
-export const getRecommendText = async (params: string) => {
-
+/**
+ * [잘 모르겠어요] 추천 검색어
+ * @param params 사용자가 입력한 텍스트필드 값
+ * @returns 추천 검색어 결과
+ */
+export const getRecommendText = async (params: string = '') => {
+    try {
+        const response = await axiosInstance.get<string>('/itinerary/recommend/text', {
+            params: {
+                input: params
+            }
+        });
+        return response.data;
+    } catch (err: any) {
+        throw new Error(err.response?.data.message || "여행테마 추천 검색어 불러오기에 실패했습니다.");
+    }
 }
