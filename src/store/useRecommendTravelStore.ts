@@ -1,4 +1,4 @@
-import { type RecommendResponse } from "@/lib/api/itinerary";
+import { ItineraryDetail, type RecommendResponse } from "@/lib/api/itinerary";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -22,8 +22,8 @@ interface UserInputStore {
 }
 
 interface RecommendTravelDetailStore {
-  itinerary: null;
-  setItinerary: (value: null) => void;
+  itinerary: ItineraryDetail | null;
+  setItinerary: (value: ItineraryDetail) => void;
   clearItinerary: () => void;
 }
 
