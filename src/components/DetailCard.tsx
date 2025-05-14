@@ -31,10 +31,10 @@ const DetailCard: React.FC<DetailCardProps> = ({
                 </div>
 
                 <div className="flex flex-col gap-2 w-[510px] h-[160px]">
-                    <Text textStyle="heading1" className="font-bold">
+                    <Text textStyle="heading1" className="font-bold truncate overflow-hidden whitespace-nowrap">
                         {title}
                     </Text>
-                    <Text textStyle="headline2" className="text-[#9A77FF]">
+                    <Text textStyle="headline2" className="text-[#9A77FF] truncate overflow-hidden whitespace-nowrap">
                         {subtitle}
                     </Text>
 
@@ -66,7 +66,7 @@ const DetailCard: React.FC<DetailCardProps> = ({
                 </div>
             </div>
 
-        </div>
+        </div >
     );
 };
 
