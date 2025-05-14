@@ -11,7 +11,7 @@ import { useModal } from '@/hooks/useModal';
 import { getRecommendedDestinations, getRecommendText } from '@/lib/api/itinerary';
 import { useRecommendTravelListStore, useUserInputStore } from '@/store/useRecommendTravelStore';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const COMPANIONS = [
   { value: 'alone', label: "혼자", imageSrc: "/icons/alone.png" },
@@ -52,6 +52,12 @@ export default function UserInputs() {
   }, [companion, duration, travelDescription]);
   const [errMessage, setErrMessage] = useState('');
 
+  useEffect(() => {
+    return () => {
+      confirmRecommendModal.close();
+    }
+  }, [])
+
   /**
    * 함수 선언
    * handleTravelRecommend : 여행지 리스트 추천 api call 및 데이터 후처리
@@ -59,21 +65,29 @@ export default function UserInputs() {
   const handleTravelRecommend = async () => {
     try {
       setIsLoading(true);
+      const today = new Date();
+
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0'); // 0-based
+      const dd = String(today.getDate()).padStart(2, '0');
+
+      const formattedToday = `${yyyy}-${mm}-${dd}`;
 
       const params = {
         travelWith: companion,
         description: travelDescription,
         duration: Number(duration),
-        startDate: '2025-05-13'
+        startDate: formattedToday
       };
       const result = await getRecommendedDestinations(params);
       // store 저장
       useRecommendTravelListStore.getState().setItems(result);
-      useUserInputStore.getState().setInputs(params);
+      useUserInputStore.getState().setInputs({ ...params, requestCount: 0 });
 
       return true;
     } catch (err: any) {
       setErrMessage(err.message);
+      confirmRecommendModal.close();
       errModal.open();
       return false;
     } finally {
@@ -93,7 +107,7 @@ export default function UserInputs() {
   };
 
   const onClickContinueRecommend = async () => {
-    confirmRecommendModal.close();
+    // confirmRecommendModal.close();
     const isValid = await handleTravelRecommend();
 
     if (!isValid) return;
@@ -230,7 +244,7 @@ export default function UserInputs() {
         <div className="mt-[60px]">
           {/* TODO: 이미지 요소가 들어가는 버튼 => Button component에 녹일 수 있는지? */}
           <button
-            disabled={!isButtonDisabled}
+            disabled={isButtonDisabled}
             className={`flex justify-between w-[186px] text-[18px] px-5 py-3 rounded-[25px] font-semibold text-semantic-static-white 
               ${isButtonDisabled ? 'bg-[#D9D9D9] cursor-not-allowed' : 'bg-semantic-primary-normal'}`}
             onClick={onClickNext}
@@ -241,7 +255,6 @@ export default function UserInputs() {
         </div>
       </section>
       {isLoading ? <FullScreenLoader /> : null}
-
     </>
   );
 }
