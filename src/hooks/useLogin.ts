@@ -38,11 +38,11 @@ export function useLogin() {
         });
         router.push('/userinputs');
         window.removeEventListener('message', handleMessage);
-        // popupRef.current?.close();
+        popupRef.current?.close();
       } else if (type === 'KAKAO_LOGIN_FAILURE') {
         alert('로그인 실패: ' + error);
         window.removeEventListener('message', handleMessage);
-        // popupRef.current?.close();
+        popupRef.current?.close();
       }
     };
 

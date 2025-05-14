@@ -1,6 +1,6 @@
 import axiosInstance from "./axiosInstance";
 
-interface Attraction {
+export interface Attraction {
     id: number;
     type: 'place' | 'meal' | 'ACTIVITY';
     name: string;
@@ -11,9 +11,12 @@ interface Attraction {
     rating: number;
     latitude: number;
     longitude: number;
+    travelWalkTime?: string;
+    travelCarTime?: string;
+    travelDistance?: string;
 }
 
-interface DailyScheduleDtos {
+export interface DailyScheduleDtos {
     dayDate: number;
     attractions: Attraction[];
 }
@@ -36,7 +39,11 @@ export interface ItineraryDetail {
 export const getItineraryDetails = async (id: number): Promise<ItineraryDetail[]> => {
     try {
         const response = await axiosInstance.get<ItineraryDetail[]>(`/itinerary/lists/${id}`);
-        return response.data;
+        const mergedItineraries = response.data.map((itinerary: ItineraryDetail) =>
+            mergeItineraryByDate(itinerary)
+        );
+
+        return mergedItineraries;
     } catch (error: any) {
         throw new Error(error.response?.data.message || "여행 일정 상세 정보를 불러오지 못했습니다.");
     }
@@ -99,7 +106,7 @@ export const createItinerary = async (
         const response = await axiosInstance.get<ItineraryDetail>("/itinerary/create", {
             params: data
         });
-        return response.data;
+        return mergeItineraryByDate(response.data);
     } catch (error: any) {
         throw new Error(error.response?.data.message || "여행 일정을 생성하지 못했습니다.");
     }
@@ -145,11 +152,6 @@ export const saveItinerary = async (
     }
 };
 
-/**
- * [잘 모르겠어요] 추천 검색어
- * @param params 사용자가 입력한 텍스트필드 값
- * @returns 추천 검색어 결과
- */
 export const getRecommendText = async (params: string = '') => {
     try {
         const response = await axiosInstance.get<string>('/itinerary/recommend/text', {
@@ -162,3 +164,38 @@ export const getRecommendText = async (params: string = '') => {
         throw new Error(err.response?.data.message || "여행테마 추천 검색어 불러오기에 실패했습니다.");
     }
 }
+
+// DailyScheduleDtos가 같은 date임에도 각각 오는 이슈가 있음 (묶어주는 함수)
+export const mergeItineraryByDate = (itinerary: ItineraryDetail): ItineraryDetail => {
+    // Map을 사용하여 dayDate 기준으로 그룹화
+    const itineraryMap = new Map<number, Attraction[]>();
+
+    itinerary.dailyScheduleDtos.forEach((item) => {
+        const { dayDate, attractions } = item;
+
+        if (!itineraryMap.has(dayDate)) {
+            itineraryMap.set(dayDate, []);
+        }
+
+        if (Array.isArray(attractions)) {
+            itineraryMap.get(dayDate)?.push(...attractions);
+        } else {
+            itineraryMap.get(dayDate)?.push(attractions);
+        }
+    });
+
+    // Map을 DailyScheduleDtos 형태의 배열로 변환
+    const mergedItinerary: DailyScheduleDtos[] = Array.from(itineraryMap.entries()).map(
+        ([dayDate, attractions]) => ({
+            dayDate,
+            attractions,
+        })
+    );
+
+    // 원본 ItineraryDetail을 수정하지 않고 새로운 객체 생성
+    return {
+        ...itinerary,
+        dailyScheduleDtos: mergedItinerary
+    };
+};
+

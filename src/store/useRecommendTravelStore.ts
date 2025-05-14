@@ -1,4 +1,5 @@
-import type { ItineraryDetail, RecommendResponse } from "@/lib/api/itinerary";
+import { ItineraryDetail, type RecommendResponse } from "@/lib/api/itinerary";
+
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 

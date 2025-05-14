@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import { useRecommendTravelDetailStore } from '@/store/useRecommendTravelStore';
 
 declare global {
     interface Window {
@@ -7,16 +8,21 @@ declare global {
     }
 }
 
-interface MapProps {
-    latitude: number;
-    longitude: number;
-}
-
-const KakaoMap: React.FC<MapProps> = ({ latitude, longitude }) => {
+const KakaoMap: React.FC = () => {
     const [isLoaded, setIsLoaded] = useState(false);
 
-    // ✅ 환경 변수에서 API 키 로딩
     const KAKAO_API_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY;
+    const itinerary = useRecommendTravelDetailStore((state) => state.itinerary);
+
+    const colorCycle = [
+        '#FF0000', // 빨강
+        '#FF7F00', // 주황
+        '#FFFF00', // 노랑
+        '#00FF00', // 초록
+        '#0000FF', // 파랑
+        '#4B0082', // 남색
+        '#8B00FF'  // 보라
+    ];
 
     useEffect(() => {
         if (!KAKAO_API_KEY) {
@@ -30,10 +36,8 @@ const KakaoMap: React.FC<MapProps> = ({ latitude, longitude }) => {
         document.head.appendChild(script);
 
         script.onload = () => {
-            console.log('✅ Kakao Maps SDK Loaded');
             if (window.kakao && window.kakao.maps) {
                 window.kakao.maps.load(() => {
-                    console.log('✅ Kakao Maps 객체 로딩 완료');
                     setIsLoaded(true);
                 });
             }
@@ -41,34 +45,95 @@ const KakaoMap: React.FC<MapProps> = ({ latitude, longitude }) => {
     }, [KAKAO_API_KEY]);
 
     useEffect(() => {
-        console.log('isLoaded 상태:', isLoaded);
         if (isLoaded) {
             const kakao = (window as any).kakao;
 
             const container = document.getElementById('map');
             if (!container) {
-                console.error('❌ #map 컨테이너를 찾을 수 없습니다.');
                 return;
             }
+
+            let initialLat = 37.5665;
+            let initialLng = 126.9780;
+
+            if (itinerary?.dailyScheduleDtos?.length) {
+                for (const day of itinerary.dailyScheduleDtos) {
+                    if (day.attractions.length > 0) {
+                        const firstAttraction = day.attractions[0];
+                        if (firstAttraction.latitude && firstAttraction.longitude) {
+                            initialLat = firstAttraction.longitude;
+                            initialLng = firstAttraction.latitude;
+                        }
+                        break;
+                    }
+                }
+            }
+
             const options = {
-                center: new kakao.maps.LatLng(latitude, longitude),
+                center: new kakao.maps.LatLng(initialLat, initialLng),
                 level: 3,
             };
 
-            try {
-                const map = new kakao.maps.Map(container, options);
-                const markerPosition = new kakao.maps.LatLng(latitude, longitude);
-                const marker = new kakao.maps.Marker({
-                    position: markerPosition,
+            const map = new kakao.maps.Map(container, options);
+
+            const linePath: any[] = [];
+            let markerIndex = 1;
+
+            if (itinerary?.dailyScheduleDtos) {
+                itinerary.dailyScheduleDtos.forEach((day, dayIndex) => {
+                    day.attractions.forEach((attraction) => {
+                        if (attraction.latitude && attraction.longitude) {
+                            const markerPosition = new kakao.maps.LatLng(attraction.longitude, attraction.latitude);
+
+                            linePath.push(markerPosition);
+
+                            const color = colorCycle[dayIndex % colorCycle.length];
+
+                            const overlayContent = `
+                                <div style="
+                                    width: 30px;
+                                    height: 30px;
+                                    background-color: ${color};
+                                    border-radius: 50%;
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    color: white;
+                                    font-weight: bold;
+                                    border: 2px solid white;
+                                    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+                                ">
+                                    ${markerIndex}
+                                </div>`;
+
+                            const overlay = new kakao.maps.CustomOverlay({
+                                content: overlayContent,
+                                position: markerPosition,
+                                yAnchor: 1.1,
+                            });
+
+                            overlay.setMap(map);
+                            markerIndex++;
+
+                            kakao.maps.event.addListener(overlay, 'click', () => {
+                                alert(`${attraction.name} - ${attraction.address}`);
+                            });
+                        }
+                    });
                 });
 
-                marker.setMap(map);
-                console.log('✅ Kakao Map 렌더링 성공');
-            } catch (error) {
-                console.error('❌ 마커 생성 중 에러:', error);
+                const polyline = new kakao.maps.Polyline({
+                    path: linePath,
+                    strokeWeight: 3,
+                    strokeColor: '#db4040',
+                    strokeOpacity: 0.8,
+                    strokeStyle: 'solid',
+                });
+
+                polyline.setMap(map);
             }
         }
-    }, [isLoaded, latitude, longitude]);
+    }, [isLoaded, itinerary]);
 
     return (
         <div

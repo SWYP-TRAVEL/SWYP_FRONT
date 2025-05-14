@@ -36,7 +36,7 @@ export default function MapLayout({ children }: MapLayoutProps) {
             </aside>
 
             <section className="flex-grow h-full">
-                <KakaoMap latitude={37.787138} longitude={128.899383} />
+                <KakaoMap />
             </section>
         </div>
     );
