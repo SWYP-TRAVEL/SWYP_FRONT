@@ -59,7 +59,7 @@ const DayScheduleCard: React.FC<DayScheduleCardProps> = ({ dailySchedule, onReor
                     className="flex flex-col gap-2"
                 >
                     {items.map((place, index) => (
-                        <Reorder.Item key={place.id} value={place}>
+                        <Reorder.Item key={place.id ?? place.name} value={place}>
                             <div className="relative flex flex-col gap-2">
                                 <DetailCard
                                     title={place.name}

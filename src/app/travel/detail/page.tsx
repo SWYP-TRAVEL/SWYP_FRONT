@@ -147,9 +147,9 @@ const TravelSchedulePage: React.FC = () => {
                 </section>
 
                 <section className='w-full flex flex-col gap-5'>
-                    {groupedPlaces.map((schedule) => (
+                    {groupedPlaces.map((schedule, index) => (
                         <DayScheduleCard
-                            key={`${schedule.dayDate}-${JSON.stringify(schedule.attractions)}`}
+                            key={`${schedule.dayDate ?? 'no-date'}-${index}`}
                             dailySchedule={schedule}
                             onReorder={(newOrder) => handleReorder(schedule.dayDate, newOrder)}
                         />

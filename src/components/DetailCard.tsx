@@ -55,7 +55,11 @@ const DetailCard: React.FC<DetailCardProps> = ({
                 </div>
 
                 <div className="w-[280px] h-[160px] overflow-hidden rounded-2xl">
-                    <img src={imageUrl} alt={title} className="object-cover w-full h-full" />
+                    <img
+                        src={imageUrl && imageUrl.trim() !== "" ? imageUrl : "https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=5dc87836-b647-45ef-ae17-e3247f91b8b4"}
+                        alt={title}
+                        className="object-cover w-full h-full"
+                    />
                 </div>
                 <div className="w-6 h-full flex flex-col items-center gap-2">
                     <img
