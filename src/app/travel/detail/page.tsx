@@ -7,6 +7,7 @@ import Button from '@/components/Button';
 import { useRecommendTravelDetailStore } from '@/store/useRecommendTravelStore';
 import { getRouteTime } from '@/lib/api/route';
 import { Attraction, DailyScheduleDtos } from '@/lib/api/itinerary';
+import debounce from 'lodash.debounce';
 
 const fetchTravelTime = async (
     current: Attraction,
@@ -50,7 +51,7 @@ const fetchTravelTime = async (
     }
 };
 
-const updatePlaceInfos = async (places: Attraction[]): Promise<Attraction[]> => {
+const calculateScheduleTimes = async (places: Attraction[]): Promise<Attraction[]> => {
     if (!places) return [];
 
     const updatedPlaces: Attraction[] = await Promise.all(
@@ -71,7 +72,7 @@ const updatePlaceInfos = async (places: Attraction[]): Promise<Attraction[]> => 
         })
     );
 
-    return [...updatedPlaces];
+    return updatedPlaces;
 };
 
 const TravelSchedulePage: React.FC = () => {
@@ -94,7 +95,7 @@ const TravelSchedulePage: React.FC = () => {
                         };
                     }
 
-                    const updatedPlaces = await updatePlaceInfos(schedule.attractions);
+                    const updatedPlaces = await calculateScheduleTimes(schedule.attractions);
                     return {
                         dayDate: schedule.dayDate,
                         attractions: updatedPlaces
@@ -115,8 +116,18 @@ const TravelSchedulePage: React.FC = () => {
         fetchData();
     }, [itinerary]);
 
-    const handleReorder = async (dayDate: number, newOrder: Attraction[]) => {
-        const updatedPlaces = await updatePlaceInfos([...newOrder]);
+
+    const handleReorder = debounce(async (dayDate: number, newOrder: Attraction[]) => {
+        const updatedPlaces = await calculateScheduleTimes(newOrder);
+
+        const updatedDailySchedules = JSON.parse(JSON.stringify(
+            (itinerary?.dailyScheduleDtos ?? []).map((schedule) =>
+                schedule.dayDate === dayDate
+                    ? { ...schedule, attractions: updatedPlaces }
+                    : schedule
+            )
+        ));
+
         updateItinerary({
             id: itinerary?.id ?? 0,
             title: itinerary?.title ?? '',
@@ -124,13 +135,10 @@ const TravelSchedulePage: React.FC = () => {
             createdAt: itinerary?.createdAt ?? 0,
             isPublic: itinerary?.isPublic ?? false,
             isSaved: itinerary?.isSaved ?? false,
-            dailyScheduleDtos: (itinerary?.dailyScheduleDtos ?? []).map((schedule) =>
-                schedule.dayDate === dayDate
-                    ? { ...schedule, attractions: updatedPlaces }
-                    : schedule
-            )
+            dailyScheduleDtos: updatedDailySchedules
         });
-    };
+    }, 500); // 500ms 디바운스 설정
+
 
     const handleSave = () => {
         console.log('✅ 저장된 일정:', itinerary?.dailyScheduleDtos);
@@ -156,7 +164,7 @@ const TravelSchedulePage: React.FC = () => {
                 <section className='w-full flex flex-col gap-5'>
                     {itinerary?.dailyScheduleDtos.map((schedule, index) => (
                         <DayScheduleCard
-                            key={`${schedule.dayDate ?? 'no-date'}-${index}`}
+                            key={`${schedule.dayDate ?? 'no-date'}-${index}-${JSON.stringify(schedule.attractions)}`}
                             dailySchedule={schedule}
                             onReorder={(newOrder) => handleReorder(schedule.dayDate, newOrder)}
                         />
@@ -173,7 +181,7 @@ const TravelSchedulePage: React.FC = () => {
                     </Button>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 
