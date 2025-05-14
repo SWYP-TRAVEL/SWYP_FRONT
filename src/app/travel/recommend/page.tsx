@@ -4,29 +4,79 @@ import Button from "@/components/Button";
 import Card from "@/components/Card";
 import Text from "@/components/Text";
 import { createItinerary, type RecommendResponse } from "@/lib/api/itinerary";
-import { useRecommendTravelListStore, useUserInputStore } from "@/store/useRecommendTravelStore";
-import Image from "next/image";
+import { useRecommendTravelDetailStore, useRecommendTravelListStore, useUserInputStore } from "@/store/useRecommendTravelStore";
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useModal } from '@/hooks/useModal';
+import { useState, useEffect } from 'react';
+import FullScreenLoader from '@/components/FullScreenLoader';
+import ConfirmModal from "@/components/modals/ConfirmModal";
+import UserInputSummary from "@/components/UserInputSummary";
 
 export default function TravelRecommendPage() {
   const travelData = useRecommendTravelListStore((state) => state.items);
   const userInputs = useUserInputStore((state) => state.inputs);
+  const router = useRouter();
+  const [selectedTravel, setSelectedTravel] = useState<RecommendResponse | null>(null);
 
-  const onClickTravelCard = async (data: RecommendResponse) => {
+  const travelConfirmModal = useModal(() => {
+    return (
+      <ConfirmModal
+        title="이 여행지를 선택하시겠어요?"
+        description="맞는지 한 번 더 확인해주세요!"
+        cancelText="다시 선택하기"
+        onCancel={travelConfirmModal.close}
+        confirmText="일정 생성하기"
+        onConfirm={onConfirmCreateItinerary}
+      >
+        {selectedTravel ? (
+          <UserInputSummary
+            companion={userInputs?.travelWith || ''}
+            period={`${userInputs?.duration || 1}박 ${(userInputs?.duration || 1) + 1}일`}
+            inputText={userInputs?.description || ''}
+          />
+        ) : (
+          <p>여행지 정보를 불러오는 중입니다...</p>
+        )}
+      </ConfirmModal>
+    );
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (selectedTravel) {
+      travelConfirmModal.open();
+    }
+  }, [selectedTravel]);
+
+  const onClickTravelCard = (data: RecommendResponse) => {
+    setSelectedTravel(data);
+  };
+
+  const onConfirmCreateItinerary = async () => {
     try {
+      setIsLoading(true);
+
       const params = {
-        travelWith: userInputs?.travelWith || '',
-        startDate: userInputs?.startDate || '',
+        travelWith: userInputs?.travelWith || "",
+        startDate: userInputs?.startDate || "",
         duration: userInputs?.duration || -1,
-        description: userInputs?.description || '',
-        theme: data.theme,
-        latitude: data.latitude,
-        longitude: data.longitude,
+        description: userInputs?.description || "",
+        theme: selectedTravel?.theme || '',
+        latitude: selectedTravel?.latitude || 0,
+        longitude: selectedTravel?.longitude || 0,
       };
       const result = await createItinerary(params);
-      console.log('사용자 입력 바탕으로 여행 일정 생성 ::: ', result);
+
+      if (result) {
+        useRecommendTravelDetailStore.getState().setItinerary(result);
+        router.push("/travel/detail");
+      }
     } catch (err) {
-      //
+      console.error("일정 생성 중 오류 발생:", err);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -72,6 +122,8 @@ export default function TravelRecommendPage() {
           다른 추천은 1회만 가능해요!
         </Text>
       </div>
+
+      {isLoading ? <FullScreenLoader /> : null}
     </main>
   );
 }
