@@ -53,7 +53,6 @@ const fetchTravelTime = async (
 const updatePlaceInfos = async (places: Attraction[]): Promise<Attraction[]> => {
     if (!places) return [];
 
-    console.log(places);
     const updatedPlaces: Attraction[] = await Promise.all(
         places.map(async (currentPlace, index) => {
             const nextPlace = places[index + 1];
@@ -77,56 +76,64 @@ const updatePlaceInfos = async (places: Attraction[]): Promise<Attraction[]> => 
 
 const TravelSchedulePage: React.FC = () => {
     const itinerary = useRecommendTravelDetailStore((state) => state.itinerary);
-    const [groupedPlaces, setGroupedPlaces] = useState<DailyScheduleDtos[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const updateItinerary = useRecommendTravelDetailStore((state) => state.setItinerary);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
-            if (itinerary?.dailyScheduleDtos && itinerary.dailyScheduleDtos.length > 0) {
-                console.log("✅ Store에서 받아온 itinerary:", itinerary);
+            if (!itinerary?.dailyScheduleDtos || isLoading) {
+                return;
+            }
 
-                const updatedData: DailyScheduleDtos[] = await Promise.all(
-                    itinerary.dailyScheduleDtos.map(async (schedule) => {
-                        if (!schedule.attractions) {
-                            console.warn(`⚠️ day ${schedule.dayDate}의 attractions가 null 또는 undefined 입니다.`);
-                            return {
-                                dayDate: schedule.dayDate,
-                                attractions: []
-                            };
-                        }
-
-                        const updatedPlaces = await updatePlaceInfos(schedule.attractions);
+            const updatedData: DailyScheduleDtos[] = await Promise.all(
+                itinerary.dailyScheduleDtos.map(async (schedule) => {
+                    if (!schedule.attractions) {
                         return {
                             dayDate: schedule.dayDate,
-                            attractions: updatedPlaces
+                            attractions: []
                         };
-                    })
-                );
+                    }
 
-                console.log("✅ 업데이트된 장소 정보:", updatedData);
+                    const updatedPlaces = await updatePlaceInfos(schedule.attractions);
+                    return {
+                        dayDate: schedule.dayDate,
+                        attractions: updatedPlaces
+                    };
+                })
+            );
 
-                setGroupedPlaces(updatedData);
-                setIsLoading(false);
-            } else {
-                console.log("⏳ 데이터가 아직 로딩되지 않았습니다.");
+            if (JSON.stringify(itinerary.dailyScheduleDtos) !== JSON.stringify(updatedData)) {
+                updateItinerary({
+                    ...itinerary,
+                    dailyScheduleDtos: updatedData
+                });
             }
+
+            setIsLoading(false);
         };
+
         fetchData();
     }, [itinerary]);
 
     const handleReorder = async (dayDate: number, newOrder: Attraction[]) => {
         const updatedPlaces = await updatePlaceInfos([...newOrder]);
-        setGroupedPlaces((prev) =>
-            prev.map((schedule) =>
+        updateItinerary({
+            id: itinerary?.id ?? 0,
+            title: itinerary?.title ?? '',
+            createdBy: itinerary?.createdBy ?? 0,
+            createdAt: itinerary?.createdAt ?? 0,
+            isPublic: itinerary?.isPublic ?? false,
+            isSaved: itinerary?.isSaved ?? false,
+            dailyScheduleDtos: (itinerary?.dailyScheduleDtos ?? []).map((schedule) =>
                 schedule.dayDate === dayDate
                     ? { ...schedule, attractions: updatedPlaces }
                     : schedule
             )
-        );
+        });
     };
 
     const handleSave = () => {
-        console.log('✅ 저장된 일정:', groupedPlaces);
+        console.log('✅ 저장된 일정:', itinerary?.dailyScheduleDtos);
     };
 
     if (isLoading) {
@@ -147,7 +154,7 @@ const TravelSchedulePage: React.FC = () => {
                 </section>
 
                 <section className='w-full flex flex-col gap-5'>
-                    {groupedPlaces.map((schedule, index) => (
+                    {itinerary?.dailyScheduleDtos.map((schedule, index) => (
                         <DayScheduleCard
                             key={`${schedule.dayDate ?? 'no-date'}-${index}`}
                             dailySchedule={schedule}
