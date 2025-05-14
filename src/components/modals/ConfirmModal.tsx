@@ -25,7 +25,7 @@ export default function ConfirmModal({
     <BaseModal onClose={onCancel}>
       <Text as='h2' textStyle='heading1' className='font-semibold text-center'>{title}</Text>
       {description ? (
-        <Text as='p' textStyle='body1' className='text-center text-semantic-label-alternative mt-3'>
+        <Text as='p' textStyle='body1' className='whitespace-pre-line text-center text-semantic-label-alternative mt-3'>
           {description}
         </Text>
       ) : null}

@@ -3,6 +3,7 @@ interface TextFieldProps {
   value: string;
   onChange: (value: string) => void;
   variant?: "filled" | "outlined";
+  disabled?: boolean;
 }
 
 export default function TextField({
@@ -10,6 +11,7 @@ export default function TextField({
   value,
   onChange,
   variant = "outlined",
+  ...otherProps
 }: TextFieldProps) {
   const baseClass =
     "w-full p-4 text-sm rounded-xl outline-none resize-none transition-colors";
@@ -26,6 +28,7 @@ export default function TextField({
       onChange={(e) => onChange(e.target.value)}
       className={`${baseClass} ${variantClass}`}
       rows={4}
+      {...otherProps}
     />
   );
 }

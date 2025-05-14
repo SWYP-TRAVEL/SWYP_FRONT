@@ -31,7 +31,7 @@ export default {
           { lineHeight: "26px", letterSpacing: "0.0069em" },
         ],
         label1: ["14px", { lineHeight: "20px", letterSpacing: "0.0145em" }],
-        label1Normal: [
+        label1Reading: [
           "14px",
           { lineHeight: "20px", letterSpacing: "0.0145em" },
         ],
