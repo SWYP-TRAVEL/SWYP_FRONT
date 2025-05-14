@@ -1,16 +1,17 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import DayScheduleCard, { PlaceInfo } from '@/components/ScheduleCard';
+import DayScheduleCard from '@/components/ScheduleCard';
 import Text from '@/components/Text';
 import Button from '@/components/Button';
 import { useRecommendTravelDetailStore } from '@/store/useRecommendTravelStore';
 import { getRouteTime } from '@/lib/api/route';
+import { Attraction, DailyScheduleDtos } from '@/lib/api/itinerary';
 
 const fetchTravelTime = async (
-    current: PlaceInfo,
-    next: PlaceInfo
-): Promise<PlaceInfo> => {
+    current: Attraction,
+    next: Attraction
+): Promise<Attraction> => {
     if (
         current.latitude === undefined ||
         current.longitude === undefined ||
@@ -49,8 +50,11 @@ const fetchTravelTime = async (
     }
 };
 
-const updatePlaceInfos = async (places: PlaceInfo[]): Promise<PlaceInfo[]> => {
-    const updatedPlaces: PlaceInfo[] = await Promise.all(
+const updatePlaceInfos = async (places: Attraction[]): Promise<Attraction[]> => {
+    if (!places) return [];
+
+    console.log(places);
+    const updatedPlaces: Attraction[] = await Promise.all(
         places.map(async (currentPlace, index) => {
             const nextPlace = places[index + 1];
 
@@ -71,79 +75,63 @@ const updatePlaceInfos = async (places: PlaceInfo[]): Promise<PlaceInfo[]> => {
     return [...updatedPlaces];
 };
 
-const mapToPlaceInfo = async (dailyScheduleDtos: any[]): Promise<Record<number, PlaceInfo[]>> => {
-    const grouped: Record<number, PlaceInfo[]> = {};
-
-    for (const dto of dailyScheduleDtos) {
-        const place: PlaceInfo = {
-            title: dto.attractions.name,
-            subtitle: `${dto.attractions.type} / ${dto.attractions.description}`,
-            address: dto.attractions.address || '주소 정보 없음',
-            hours: dto.attractions.businessTime || '운영 시간 정보 없음',
-            rating: dto.attractions.rating,
-            imageUrl: dto.attractions.coverImage || 'https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=5dc87836-b647-45ef-ae17-e3247f91b8b4',
-            travelWalkTime: '정보 없음',
-            travelCarTime: '정보 없음',
-            travelDistance: '정보 없음',
-            latitude: dto.attractions.latitude,
-            longitude: dto.attractions.longitude
-        };
-
-        if (!grouped[dto.dayDate]) {
-            grouped[dto.dayDate] = [];
-        }
-        grouped[dto.dayDate].push(place);
-    }
-
-    for (const key in grouped) {
-        grouped[key] = await updatePlaceInfos(grouped[key]);
-    }
-
-    return grouped;
-};
-
 const TravelSchedulePage: React.FC = () => {
     const itinerary = useRecommendTravelDetailStore((state) => state.itinerary);
-    const [groupedPlaces, setGroupedPlaces] = useState<Record<number, PlaceInfo[]>>({});
+    const [groupedPlaces, setGroupedPlaces] = useState<DailyScheduleDtos[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
-            if (itinerary?.dailyScheduleDtos) {
-                const mappedPlaces = await mapToPlaceInfo(itinerary.dailyScheduleDtos);
-                setGroupedPlaces(mappedPlaces);
+            if (itinerary?.dailyScheduleDtos && itinerary.dailyScheduleDtos.length > 0) {
+                console.log("✅ Store에서 받아온 itinerary:", itinerary);
+
+                const updatedData: DailyScheduleDtos[] = await Promise.all(
+                    itinerary.dailyScheduleDtos.map(async (schedule) => {
+                        if (!schedule.attractions) {
+                            console.warn(`⚠️ day ${schedule.dayDate}의 attractions가 null 또는 undefined 입니다.`);
+                            return {
+                                dayDate: schedule.dayDate,
+                                attractions: []
+                            };
+                        }
+
+                        const updatedPlaces = await updatePlaceInfos(schedule.attractions);
+                        return {
+                            dayDate: schedule.dayDate,
+                            attractions: updatedPlaces
+                        };
+                    })
+                );
+
+                console.log("✅ 업데이트된 장소 정보:", updatedData);
+
+                setGroupedPlaces(updatedData);
+                setIsLoading(false);
+            } else {
+                console.log("⏳ 데이터가 아직 로딩되지 않았습니다.");
             }
         };
         fetchData();
     }, [itinerary]);
 
-    const handleReorder = async (day: number, newOrder: PlaceInfo[]) => {
+    const handleReorder = async (dayDate: number, newOrder: Attraction[]) => {
         const updatedPlaces = await updatePlaceInfos([...newOrder]);
-        setGroupedPlaces((prev) => {
-            const newGroupedPlaces = JSON.parse(JSON.stringify(prev));
-            newGroupedPlaces[day] = updatedPlaces;
-            return newGroupedPlaces;
-        });
+        setGroupedPlaces((prev) =>
+            prev.map((schedule) =>
+                schedule.dayDate === dayDate
+                    ? { ...schedule, attractions: updatedPlaces }
+                    : schedule
+            )
+        );
     };
 
     const handleSave = () => {
-        const updatedDtos = Object.entries(groupedPlaces).flatMap(([day, places]) =>
-            places.map((place) => ({
-                dayDate: Number(day),
-                attractions: {
-                    id: null,
-                    type: place.subtitle.split(' / ')[0],
-                    name: place.title,
-                    address: place.address,
-                    description: place.subtitle.split(' / ')[1],
-                    coverImage: place.imageUrl,
-                    businessTime: place.hours,
-                    rating: place.rating,
-                    latitude: place.latitude,
-                    longitude: place.longitude
-                }
-            }))
-        );
+        console.log('✅ 저장된 일정:', groupedPlaces);
     };
+
+    if (isLoading) {
+        return <div className="flex items-center justify-center h-full">⏳ 로딩 중...</div>;
+    }
 
     return (
         <div className='flex h-[calc(100vh-60px)] max-w-[100vw] overflow-hidden'>
@@ -152,17 +140,18 @@ const TravelSchedulePage: React.FC = () => {
                     <Text textStyle='headline1' className='mb-[8px] text-gray-600'>
                         {itinerary?.title || '여행 일정'}
                     </Text>
-                    <Text textStyle='title2' className='font-bold mb-[40px]'>{`휴식이 필요한 유정님을 위한 ${itinerary?.title || '여행코스'}`}</Text>
+                    <Text textStyle='title2' className='font-bold mb-[40px]'>
+                        {`휴식이 필요한 유정님을 위한 ${itinerary?.title || '여행코스'}`}
+                    </Text>
                     <Text textStyle='title3' className='font-bold'>일정</Text>
                 </section>
 
                 <section className='w-full flex flex-col gap-5'>
-                    {Object.entries(groupedPlaces).map(([dayNumber, places]) => (
+                    {groupedPlaces.map((schedule) => (
                         <DayScheduleCard
-                            key={`${dayNumber}-${JSON.stringify(places)}`}
-                            dayNumber={Number(dayNumber)}
-                            places={places}
-                            onReorder={(newOrder) => handleReorder(Number(dayNumber), newOrder)}
+                            key={`${schedule.dayDate}-${JSON.stringify(schedule.attractions)}`}
+                            dailySchedule={schedule}
+                            onReorder={(newOrder) => handleReorder(schedule.dayDate, newOrder)}
                         />
                     ))}
                 </section>
