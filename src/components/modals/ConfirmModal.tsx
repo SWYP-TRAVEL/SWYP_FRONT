@@ -10,6 +10,7 @@ interface ConfirmModalProps {
   children?: React.ReactNode;
   cancelText: string;
   confirmText: string;
+  onClose?: () => void;
 }
 
 export default function ConfirmModal({
@@ -19,10 +20,11 @@ export default function ConfirmModal({
   onConfirm,
   children,
   cancelText,
-  confirmText
+  confirmText,
+  onClose
 }: ConfirmModalProps) {
   return (
-    <BaseModal onClose={onCancel}>
+    <BaseModal onClose={onClose ? onClose : onCancel}>
       <Text as='h2' textStyle='heading1' className='font-semibold text-center'>{title}</Text>
       {description ? (
         <Text as='p' textStyle='body1' className='whitespace-pre-line text-center text-semantic-label-alternative mt-3'>
