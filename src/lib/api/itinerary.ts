@@ -39,7 +39,7 @@ export interface ItineraryDetail {
 export const getItineraryDetails = async (id: number): Promise<ItineraryDetail[]> => {
     try {
         const response = await axiosInstance.get<ItineraryDetail[]>(`/itinerary/lists/${id}`);
-        const mergedItineraries = response.data.map((itinerary) =>
+        const mergedItineraries = response.data.map((itinerary: ItineraryDetail) =>
             mergeItineraryByDate(itinerary)
         );
 
@@ -152,8 +152,17 @@ export const saveItinerary = async (
     }
 };
 
-export const getRecommendText = async (params: string) => {
-
+export const getRecommendText = async (params: string = '') => {
+    try {
+        const response = await axiosInstance.get<string>('/itinerary/recommend/text', {
+            params: {
+                input: params
+            }
+        });
+        return response.data;
+    } catch (err: any) {
+        throw new Error(err.response?.data.message || "여행테마 추천 검색어 불러오기에 실패했습니다.");
+    }
 }
 
 // DailyScheduleDtos가 같은 date임에도 각각 오는 이슈가 있음 (묶어주는 함수)
@@ -189,3 +198,4 @@ export const mergeItineraryByDate = (itinerary: ItineraryDetail): ItineraryDetai
         dailyScheduleDtos: mergedItinerary
     };
 };
+

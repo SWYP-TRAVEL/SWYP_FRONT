@@ -1,4 +1,5 @@
 import { ItineraryDetail, type RecommendResponse } from "@/lib/api/itinerary";
+
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -13,6 +14,7 @@ interface UserInput {
   description: string;
   duration: number;
   startDate: string;
+  requestCount: number;
 }
 
 interface UserInputStore {
