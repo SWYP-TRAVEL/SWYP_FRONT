@@ -8,6 +8,9 @@ import { useRecommendTravelDetailStore } from '@/store/useRecommendTravelStore';
 import { getRouteTime } from '@/lib/api/route';
 import { Attraction, DailyScheduleDtos } from '@/lib/api/itinerary';
 import debounce from 'lodash.debounce';
+import ConfirmModal from '@/components/modals/ConfirmModal';
+import { useModal } from '@/hooks/useModal';
+import ConfirmSaveItinerary from '@/components/ConfirmSaveItinerary';
 
 const fetchTravelTime = async (
     current: Attraction,
@@ -80,6 +83,26 @@ const TravelSchedulePage: React.FC = () => {
     const updateItinerary = useRecommendTravelDetailStore((state) => state.setItinerary);
     const [isLoading, setIsLoading] = useState(false);
 
+    const [checked, setCheckd] = useState(false)
+
+    const confirmSaveModal = useModal(() => (
+        <ConfirmModal
+            title='이대로 세부 일정을 저장할까요?'
+            description='한번 저장한 이후에는 수정이 어려워요.'
+            cancelText='다시 편집하기'
+            onCancel={confirmSaveModal.close}
+            confirmText='저장하기'
+            onConfirm={() => { }}
+        >
+            <>
+                <ConfirmSaveItinerary
+                    title='강릉 1박 2일 여행코스'
+                    onChange={setCheckd}
+                />
+            </>
+        </ConfirmModal>
+    ))
+
     useEffect(() => {
         const fetchData = async () => {
             if (!itinerary?.dailyScheduleDtos || isLoading) {
@@ -142,6 +165,7 @@ const TravelSchedulePage: React.FC = () => {
 
     const handleSave = () => {
         console.log('✅ 저장된 일정:', itinerary?.dailyScheduleDtos);
+        confirmSaveModal.open();
     };
 
     if (isLoading) {
