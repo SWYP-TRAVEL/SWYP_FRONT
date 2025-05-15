@@ -26,12 +26,15 @@ export function ModalProvider({ children }: { children: ReactNode }) {
     <ModalContext.Provider value={{ openModal, closeModal }}>
       {children}
       {modals.map((ModalComponent, index) => (
-        <div key={index} className="fixed inset-0 z-[1000 + index]">
+        <div
+          key={index}
+          className={`fixed inset-0 z-[${1000 + index}]`}
+        >
           {ModalComponent}
         </div>
       ))}
     </ModalContext.Provider>
-  );
+  )
 }
 
 export function useModalContext() {
