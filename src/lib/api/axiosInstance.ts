@@ -1,6 +1,7 @@
-import axios from "axios";
-import { useAuthStore } from "@/store/useAuthStore";
 import { reissueToken } from "@/lib/api/auth";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useLoadingStore } from "@/store/useLoadingStore";
+import axios from "axios";
 
 const backendUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -18,16 +19,25 @@ axiosInstance.interceptors.request.use(
     if (user?.accessToken) {
       config.headers.Authorization = `Bearer ${user.accessToken}`;
     }
+    // 로딩 시작
+    useLoadingStore.getState().setLoading(true);
     return config;
   },
   (error) => {
+    useLoadingStore.getState().setLoading(false);
     return Promise.reject(error);
   }
 );
 
 axiosInstance.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // 로딩 끝
+    useLoadingStore.getState().setLoading(false);
+    return response
+  },
   async (error) => {
+    useLoadingStore.getState().setLoading(false);
+
     const originalRequest = error.config;
 
     // 🔍 만약 토큰 재발급 요청이면 인터셉터가 잡지 않도록 한다.
@@ -65,6 +75,5 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
 
 export default axiosInstance;
