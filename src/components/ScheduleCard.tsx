@@ -5,7 +5,6 @@ import DetailCard from "./DetailCard";
 import Text from "./Text";
 import { Reorder } from "framer-motion";
 import { Attraction, DailyScheduleDtos } from "@/lib/api/itinerary";
-import { changeAttraction } from "@/lib/api/itinerary";
 import { useRecommendTravelDetailStore } from "@/store/useRecommendTravelStore";
 
 type DayScheduleCardProps = {
@@ -21,6 +20,9 @@ const DayScheduleCard: React.FC<DayScheduleCardProps> = ({ dailySchedule }) => {
         setIsExpanded(!isExpanded);
     };
 
+    /**
+     * ✅ 순서 변경 시 Store에 직접 반영
+     */
     const handleReorder = (newOrder: Attraction[]) => {
         updateItinerary([
             {
@@ -28,24 +30,6 @@ const DayScheduleCard: React.FC<DayScheduleCardProps> = ({ dailySchedule }) => {
                 attractions: newOrder,
             }
         ]);
-    };
-
-    const handleUpdateAttraction = async (updatedAttraction: Attraction) => {
-        try {
-            const response = await changeAttraction(updatedAttraction);
-            const updatedAttractions = dailySchedule.attractions.map((item) =>
-                item.name === updatedAttraction.name ? response : item
-            );
-
-            updateItinerary([
-                {
-                    ...dailySchedule,
-                    attractions: updatedAttractions,
-                }
-            ]);
-        } catch (error) {
-            console.error("업데이트 실패:", error);
-        }
     };
 
     return (
@@ -91,7 +75,6 @@ const DayScheduleCard: React.FC<DayScheduleCardProps> = ({ dailySchedule }) => {
                                     rating={place.rating}
                                     imageUrl={place.coverImage}
                                     attractionData={place}
-                                    onUpdate={handleUpdateAttraction}
                                 />
 
                                 {index < dailySchedule.attractions.length - 1 && (

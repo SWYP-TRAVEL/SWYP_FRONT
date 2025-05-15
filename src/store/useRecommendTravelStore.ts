@@ -169,7 +169,12 @@ export const useRecommendTravelDetailStore = create<RecommendTravelDetailStore>(
 
               const updatedAttractions = await calculateScheduleTimes(
                 schedule.attractions.map((attraction) =>
-                  attraction.name === oldAttraction.name ? newAttraction : attraction
+                  attraction.name === oldAttraction.name
+                    ? {
+                      ...newAttraction,
+                      previousData: JSON.parse(JSON.stringify(attraction)),
+                    }
+                    : attraction
                 )
               );
 

@@ -1,6 +1,10 @@
+"use client";
+
 import React from "react";
 import Text from "./Text";
 import { Attraction } from "@/lib/api/itinerary";
+import { useRecommendTravelDetailStore } from "@/store/useRecommendTravelStore";
+import { changeAttraction } from "@/lib/api/itinerary";
 
 type DetailCardProps = {
     title: string;
@@ -10,7 +14,6 @@ type DetailCardProps = {
     rating: number;
     imageUrl: string;
     attractionData: Attraction;
-    onUpdate: (attraction: Attraction) => void;
 };
 
 const DetailCard: React.FC<DetailCardProps> = ({
@@ -21,19 +24,32 @@ const DetailCard: React.FC<DetailCardProps> = ({
     rating,
     imageUrl,
     attractionData,
-    onUpdate,
 }) => {
-    // 📝 클릭 시 상위로 업데이트 요청만 보냄
-    const handleUpdateClick = () => {
-        onUpdate({
-            ...attractionData,
-            name: title,
-            address,
-            description: subtitle,
-            businessTime: hours,
-            rating,
-            coverImage: imageUrl,
-        });
+    const updateAttraction = useRecommendTravelDetailStore((state) => state.updateAttraction);
+
+    const handleUpdateClick = async () => {
+        try {
+            const updatedAttraction = {
+                ...attractionData,
+                name: title,
+                address,
+                description: subtitle,
+                businessTime: hours,
+                rating,
+                coverImage: imageUrl,
+            };
+
+            const response = await changeAttraction(updatedAttraction);
+            updateAttraction(attractionData, response);
+        } catch (error) {
+            console.error("업데이트 실패:", error);
+        }
+    };
+
+    const handleRollbackClick = () => {
+        if (attractionData.previousData) {
+            updateAttraction(attractionData, attractionData.previousData);
+        }
     };
 
     return (
@@ -81,11 +97,19 @@ const DetailCard: React.FC<DetailCardProps> = ({
 
                 <div className="w-6 h-full flex flex-col items-center gap-2">
                     <img
-                        src="/icons/ReSet.svg"
+                        src="/icons/Re_request.svg"
                         alt="icon"
                         className="w-6 h-6 object-contain cursor-pointer"
                         onClick={handleUpdateClick}
                     />
+                    {attractionData.previousData && (
+                        <img
+                            src="/icons/Reset.svg"
+                            alt="ReSet icon"
+                            className="w-6 h-6 object-contain cursor-pointer"
+                            onClick={handleRollbackClick}
+                        />
+                    )}
                 </div>
             </div>
         </div>
