@@ -5,41 +5,31 @@ import DetailCard from "./DetailCard";
 import Text from "./Text";
 import { Reorder } from "framer-motion";
 import { Attraction, DailyScheduleDtos } from "@/lib/api/itinerary";
-import { changeAttraction } from "@/lib/api/itinerary";
+import { useRecommendTravelDetailStore } from "@/store/useRecommendTravelStore";
 
 type DayScheduleCardProps = {
     dailySchedule: DailyScheduleDtos;
-    onReorder: (newOrder: Attraction[]) => void;
 };
 
-const DayScheduleCard: React.FC<DayScheduleCardProps> = ({ dailySchedule, onReorder }) => {
+const DayScheduleCard: React.FC<DayScheduleCardProps> = ({ dailySchedule }) => {
     const [isExpanded, setIsExpanded] = useState(true);
-    const [items, setItems] = useState<Attraction[]>(dailySchedule.attractions);
     const contentRef = useRef<HTMLDivElement>(null);
+    const updateItinerary = useRecommendTravelDetailStore((state) => state.updateItinerary);
 
     const handleExpandClick = () => {
         setIsExpanded(!isExpanded);
     };
 
+    /**
+     * ✅ 순서 변경 시 Store에 직접 반영
+     */
     const handleReorder = (newOrder: Attraction[]) => {
-        setItems(newOrder);
-        onReorder(newOrder);
-    };
-
-    const handleUpdateAttraction = async (updatedAttraction: Attraction) => {
-        console.log(items);
-        console.log(updatedAttraction);
-        try {
-            const response = await changeAttraction(updatedAttraction);
-            const updatedItems = items.map((item) =>
-                item.name === updatedAttraction.name ? response : item
-            );
-            console.log(response);
-            setItems(updatedItems);
-            onReorder(updatedItems);
-        } catch (error) {
-            console.error("업데이트 실패:", error);
-        }
+        updateItinerary([
+            {
+                ...dailySchedule,
+                attractions: newOrder,
+            }
+        ]);
     };
 
     return (
@@ -70,12 +60,12 @@ const DayScheduleCard: React.FC<DayScheduleCardProps> = ({ dailySchedule, onReor
             >
                 <Reorder.Group
                     axis="y"
-                    values={items}
+                    values={dailySchedule.attractions}
                     onReorder={handleReorder}
                     className="flex flex-col gap-2"
                 >
-                    {items.map((place, index) => (
-                        <Reorder.Item key={place.id ?? place.name} value={place}>
+                    {dailySchedule.attractions.map((place, index) => (
+                        <Reorder.Item key={place.name} value={place}>
                             <div className="relative flex flex-col gap-2">
                                 <DetailCard
                                     title={place.name}
@@ -85,13 +75,11 @@ const DayScheduleCard: React.FC<DayScheduleCardProps> = ({ dailySchedule, onReor
                                     rating={place.rating}
                                     imageUrl={place.coverImage}
                                     attractionData={place}
-                                    onUpdate={handleUpdateAttraction}
                                 />
 
-                                {index < items.length - 1 && (
+                                {index < dailySchedule.attractions.length - 1 && (
                                     <div className="flex items-center w-full pl-[60px] pr-[60px] py-[4px] gap-2">
                                         <div className="w-[2px] h-[40px] bg-[url('/icons/DotLine.svg')] bg-repeat-y bg-center" />
-
                                         {place.travelWalkTime && (
                                             <div className="flex items-center gap-2">
                                                 <img src="/icons/Walk.svg" alt="walk icon" className="w-5 h-5" />

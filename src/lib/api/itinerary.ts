@@ -14,6 +14,7 @@ export interface Attraction {
     travelWalkTime?: string;
     travelCarTime?: string;
     travelDistance?: string;
+    previousData?: Attraction;
 }
 
 export interface DailyScheduleDtos {
