@@ -156,28 +156,49 @@ export default function MyPage() {
                     onMouseLeave={handleMouseLeave}
                     className="overflow-x-auto scrollbar-hide snap-x snap-mandatory cursor-grab active:cursor-grabbing select-none"
                 >
-                    <div className="flex gap-4 w-max pr-4">
-                        {courseList.map((course) => (
-                            <Card
-                                key={course.id}
-                                size="small"
-                                region={course.title}
-                                distanceInfo="알 수 없음"
-                                imageUrl={course.image_url[0]}
-                            />
-                        ))}
-                    </div>
-                    <div className="flex justify-center items-center mt-[16px] bg-[#F8F8F8] px-[20px] py-[12px] rounded-[12px]">
-                        <button className="flex items-center gap-2 text-gray-600 text-sm font-medium">
-                            <span>더보기</span>
-                            <Image
-                                src="/icons/Chevron Down.svg"
-                                alt="chevron down"
-                                width={12}
-                                height={12}
-                            />
-                        </button>
-                    </div>
+                    {courseList.length > 0 ? <>
+                        <div className="flex gap-4 w-max pr-4">
+                            {courseList.map((course) => (
+                                <Card
+                                    key={course.id}
+                                    size="small"
+                                    region={course.title}
+                                    distanceInfo="알 수 없음"
+                                    imageUrl={course.image_url[0]}
+                                />
+                            ))}
+                        </div>
+                        <div className="flex justify-center items-center mt-[16px] bg-[#F8F8F8] px-[20px] py-[12px] rounded-[12px]">
+                            <button className="flex items-center gap-2 text-gray-600 text-sm font-medium">
+                                <span>더보기</span>
+                                <Image
+                                    src="/icons/Chevron Down.svg"
+                                    alt="chevron down"
+                                    width={12}
+                                    height={12}
+                                />
+                            </button>
+                        </div>
+                    </> : <>
+                        <div className="w-[1060px] h-[160px] bg-[#F8F8F8] flex flex-col justify-center items-center rounded-[12px] mt-[16px] p-[20px]">
+                            <Text textStyle='body1' className="text-gray-500 mb-[8px] font-bold">
+                                아직 저장된 여행 코스가 없어요.
+                            </Text>
+                            <Text textStyle='label1' className="text-gray-400 mb-[16px] font-bold">
+                                나에게 꼭 맞는 여행지를 추천받고, 나만의 일정을 만들어보세요!
+                            </Text>
+                            <Button
+                                variant='gradation'
+                                className='text-white font-semibold text-[16px] leading-[24px] tracking-[0.091px] mx-auto'
+                                onClick={() => router.push("/userinputs")}
+                            >
+                                지금 코스 만들러 가기 →
+                            </Button>
+                        </div>
+                    </>
+                    }
+
+
                 </div>
             </section>
             <div className="h-[274px]"></div>
