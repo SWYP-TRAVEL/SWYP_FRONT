@@ -111,8 +111,8 @@ export default function MyPage() {
     };
 
     return (
-        <div className="w-full max-w-[1100px] mx-auto px-4 pt-[60px] pb-[60px] space-y-[84px]">
-            <div className="flex items-center gap-2 mb-8">
+        <div className="w-full flex flex-col gap-[40px] max-w-[1100px] mx-auto px-5 py-[60px]">
+            <div className="flex items-center gap-2 ">
                 <Image
                     src="/icons/Chevron Left Bold.svg"
                     alt="chip icon"
@@ -123,7 +123,23 @@ export default function MyPage() {
                     마이페이지
                 </Text>
             </div>
-
+            <div className="flex items-center bg-white py-[20px] px-[28px] rounded-lg shadow-md gap-4">
+                <Image
+                    src="/icons/kakao_round.png"
+                    alt="profile"
+                    width={52}
+                    height={52}
+                    className="rounded-full"
+                />
+                <div className="flex flex-col justify-center">
+                    <Text as="p" textStyle="headline1" className="font-semibold text-left text-[18px] text-[#404040] font-pretendard leading-[144.5%] tracking-[-0.004px]">
+                        안유정
+                    </Text>
+                    <Text as="p" textStyle="label1" className="text-gray-500">
+                        카카오 계정 연결 2025.05.10
+                    </Text>
+                </div>
+            </div>
             <section className="space-y-4 mb-5">
                 <div className="flex items-center gap-2 mb-5">
                     <Text textStyle="heading2" className="font-bold">
@@ -151,37 +167,20 @@ export default function MyPage() {
                             />
                         ))}
                     </div>
-                </div>
-            </section>
-
-            <section className="space-y-4 mb-5">
-                <div className="flex flex-col gap-2 mb-5">
-                    <Text textStyle="heading2" className="font-bold">
-                        모먼티어 사용경험은 어땠나요?
-                    </Text>
-                </div>
-                <div className="flex flex-col gap-5">
-                    <textarea
-                        value={experience}
-                        onChange={(e) => setExperience(e.target.value)}
-                        className="w-full h-[160px] border border-gray-200 rounded-xl p-4 resize-none focus:outline-none focus:ring-2 focus:ring-[#9A77FF]"
-                        placeholder="편했던 점, 아쉬웠던 점을 자유롭게 적어주세요."
-                    />
-                    {error && <div className="text-red-500">{error}</div>}
-                    <div className="flex justify-end">
-                        <Button
-                            variant="default"
-                            textStyle="label1"
-                            className="font-bold"
-                            onClick={handleExperienceSubmit}
-                            disabled={loading}
-                        >
-                            {loading ? "제출 중..." : "제출하기"}
-                        </Button>
+                    <div className="flex justify-center items-center mt-[16px] bg-[#F8F8F8] px-[20px] py-[12px] rounded-[12px]">
+                        <button className="flex items-center gap-2 text-gray-600 text-sm font-medium">
+                            <span>더보기</span>
+                            <Image
+                                src="/icons/Chevron Down.svg"
+                                alt="chevron down"
+                                width={12}
+                                height={12}
+                            />
+                        </button>
                     </div>
                 </div>
             </section>
-
+            <div className="h-[274px]"></div>
             <div className="w-full flex justify-start pt-10">
                 <div className="flex items-center gap-2 cursor-pointer mb-5">
                     <button
