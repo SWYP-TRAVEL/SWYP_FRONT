@@ -56,6 +56,7 @@ export default function TravelRecommendPage() {
 
   const onConfirmCreateItinerary = async () => {
     try {
+      travelConfirmModal.close();
       setIsLoading(true);
 
       const params = {
