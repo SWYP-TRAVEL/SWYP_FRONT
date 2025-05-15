@@ -1,5 +1,6 @@
 "use client";
 
+import { COMPANIONS, DURATIONS } from "@/app/userinputs/page";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 import FullScreenLoader from '@/components/FullScreenLoader';
@@ -31,6 +32,8 @@ export default function TravelRecommendPage() {
 
   // 카드 클릭 시 컨펌 모달
   const travelConfirmModal = useModal(() => {
+    const companionText = COMPANIONS.find(item => item.value === (userInputs?.travelWith || ''))?.label || '';
+    const durationText = DURATIONS.find(item => item.value === (userInputs?.duration.toString() || ''))?.label || '';
     return (
       <ConfirmModal
         title="이 여행지를 선택하시겠어요?"
@@ -42,8 +45,8 @@ export default function TravelRecommendPage() {
       >
         {selectedTravel ? (
           <UserInputSummary
-            companion={userInputs?.travelWith || ''}
-            period={`${userInputs?.duration || 1}박 ${(userInputs?.duration || 1) + 1}일`}
+            companion={companionText}
+            period={durationText}
             inputText={userInputs?.description || ''}
           />
         ) : (
