@@ -97,7 +97,7 @@ const DetailCard: React.FC<DetailCardProps> = ({
 
                 <div className="w-6 h-full flex flex-col items-center gap-2">
                     <img
-                        src="/icons/Re_request.svg"
+                        src="/icons/Re_Request.svg"
                         alt="icon"
                         className="w-6 h-6 object-contain cursor-pointer"
                         onClick={handleUpdateClick}
