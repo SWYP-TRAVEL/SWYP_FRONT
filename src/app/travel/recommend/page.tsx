@@ -1,6 +1,5 @@
 "use client";
 
-import { COMPANIONS, DURATIONS } from "@/app/userinputs/page";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 import FullScreenLoader from '@/components/FullScreenLoader';
@@ -8,6 +7,7 @@ import AlertModal from "@/components/modals/AlertModal";
 import ConfirmModal from "@/components/modals/ConfirmModal";
 import Text from "@/components/Text";
 import UserInputSummary from "@/components/UserInputSummary";
+import { COMPANIONS, DURATIONS } from "@/constants/UserInputConstants";
 import { useModal } from '@/hooks/useModal';
 import { createItinerary, getRecommendedDestinations, type RecommendResponse } from "@/lib/api/itinerary";
 import { useAuthStore } from "@/store/useAuthStore";
