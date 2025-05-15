@@ -1,5 +1,6 @@
 import React from "react";
 import Text from "./Text";
+import { Attraction } from "@/lib/api/itinerary";
 
 type DetailCardProps = {
     title: string;
@@ -8,6 +9,8 @@ type DetailCardProps = {
     hours: string;
     rating: number;
     imageUrl: string;
+    attractionData: Attraction;
+    onUpdate: (attraction: Attraction) => void;
 };
 
 const DetailCard: React.FC<DetailCardProps> = ({
@@ -17,8 +20,22 @@ const DetailCard: React.FC<DetailCardProps> = ({
     hours,
     rating,
     imageUrl,
-
+    attractionData,
+    onUpdate,
 }) => {
+    // 📝 클릭 시 상위로 업데이트 요청만 보냄
+    const handleUpdateClick = () => {
+        onUpdate({
+            ...attractionData,
+            name: title,
+            address,
+            description: subtitle,
+            businessTime: hours,
+            rating,
+            coverImage: imageUrl,
+        });
+    };
+
     return (
         <div className="flex flex-col border-2 border-gray-300 rounded-2xl shadow-lg bg-[#F8F8F8] w-[880px] h-[208px] hover:border-[#9A77FF] transition-colors duration-200">
             <div className="flex p-6 gap-4">
@@ -61,16 +78,17 @@ const DetailCard: React.FC<DetailCardProps> = ({
                         className="object-cover w-full h-full"
                     />
                 </div>
+
                 <div className="w-6 h-full flex flex-col items-center gap-2">
                     <img
                         src="/icons/ReSet.svg"
                         alt="icon"
-                        className="w-6 h-6 object-contain"
+                        className="w-6 h-6 object-contain cursor-pointer"
+                        onClick={handleUpdateClick}
                     />
                 </div>
             </div>
-
-        </div >
+        </div>
     );
 };
 

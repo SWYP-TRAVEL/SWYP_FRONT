@@ -145,7 +145,16 @@ export const saveItinerary = async (
     data: ItineraryDetail
 ): Promise<SaveItineraryResponse> => {
     try {
-        const response = await axiosInstance.patch<SaveItineraryResponse>("/itinerary", data);
+        // attractions가 객체라면 배열로 감싸기
+        const normalizedData = {
+            ...data,
+            dailyScheduleDtos: data.dailyScheduleDtos.map(dto => ({
+                ...dto,
+                attractions: Array.isArray(dto.attractions) ? dto.attractions : [dto.attractions]
+            }))
+        };
+
+        const response = await axiosInstance.patch<SaveItineraryResponse>("/itinerary", normalizedData);
         return response.data;
     } catch (error: any) {
         throw new Error(error.response?.data.message || "여행 코스 저장에 실패했습니다.");
@@ -165,8 +174,28 @@ export const getRecommendText = async (params: string = '') => {
     }
 }
 
+export const changeAttraction = async (
+    data: Attraction
+): Promise<Attraction> => {
+    try {
+        const response = await axiosInstance.post<Attraction>(
+            "/itinerary/change/attraction",
+            data
+        );
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data.message || "관광지 정보를 변경하지 못했습니다.");
+    }
+};
+
+
+
+
+
+
+
 // DailyScheduleDtos가 같은 date임에도 각각 오는 이슈가 있음 (묶어주는 함수)
-export const mergeItineraryByDate = (itinerary: ItineraryDetail): ItineraryDetail => {
+const mergeItineraryByDate = (itinerary: ItineraryDetail): ItineraryDetail => {
     // Map을 사용하여 dayDate 기준으로 그룹화
     const itineraryMap = new Map<number, Attraction[]>();
 
