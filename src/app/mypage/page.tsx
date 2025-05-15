@@ -64,25 +64,6 @@ export default function MyPage() {
         isDragging.current = false;
     };
 
-    const handleExperienceSubmit = async () => {
-        if (experience.trim() === "") {
-            alert("내용을 입력해주세요.");
-            return;
-        }
-
-        setLoading(true);
-        setError(null);
-
-        try {
-            await saveUserExperience(experience);
-            alert("경험이 성공적으로 제출되었습니다!");
-            setExperience("");
-        } catch (err: any) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const handleUnlink = async () => {
         confirmUnlinkModal.open();
@@ -109,6 +90,12 @@ export default function MyPage() {
             alert("계정 탈퇴에 실패하였습니다."); // TODO: window alert?
         }
     };
+
+    const onClickCard = (id: number) => {
+
+    };
+
+    const onClickBack = () => { };
 
     return (
         <div className="w-full flex flex-col gap-[40px] max-w-[1100px] mx-auto px-5 py-[60px]">

@@ -26,7 +26,7 @@ const DetailCard: React.FC<DetailCardProps> = ({
     attractionData,
 }) => {
     const updateAttraction = useRecommendTravelDetailStore((state) => state.updateAttraction);
-
+    console.log(title, '===>', hours)
     const handleUpdateClick = async () => {
         try {
             const updatedAttraction = {
@@ -78,7 +78,7 @@ const DetailCard: React.FC<DetailCardProps> = ({
 
                     <div className="flex items-center gap-2">
                         <img src="/icons/Clock.svg" alt="hours icon" className="w-5 h-5" />
-                        <Text textStyle="body1" className="text-gray-700">{hours}</Text>
+                        <Text textStyle="body1" className="text-gray-700 truncate">{hours}</Text>
                     </div>
 
                     <div className="flex items-center gap-2">

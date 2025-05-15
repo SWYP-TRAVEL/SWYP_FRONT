@@ -87,7 +87,6 @@ export default function UserInputs() {
       return true;
     } catch (err: any) {
       setErrMessage(err.message);
-      confirmRecommendModal.close();
       errModal.open();
       return false;
     } finally {
@@ -107,7 +106,7 @@ export default function UserInputs() {
   };
 
   const onClickContinueRecommend = async () => {
-    // confirmRecommendModal.close();
+    confirmRecommendModal.close();
     const isValid = await handleTravelRecommend();
 
     if (!isValid) return;
