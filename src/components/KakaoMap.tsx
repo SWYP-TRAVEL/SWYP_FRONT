@@ -61,8 +61,8 @@ const KakaoMap: React.FC = () => {
                     if (day.attractions.length > 0) {
                         const firstAttraction = day.attractions[0];
                         if (firstAttraction.latitude && firstAttraction.longitude) {
-                            initialLat = firstAttraction.longitude;
-                            initialLng = firstAttraction.latitude;
+                            initialLat = firstAttraction.latitude;
+                            initialLng = firstAttraction.longitude;
                         }
                         break;
                     }
@@ -83,7 +83,7 @@ const KakaoMap: React.FC = () => {
                 itinerary.dailyScheduleDtos.forEach((day, dayIndex) => {
                     day.attractions.forEach((attraction) => {
                         if (attraction.latitude && attraction.longitude) {
-                            const markerPosition = new kakao.maps.LatLng(attraction.longitude, attraction.latitude);
+                            const markerPosition = new kakao.maps.LatLng(attraction.latitude, attraction.longitude);
 
                             linePath.push(markerPosition);
 
