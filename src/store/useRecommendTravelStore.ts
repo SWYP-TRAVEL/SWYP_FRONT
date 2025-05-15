@@ -204,3 +204,24 @@ export const useRecommendTravelDetailStore = create<RecommendTravelDetailStore>(
     }
   )
 );
+
+
+interface PublicTravelDetailStore {
+  itinerary: ItineraryDetail | null;
+  setItinerary: (value: ItineraryDetail) => void;
+  clearItinerary: () => void;
+}
+
+
+export const usePublicTravelDetailStore = create<PublicTravelDetailStore>()(
+  persist(
+    (set) => ({
+      itinerary: null,
+      setItinerary: (value) => set({ itinerary: value }),
+      clearItinerary: () => set({ itinerary: null }),
+    }),
+    {
+      name: "public-travel-detail",
+    }
+  )
+);

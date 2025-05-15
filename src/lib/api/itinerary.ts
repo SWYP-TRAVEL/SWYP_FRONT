@@ -189,10 +189,14 @@ export const changeAttraction = async (
     }
 };
 
-
-
-
-
+export const getItineraryDetail = async (id: number): Promise<ItineraryDetail> => {
+    try {
+        const response = await axiosInstance.get<ItineraryDetail>(`/itinerary/${id}`);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data.message || "여행 일정을 불러오지 못했습니다.");
+    }
+};
 
 
 // DailyScheduleDtos가 같은 date임에도 각각 오는 이슈가 있음 (묶어주는 함수)
