@@ -1,6 +1,7 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import { useRecommendTravelDetailStore } from '@/store/useRecommendTravelStore';
+"use client";
+import React, { useEffect, useState } from "react";
+import { useRecommendTravelDetailStore, usePublicTravelDetailStore } from "@/store/useRecommendTravelStore";
+import { usePathname } from "next/navigation";
 
 declare global {
     interface Window {
@@ -10,27 +11,35 @@ declare global {
 
 const KakaoMap: React.FC = () => {
     const [isLoaded, setIsLoaded] = useState(false);
-
     const KAKAO_API_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY;
-    const itinerary = useRecommendTravelDetailStore((state) => state.itinerary);
+
+    // ✅ 현재 경로 확인
+    const pathname = usePathname();
+    const isDetailPage = pathname === "/travel/detail";
+    const isDetailIdPage = pathname.startsWith("/travel/detail/");
+
+    // ✅ 상태 분리
+    const itinerary = isDetailPage
+        ? useRecommendTravelDetailStore((state) => state.itinerary)
+        : usePublicTravelDetailStore((state) => state.itinerary);
 
     const colorCycle = [
-        '#FF0000', // 빨강
-        '#FF7F00', // 주황
-        '#FFFF00', // 노랑
-        '#00FF00', // 초록
-        '#0000FF', // 파랑
-        '#4B0082', // 남색
-        '#8B00FF'  // 보라
+        "#FF0000",
+        "#FF7F00",
+        "#FFFF00",
+        "#00FF00",
+        "#0000FF",
+        "#4B0082",
+        "#8B00FF",
     ];
 
     useEffect(() => {
         if (!KAKAO_API_KEY) {
-            console.error('❌ Kakao Map API Key가 설정되지 않았습니다.');
+            console.error("❌ Kakao Map API Key가 설정되지 않았습니다.");
             return;
         }
 
-        const script = document.createElement('script');
+        const script = document.createElement("script");
         script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_API_KEY}&autoload=false&libraries=services,clusterer,drawing`;
         script.async = true;
         document.head.appendChild(script);
@@ -47,8 +56,7 @@ const KakaoMap: React.FC = () => {
     useEffect(() => {
         if (isLoaded) {
             const kakao = (window as any).kakao;
-
-            const container = document.getElementById('map');
+            const container = document.getElementById("map");
             if (!container) {
                 return;
             }
@@ -75,7 +83,6 @@ const KakaoMap: React.FC = () => {
             };
 
             const map = new kakao.maps.Map(container, options);
-
             const linePath: any[] = [];
             let markerIndex = 1;
 
@@ -83,7 +90,10 @@ const KakaoMap: React.FC = () => {
                 itinerary.dailyScheduleDtos.forEach((day, dayIndex) => {
                     day.attractions.forEach((attraction) => {
                         if (attraction.latitude && attraction.longitude) {
-                            const markerPosition = new kakao.maps.LatLng(attraction.latitude, attraction.longitude);
+                            const markerPosition = new kakao.maps.LatLng(
+                                attraction.latitude,
+                                attraction.longitude
+                            );
 
                             linePath.push(markerPosition);
 
@@ -115,7 +125,7 @@ const KakaoMap: React.FC = () => {
                             overlay.setMap(map);
                             markerIndex++;
 
-                            kakao.maps.event.addListener(overlay, 'click', () => {
+                            kakao.maps.event.addListener(overlay, "click", () => {
                                 alert(`${attraction.name} - ${attraction.address}`);
                             });
                         }
@@ -125,9 +135,9 @@ const KakaoMap: React.FC = () => {
                 const polyline = new kakao.maps.Polyline({
                     path: linePath,
                     strokeWeight: 3,
-                    strokeColor: '#db4040',
+                    strokeColor: "#db4040",
                     strokeOpacity: 0.8,
-                    strokeStyle: 'solid',
+                    strokeStyle: "solid",
                 });
 
                 polyline.setMap(map);
@@ -137,10 +147,10 @@ const KakaoMap: React.FC = () => {
 
     return (
         <div
-            id='map'
+            id="map"
             style={{
-                width: '100%',
-                height: '100%',
+                width: "100%",
+                height: "100%",
             }}
         />
     );
