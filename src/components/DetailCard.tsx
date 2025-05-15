@@ -47,7 +47,7 @@ const DetailCard: React.FC<DetailCardProps> = ({
                     />
                 </div>
 
-                <div className="flex flex-col gap-2 w-[510px] h-[160px]">
+                <div className="flex flex-col gap-2 w-[456px] h-[160px]">
                     <Text textStyle="heading1" className="font-bold truncate overflow-hidden whitespace-nowrap">
                         {title}
                     </Text>
