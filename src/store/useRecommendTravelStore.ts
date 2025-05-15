@@ -217,7 +217,14 @@ export const usePublicTravelDetailStore = create<PublicTravelDetailStore>()(
   persist(
     (set) => ({
       itinerary: null,
-      setItinerary: (value) => set({ itinerary: value }),
+      setItinerary: async (value) => {
+        if (value?.dailyScheduleDtos) {
+          const updatedSchedules = await updateDailySchedules(value.dailyScheduleDtos);
+          set({ itinerary: { ...value, dailyScheduleDtos: updatedSchedules } });
+        } else {
+          set({ itinerary: value });
+        }
+      },
       clearItinerary: () => set({ itinerary: null }),
     }),
     {
