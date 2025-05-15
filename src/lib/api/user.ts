@@ -1,7 +1,8 @@
 import axiosInstance from "./axiosInstance";
 
 export interface ExperienceRequest {
-    content: string;
+    rating: number;
+    feedback: string;
 }
 
 export interface ExperienceResponse {
@@ -16,7 +17,7 @@ export interface ExperienceResponse {
  * @param content 사용자 작성한 경험 내용
  * @returns ExperienceResponse
  */
-export const saveUserExperience = async (content: string): Promise<ExperienceResponse> => {
+export const saveUserExperience = async (content: ExperienceRequest): Promise<ExperienceResponse> => {
     try {
         const response = await axiosInstance.post<ExperienceResponse>("/user/experience", {
             content,
