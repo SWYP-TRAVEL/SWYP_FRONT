@@ -6,11 +6,12 @@ import Text from '@/components/Text';
 import Button from '@/components/Button';
 import { useRecommendTravelDetailStore } from '@/store/useRecommendTravelStore';
 import { getRouteTime } from '@/lib/api/route';
-import { Attraction, DailyScheduleDtos } from '@/lib/api/itinerary';
+import { Attraction, DailyScheduleDtos, saveItinerary } from '@/lib/api/itinerary';
 import debounce from 'lodash.debounce';
 import ConfirmModal from '@/components/modals/ConfirmModal';
 import { useModal } from '@/hooks/useModal';
 import ConfirmSaveItinerary from '@/components/ConfirmSaveItinerary';
+import { useRouter } from 'next/navigation';
 
 const fetchTravelTime = async (
     current: Attraction,
@@ -79,11 +80,18 @@ const calculateScheduleTimes = async (places: Attraction[]): Promise<Attraction[
 };
 
 const TravelSchedulePage: React.FC = () => {
+    const router = useRouter();
     const itinerary = useRecommendTravelDetailStore((state) => state.itinerary);
     const updateItinerary = useRecommendTravelDetailStore((state) => state.setItinerary);
     const [isLoading, setIsLoading] = useState(false);
 
     const [checked, setCheckd] = useState(false)
+    const checkedRef = React.useRef(checked);
+
+    useEffect(() => {
+        checkedRef.current = checked;
+        console.log("✅ 현재 checked 값:", checked);
+    }, [checked]);
 
     const confirmSaveModal = useModal(() => (
         <ConfirmModal
@@ -92,16 +100,35 @@ const TravelSchedulePage: React.FC = () => {
             cancelText='다시 편집하기'
             onCancel={confirmSaveModal.close}
             confirmText='저장하기'
-            onConfirm={() => { }}
+            onConfirm={onConfirmCreateItinerary}
         >
             <>
                 <ConfirmSaveItinerary
-                    title='강릉 1박 2일 여행코스'
+                    title={itinerary?.title ?? ""}
                     onChange={setCheckd}
                 />
             </>
         </ConfirmModal>
-    ))
+    ));
+
+    const onConfirmCreateItinerary = async () => {
+        if (!itinerary) {
+            console.error("일정 정보가 없습니다.");
+            return;
+        }
+
+        itinerary.isPublic = checkedRef.current;
+
+        try {
+            const result = await saveItinerary(itinerary);
+
+            if (result) {
+                router.push("/mypage");
+            }
+        } catch (err) {
+            console.error("일정 저장 중 오류 발생:", err);
+        }
+    };
 
     useEffect(() => {
         const fetchData = async () => {

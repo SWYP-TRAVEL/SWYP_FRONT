@@ -145,7 +145,16 @@ export const saveItinerary = async (
     data: ItineraryDetail
 ): Promise<SaveItineraryResponse> => {
     try {
-        const response = await axiosInstance.patch<SaveItineraryResponse>("/itinerary", data);
+        // attractions가 객체라면 배열로 감싸기
+        const normalizedData = {
+            ...data,
+            dailyScheduleDtos: data.dailyScheduleDtos.map(dto => ({
+                ...dto,
+                attractions: Array.isArray(dto.attractions) ? dto.attractions : [dto.attractions]
+            }))
+        };
+
+        const response = await axiosInstance.patch<SaveItineraryResponse>("/itinerary", normalizedData);
         return response.data;
     } catch (error: any) {
         throw new Error(error.response?.data.message || "여행 코스 저장에 실패했습니다.");
