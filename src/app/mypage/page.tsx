@@ -7,7 +7,7 @@ import Text from "@/components/Text";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
-import { saveUserExperience, getUserItineraries, Itinerary } from "@/lib/api/user";
+import { getUserItineraries, Itinerary } from "@/lib/api/user";
 import { unlinkKakaoAccount } from "@/lib/api/auth";
 import { useModal } from "@/hooks/useModal";
 import ConfirmModal from "@/components/modals/ConfirmModal";
@@ -152,6 +152,7 @@ export default function MyPage() {
                                     region={course.title}
                                     distanceInfo="알 수 없음"
                                     imageUrl={course.image_url[0]}
+                                    onClick={() => router.push("/travel/detail/" + course.id)}
                                 />
                             ))}
                         </div>

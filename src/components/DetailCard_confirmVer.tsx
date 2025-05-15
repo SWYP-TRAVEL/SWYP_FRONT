@@ -3,8 +3,6 @@
 import React from "react";
 import Text from "./Text";
 import { Attraction } from "@/lib/api/itinerary";
-import { useRecommendTravelDetailStore } from "@/store/useRecommendTravelStore";
-import { changeAttraction } from "@/lib/api/itinerary";
 
 type DetailCardProps = {
     title: string;

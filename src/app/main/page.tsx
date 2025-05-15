@@ -5,6 +5,7 @@ import Text from "@/components/Text"
 import { useLogin } from "@/hooks/useLogin";
 import { useEffect, useRef, useState } from "react";
 import { getPublicItineraries, PublicItinerary } from "@/lib/api/itinerary";
+import { useRouter } from "next/navigation";
 
 export default function Main() {
   const [cards, setCards] = useState<PublicItinerary[]>([]);
@@ -14,6 +15,7 @@ export default function Main() {
   const sliderRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
   const { openPopupAndHandleLogin } = useLogin();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchItineraries = async () => {
@@ -98,6 +100,7 @@ export default function Main() {
                   size="small"
                   region={card.title}
                   distanceInfo="알 수 없음"
+                  onClick={() => router.push("/travel/detail/" + card.id)}
                   imageUrl={
                     Array.isArray(card.image_url) && card.image_url.length > 0
                       ? card.image_url[0]
