@@ -5,7 +5,7 @@ import DetailCard from "./DetailCard";
 import Text from "./Text";
 import { Reorder } from "framer-motion";
 import { Attraction, DailyScheduleDtos } from "@/lib/api/itinerary";
-
+import { changeAttraction } from "@/lib/api/itinerary";
 
 type DayScheduleCardProps = {
     dailySchedule: DailyScheduleDtos;
@@ -24,6 +24,22 @@ const DayScheduleCard: React.FC<DayScheduleCardProps> = ({ dailySchedule, onReor
     const handleReorder = (newOrder: Attraction[]) => {
         setItems(newOrder);
         onReorder(newOrder);
+    };
+
+    const handleUpdateAttraction = async (updatedAttraction: Attraction) => {
+        console.log(items);
+        console.log(updatedAttraction);
+        try {
+            const response = await changeAttraction(updatedAttraction);
+            const updatedItems = items.map((item) =>
+                item.name === updatedAttraction.name ? response : item
+            );
+            console.log(response);
+            setItems(updatedItems);
+            onReorder(updatedItems);
+        } catch (error) {
+            console.error("업데이트 실패:", error);
+        }
     };
 
     return (
@@ -68,6 +84,8 @@ const DayScheduleCard: React.FC<DayScheduleCardProps> = ({ dailySchedule, onReor
                                     hours={place.businessTime}
                                     rating={place.rating}
                                     imageUrl={place.coverImage}
+                                    attractionData={place}
+                                    onUpdate={handleUpdateAttraction}
                                 />
 
                                 {index < items.length - 1 && (

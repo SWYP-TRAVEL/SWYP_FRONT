@@ -165,8 +165,28 @@ export const getRecommendText = async (params: string = '') => {
     }
 }
 
+export const changeAttraction = async (
+    data: Attraction
+): Promise<Attraction> => {
+    try {
+        const response = await axiosInstance.post<Attraction>(
+            "/itinerary/change/attraction",
+            data
+        );
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data.message || "관광지 정보를 변경하지 못했습니다.");
+    }
+};
+
+
+
+
+
+
+
 // DailyScheduleDtos가 같은 date임에도 각각 오는 이슈가 있음 (묶어주는 함수)
-export const mergeItineraryByDate = (itinerary: ItineraryDetail): ItineraryDetail => {
+const mergeItineraryByDate = (itinerary: ItineraryDetail): ItineraryDetail => {
     // Map을 사용하여 dayDate 기준으로 그룹화
     const itineraryMap = new Map<number, Attraction[]>();
 
