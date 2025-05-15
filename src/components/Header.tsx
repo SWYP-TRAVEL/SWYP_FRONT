@@ -14,16 +14,9 @@ export interface HeaderProps {
 export default function Header({ user, onClickLogo, onClickProfile }: HeaderProps) {
   return (
     <header className="w-full bg-white shadow z-50">
-      <div className="mx-auto max-w-[1100px] px-4 h-[60px] flex items-center justify-between">
-        <div>
-          {/* 로고 TODO: 추후 로고이미지로 변경 */}
-          <Text
-            as='h1'
-            className='text-semantic-primary-normal cursor-pointer'
-            onClick={onClickLogo}
-          >
-            Momentier
-          </Text>
+      <div className="mx-auto max-w-[1100px] px-5 py-3.5 h-[60px] flex items-center justify-between">
+        <div className='cursor-pointer' onClick={onClickLogo}>
+          <Image src='/icons/MainLogo.png' alt='모먼티어 메인로고 이미지' width={137} height={28} />
         </div>
 
         {/* 네비게이션 or 로그인 버튼 자리 (필요시 확장 가능) */}
