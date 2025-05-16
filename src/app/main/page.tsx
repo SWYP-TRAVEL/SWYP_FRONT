@@ -89,7 +89,7 @@ export default function Main() {
         ) : (
           <div
             ref={sliderRef}
-            className="flex w-max gap-4 animate-marquee whitespace-nowrap group-hover:[animation-play-state:paused]"
+            className="flex w-max gap-4 animate-marquee"
           >
             {cards.map((card) => (
               <div

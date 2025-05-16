@@ -52,13 +52,14 @@ export default function Card({
   const resolvedInfoTextStyle = infoTextStyle ?? CARD_TEXT_STYLES[size].info;
 
   const textAlignClass = size === "small" ? "justify-start" : "justify-end";
-
-  // width를 객체로 관리
-  const customWidth = `w-[${width ?? CARD_WIDTHS[size]}]`;
+  const customStyles = {
+    width: width ?? CARD_WIDTHS[size],
+  };
 
   return (
     <Component
-      className={`${CARD_STYLES[size]} ${customWidth} relative overflow-hidden cursor-pointer flex flex-col`}
+      className={`${CARD_STYLES[size]} relative overflow-hidden cursor-pointer`}
+      style={customStyles}
       onClick={onClick}
     >
       <div
