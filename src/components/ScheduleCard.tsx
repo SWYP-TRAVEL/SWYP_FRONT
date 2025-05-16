@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import DetailCard from "./DetailCard";
 import Text from "./Text";
 import { Reorder } from "framer-motion";
 import { Attraction, DailyScheduleDtos } from "@/lib/api/itinerary";
 import { useRecommendTravelDetailStore } from "@/store/useRecommendTravelStore";
+import { debounce } from "lodash";
 
 type DayScheduleCardProps = {
     dailySchedule: DailyScheduleDtos;
@@ -23,14 +24,17 @@ const DayScheduleCard: React.FC<DayScheduleCardProps> = ({ dailySchedule }) => {
     /**
      * ✅ 순서 변경 시 Store에 직접 반영
      */
-    const handleReorder = (newOrder: Attraction[]) => {
-        updateItinerary([
-            {
-                ...dailySchedule,
-                attractions: newOrder,
-            }
-        ]);
-    };
+    const handleReorder = useCallback(
+        debounce((newOrder: Attraction[]) => {
+            updateItinerary([
+                {
+                    ...dailySchedule,
+                    attractions: newOrder,
+                },
+            ]);
+        }, 300),
+        [dailySchedule]
+    );
 
     return (
         <div className="flex flex-col gap-2 w-[880px]">
