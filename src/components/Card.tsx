@@ -7,7 +7,7 @@ const CARD_STYLES = {
   medium:
     "w-[280px] h-[360px] p-6 rounded-xl border-4 border-transparent hover:border-[#9A77FF] text-white bg-cover bg-center transition-all",
   small:
-    "w-[300px] h-[120px] p-5 rounded-[12px] border-4 border-transparent hover:border-[#9A77FF] text-white bg-cover bg-center transition-all",
+    "w-[300px] h-[120px] p-5 rounded-[12px] border-4 border-transparent text-white bg-cover bg-center transition-all",
 };
 
 const CARD_TEXT_STYLES: Record<keyof typeof CARD_STYLES, { region: TextStyle; info: TextStyle }> = {
@@ -57,14 +57,24 @@ export default function Card({
       <div className="absolute inset-0 bg-black/30" />
 
       <div className={`relative z-10 flex flex-col ${textAlignClass} h-full gap-2`}>
-        <Text textStyle={resolvedRegionTextStyle} className="font-bold">{region}</Text>
+        <div className="flex items-center gap-2">
+          <Text textStyle={resolvedRegionTextStyle} className="font-bold overflow-hidden text-ellipsis line-clamp-2">{region}</Text>
+          <img
+            src="/icons/link.svg"
+            alt="icon"
+            className="w-6 h-6"
+          />
+        </div>
+
         {size !== "small" && (
-          <Text textStyle={resolvedInfoTextStyle} className="font-bold flex items-center gap-1">
+          <Text
+            textStyle={resolvedInfoTextStyle}
+            className="font-bold text-white font-pretendard text-[20px] font-semibold leading-[140%] tracking-[-0.24px] overflow-hidden text-ellipsis line-clamp-2"
+          >
             {distanceInfo}
-            <span aria-hidden>↗</span>
           </Text>
         )}
       </div>
-    </Component>
+    </Component >
   );
 }
