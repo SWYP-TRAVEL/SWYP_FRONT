@@ -57,12 +57,12 @@ export default function Card({
       <div className="absolute inset-0 bg-black/30" />
 
       <div className={`relative z-10 flex flex-col ${textAlignClass} h-full gap-2`}>
-        <div className="flex items-center gap-2">
-          <Text textStyle={resolvedRegionTextStyle} className="font-bold overflow-hidden text-ellipsis line-clamp-2">{region}</Text>
+        <div className="flex items-start gap-2 min-h-[76px]">
+          <Text textStyle={resolvedRegionTextStyle} className="font-bold overflow-hidden text-ellipsis line-clamp-2 ">{region}</Text>
           <img
             src="/icons/link.svg"
             alt="icon"
-            className="w-6 h-6"
+            className="w-6 h-6 mt-[2px]"
           />
         </div>
 
