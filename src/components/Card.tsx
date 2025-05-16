@@ -52,6 +52,7 @@ export default function Card({
   const resolvedInfoTextStyle = infoTextStyle ?? CARD_TEXT_STYLES[size].info;
 
   const textAlignClass = size === "small" ? "justify-start" : "justify-end";
+  const endAlignClass = size === "small" ? "items-start" : "items-end";
   const customStyles = {
     width: width ?? CARD_WIDTHS[size],
   };
@@ -69,7 +70,7 @@ export default function Card({
       <div className="absolute inset-0 bg-black/30" />
 
       <div className={`relative z-10 flex flex-col ${textAlignClass} h-full gap-2`}>
-        <div className="flex items-start gap-2 min-h-[76px]">
+        <div className={`flex ${endAlignClass} gap-2 min-h-[76px]`}>
           <Text
             textStyle={resolvedRegionTextStyle}
             className="font-bold overflow-hidden text-ellipsis line-clamp-2"
@@ -82,10 +83,11 @@ export default function Card({
         {size !== "small" && (
           <Text
             textStyle={resolvedInfoTextStyle}
-            className="font-bold text-white font-pretendard text-[20px] font-semibold leading-[140%] tracking-[-0.24px] overflow-hidden text-ellipsis line-clamp-2"
+            className="font-bold text-white font-pretendard text-[20px] font-semibold leading-[140%] tracking-[-0.24px] overflow-hidden text-ellipsis line-clamp-2 min-h-[48px]"
           >
             {distanceInfo}
           </Text>
+
         )}
       </div>
     </Component>
