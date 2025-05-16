@@ -6,11 +6,10 @@ import { getAdminToken, kakaoLogin } from "@/lib/api/auth";
 export default function KakaoRedirectPage() {
     useEffect(() => {
         const code = new URL(window.location.href).searchParams.get("code");
-        const isProd = process.env.NODE_ENV === 'production';
         const isTest = process.env.IS_TEST === 'true';
 
         // 테스트 또는 개발 환경일 때, Admin Token 가져오기
-        if (!isProd || isTest) {
+        if (isTest) {
             getAdminToken()
                 .then(({ accessToken, userName }) => {
                     window.opener?.postMessage(
