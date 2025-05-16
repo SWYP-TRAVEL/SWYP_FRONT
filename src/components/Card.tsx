@@ -3,11 +3,17 @@ import { ElementType } from "react";
 
 const CARD_STYLES = {
   large:
-    "w-[340px] h-[460px] p-6 rounded-[20px] border-4 border-transparent hover:border-[#9A77FF] text-white bg-cover bg-center transition-all",
+    "h-[460px] p-6 rounded-[20px] border-4 border-transparent hover:border-[#9A77FF] text-white bg-cover bg-center transition-all",
   medium:
-    "w-[280px] h-[360px] p-6 rounded-xl border-4 border-transparent hover:border-[#9A77FF] text-white bg-cover bg-center transition-all",
+    "h-[360px] p-6 rounded-xl border-4 border-transparent hover:border-[#9A77FF] text-white bg-cover bg-center transition-all",
   small:
-    "w-[300px] h-[120px] p-5 rounded-[12px] border-4 border-transparent text-white bg-cover bg-center transition-all",
+    "h-[120px] p-5 rounded-[12px] border-4 border-transparent text-white bg-cover bg-center transition-all",
+};
+
+const CARD_WIDTHS = {
+  large: "340px",
+  medium: "280px",
+  small: "300px",
 };
 
 const CARD_TEXT_STYLES: Record<keyof typeof CARD_STYLES, { region: TextStyle; info: TextStyle }> = {
@@ -26,6 +32,7 @@ type CardProps = {
   regionTextStyle?: TextStyle;
   infoTextStyle?: TextStyle;
   size?: CardSize;
+  width?: string;
   as?: ElementType;
   onClick?: () => void;
 };
@@ -37,6 +44,7 @@ export default function Card({
   regionTextStyle,
   infoTextStyle,
   size = "large",
+  width,
   onClick,
   as: Component = "div",
 }: CardProps) {
@@ -45,9 +53,12 @@ export default function Card({
 
   const textAlignClass = size === "small" ? "justify-start" : "justify-end";
 
+  // width를 객체로 관리
+  const customWidth = `w-[${width ?? CARD_WIDTHS[size]}]`;
+
   return (
     <Component
-      className={`${CARD_STYLES[size]} relative overflow-hidden cursor-pointer flex flex-col`}
+      className={`${CARD_STYLES[size]} ${customWidth} relative overflow-hidden cursor-pointer flex flex-col`}
       onClick={onClick}
     >
       <div
@@ -58,12 +69,13 @@ export default function Card({
 
       <div className={`relative z-10 flex flex-col ${textAlignClass} h-full gap-2`}>
         <div className="flex items-start gap-2 min-h-[76px]">
-          <Text textStyle={resolvedRegionTextStyle} className="font-bold overflow-hidden text-ellipsis line-clamp-2 ">{region}</Text>
-          <img
-            src="/icons/link.svg"
-            alt="icon"
-            className="w-6 h-6 mt-[2px]"
-          />
+          <Text
+            textStyle={resolvedRegionTextStyle}
+            className="font-bold overflow-hidden text-ellipsis line-clamp-2"
+          >
+            {region}
+          </Text>
+          <img src="/icons/link.svg" alt="icon" className="w-6 h-6 mt-[2px]" />
         </div>
 
         {size !== "small" && (
@@ -75,6 +87,6 @@ export default function Card({
           </Text>
         )}
       </div>
-    </Component >
+    </Component>
   );
 }

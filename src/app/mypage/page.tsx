@@ -17,12 +17,15 @@ export default function MyPage() {
     const [experience, setExperience] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [isExpanded, setIsExpanded] = useState(false);
+
     const scrollRef = useRef<HTMLDivElement>(null);
     const isDragging = useRef(false);
     const startX = useRef(0);
     const scrollLeft = useRef(0);
     const router = useRouter();
     const logout = useAuthStore((state) => state.logout);
+    const displayedCourses = isExpanded ? courseList : courseList.slice(0, 3);
 
     useEffect(() => {
         const fetchItineraries = async () => {
@@ -35,6 +38,10 @@ export default function MyPage() {
         };
         fetchItineraries();
     }, []);
+
+    const handleToggle = () => {
+        setIsExpanded((prev) => !prev);
+    };
 
     const handleWheel = (e: React.WheelEvent) => {
         if (scrollRef.current) {
@@ -98,7 +105,7 @@ export default function MyPage() {
     const onClickBack = () => { };
 
     return (
-        <div className="w-full flex flex-col gap-[40px] max-w-[1100px] mx-auto px-5 py-[60px]">
+        <div className="w-full flex flex-col gap-[40px] max-w-[1100px] min-h[1180px] mx-auto px-5 py-[60px]">
             <div className="flex items-center gap-2 ">
                 <Image
                     src="/icons/Chevron Left Bold.svg"
@@ -144,9 +151,10 @@ export default function MyPage() {
                     className="overflow-x-auto scrollbar-hide snap-x snap-mandatory cursor-grab active:cursor-grabbing select-none"
                 >
                     {courseList.length > 0 ? <>
-                        <div className="flex gap-4 w-max pr-4">
-                            {courseList.map((course) => (
+                        <div className="grid grid-cols-3 gap-4 w-full">
+                            {displayedCourses.map((course) => (
                                 <Card
+                                    width="340px"
                                     key={course.id}
                                     size="small"
                                     region={course.title}
@@ -156,17 +164,24 @@ export default function MyPage() {
                                 />
                             ))}
                         </div>
-                        <div className="flex justify-center items-center mt-[16px] bg-[#F8F8F8] px-[20px] py-[12px] rounded-[12px]">
-                            <button className="flex items-center gap-2 text-gray-600 text-sm font-medium">
-                                <span>더보기</span>
-                                <Image
-                                    src="/icons/Chevron Down.svg"
-                                    alt="chevron down"
-                                    width={12}
-                                    height={12}
-                                />
-                            </button>
-                        </div>
+
+                        {courseList.length > 3 && (
+                            <div className="flex justify-center items-center mt-[16px] bg-[#F8F8F8] px-[20px] py-[12px] rounded-[12px]">
+                                <button
+                                    onClick={handleToggle}
+                                    className="flex items-center gap-2 text-gray-600 text-sm font-medium"
+                                >
+                                    <span>{isExpanded ? "접기" : "더보기"}</span>
+                                    <Image
+                                        src="/icons/Chevron Down.svg"
+                                        alt="chevron"
+                                        className={`${isExpanded ? "rotate-180" : ""}`}
+                                        width={12}
+                                        height={12}
+                                    />
+                                </button>
+                            </div>
+                        )}
                     </> : <>
                         <div className="w-[1060px] h-[160px] bg-[#F8F8F8] flex flex-col justify-center items-center rounded-[12px] mt-[16px] p-[20px]">
                             <Text textStyle='body1' className="text-gray-500 mb-[8px] font-bold">
@@ -189,7 +204,7 @@ export default function MyPage() {
 
                 </div>
             </section>
-            <div className="h-[274px]"></div>
+            <div className="min-h-[80px]"></div>
             <div className="w-full flex justify-start pt-10">
                 <div className="flex items-center gap-2 cursor-pointer mb-5">
                     <button
