@@ -4,6 +4,7 @@ import React, { useState, useRef } from "react";
 import Text from "./Text";
 import { DailyScheduleDtos } from "@/lib/api/itinerary";
 import DetailCard_confirmVer from "./DetailCard_confirmVer";
+import AlertBox from "./modals/tooltip";
 
 type DayScheduleCardProps = {
     dailySchedule: DailyScheduleDtos;
@@ -19,6 +20,10 @@ const DayScheduleCard: React.FC<DayScheduleCardProps> = ({ dailySchedule }) => {
 
     return (
         <div className="flex flex-col gap-2 w-[880px]">
+            <AlertBox
+                message="보기 전용 페이지 입니다."
+                description="이 페이지는 일정 확인만 가능하며, 맞춤형 여행일정 생성 및 편집은 카카오 로그인 후에 이용 가능합니다."
+            />
             <div className="w-[880px] h-[50px] flex items-center justify-between p-[12px_24px] bg-[#F3EEFF] text-black rounded-xl">
                 <Text textStyle="headline1" className="font-bold">
                     {dailySchedule.dayDate}일 차

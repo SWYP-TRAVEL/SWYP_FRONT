@@ -25,7 +25,7 @@ const DetailCard: React.FC<DetailCardProps> = ({
 }) => {
 
     return (
-        <div className="flex flex-col border-2 border-gray-300 rounded-2xl shadow-lg bg-[#F8F8F8] w-[880px] h-[208px] hover:border-[#9A77FF] transition-colors duration-200">
+        <div className="flex flex-col border-2 border-transparent  rounded-2xl shadow-lg bg-[#F8F8F8] w-[880px] h-[208px] hover:border-[#9A77FF] transition-colors duration-200">
             <div className="flex p-6 gap-4">
                 <div className="w-6 h-full flex flex-col items-center gap-2" />
                 <div className="flex flex-col gap-2 w-[456px] h-[160px]">
