@@ -19,8 +19,10 @@ axiosInstance.interceptors.request.use(
     if (user?.accessToken) {
       config.headers.Authorization = `Bearer ${user.accessToken}`;
     }
-    // 로딩 시작
-    useLoadingStore.getState().setLoading(true);
+
+    // 🟢 요청에 따라 로딩 타입 설정
+    const type = (config as any).loadingType ?? 'fullscreen';
+    useLoadingStore.getState().setLoading(true, type);
     return config;
   },
   (error) => {
@@ -77,3 +79,9 @@ axiosInstance.interceptors.response.use(
 );
 
 export default axiosInstance;
+
+declare module 'axios' {
+  export interface AxiosRequestConfig {
+    loadingType?: 'fullscreen' | 'inline' | 'none';
+  }
+}
