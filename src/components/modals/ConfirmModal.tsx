@@ -46,17 +46,20 @@ export default function
           variant='gradation'
           onClick={onConfirm}
           className={`
-    w-[50%] text-white relative overflow-hidden
-    before:absolute before:inset-0 before:opacity-0 hover:before:opacity-100
-    before:transition-opacity
-    before:bg-[linear-gradient(125.9deg,_#9A77FF_23.39%,_#214BFF_104.52%)]
-    after:absolute after:inset-0 after:bg-black after:opacity-0 hover:after:opacity-20
-    after:transition-opacity
-    hover:text-white
-  `}
-          textStyle='body1'
+            w-[50%] relative overflow-hidden text-[#214BFF] bg-white
+            hover:text-white transition-colors
+            before:absolute before:inset-0 before:z-0
+            before:opacity-0 hover:before:opacity-100
+            before:bg-[linear-gradient(125.9deg,_#9A77FF_23.39%,_#4D6FFF_104.52%)]
+            before:transition-opacity
+            after:absolute after:inset-0 after:z-0
+            after:bg-black after:opacity-0 hover:after:opacity-20
+            after:transition-opacity
+          `}
         >
-          {confirmText}
+          <Text textStyle='body1' className='relative z-10'>
+            {confirmText}
+          </Text>
         </Button>
       </div>
     </BaseModal >
