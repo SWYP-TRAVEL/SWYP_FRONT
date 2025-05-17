@@ -72,7 +72,7 @@ const TravelSchedulePage: React.FC = () => {
         <div className="flex h-[calc(100vh-60px)] max-w-[100vw] overflow-hidden">
             <div className="flex flex-col w-[980px] items-start py-[60px] px-[40px] gap-5 overflow-y-auto box-border">
                 <section className="flex flex-col w-full mb-5 gap-[40px]">
-                    {isOwner && (
+                    {!isOwner && (
                         <AlertBox
                             message="보기 전용 페이지 입니다."
                             description="이 페이지는 일정 확인만 가능하며, 맞춤형 여행일정 생성 및 편집은 카카오 로그인 후에 이용 가능합니다."

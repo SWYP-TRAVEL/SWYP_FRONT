@@ -105,8 +105,8 @@ export default function Main() {
                   distanceInfo="알 수 없음"
                   onClick={() => router.push("/travel/detail/" + card.id)}
                   imageUrl={
-                    Array.isArray(card.image_url) && card.image_url.length > 0
-                      ? card.image_url[0]
+                    card.image_url
+                      ? card.image_url
                       : "https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=5dc87836-b647-45ef-ae17-e3247f91b8b4"
                   }
                 />
