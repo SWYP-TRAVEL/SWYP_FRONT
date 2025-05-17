@@ -4,10 +4,7 @@ import Button from "@/components/Button";
 import Card from "@/components/Card";
 import FullScreenLoader from '@/components/FullScreenLoader';
 import AlertModal from "@/components/modals/AlertModal";
-import ConfirmModal from "@/components/modals/ConfirmModal";
 import Text from "@/components/Text";
-import UserInputSummary from "@/components/UserInputSummary";
-import { COMPANIONS, DURATIONS } from "@/constants/UserInputConstants";
 import { useModal } from '@/hooks/useModal';
 import { createItinerary, getRecommendedDestinations, type RecommendResponse } from "@/lib/api/itinerary";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -30,35 +27,9 @@ export default function TravelRecommendPage() {
   const [selectedTravel, setSelectedTravel] = useState<RecommendResponse | null>(null);
   const [errMessage, setErrMessage] = useState('');
 
-  // 카드 클릭 시 컨펌 모달
-  const travelConfirmModal = useModal(() => {
-    const companionText = COMPANIONS.find(item => item.value === (userInputs?.travelWith || ''))?.label || '';
-    const durationText = DURATIONS.find(item => item.value === (userInputs?.duration.toString() || ''))?.label || '';
-    return (
-      <ConfirmModal
-        title="이 여행지를 선택하시겠어요?"
-        description="맞는지 한 번 더 확인해주세요!"
-        cancelText="다시 선택하기"
-        onCancel={travelConfirmModal.close}
-        confirmText="일정 생성하기"
-        onConfirm={onConfirmCreateItinerary}
-      >
-        {selectedTravel ? (
-          <UserInputSummary
-            companion={companionText}
-            period={durationText}
-            inputText={userInputs?.description || ''}
-          />
-        ) : (
-          <p>여행지 정보를 불러오는 중입니다...</p>
-        )}
-      </ConfirmModal>
-    );
-  });
-
   useEffect(() => {
     if (selectedTravel) {
-      travelConfirmModal.open();
+      onConfirmCreateItinerary();
     }
   }, [selectedTravel]);
 
@@ -70,7 +41,6 @@ export default function TravelRecommendPage() {
   // 카드 클릭 시 컨펌 모달 => 일정 생성하기 클릭 이벤트
   const onConfirmCreateItinerary = async () => {
     try {
-      travelConfirmModal.close();
       setIsLoading(true);
 
       const params = {
