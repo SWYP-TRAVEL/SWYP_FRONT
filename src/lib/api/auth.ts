@@ -5,6 +5,7 @@ export interface KakaoLoginResponse {
     accessToken: string;
     userName: string;
     expiresIn: number;
+    hasSubmittedExperience: boolean;
 }
 
 /**
@@ -97,12 +98,13 @@ export const reissueToken = async (): Promise<KakaoLoginResponse | null> => {
         const response = await axiosInstance.post<KakaoLoginResponse>("/auth/token/reissue",);
 
         if (response.status === 200) {
-            const { accessToken, userName, expiresIn } = response.data;
+            const { accessToken, userName, expiresIn, hasSubmittedExperience } = response.data;
 
             useAuthStore.getState().login({
                 userName,
                 accessToken,
                 expiresIn,
+                hasSubmittedExperience
             });
 
             console.log("🔄 토큰 재발급 성공");

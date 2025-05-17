@@ -35,6 +35,7 @@ export function useLogin() {
           accessToken: payload.accessToken,
           expiresIn: payload.expiresIn,
           profileImage: payload.profileImage, // 혹시 있으면 추가
+          hasSubmittedExperience: payload.hasSubmittedExperience
         });
         console.log(payload.userName);
         router.push('/userinputs');
