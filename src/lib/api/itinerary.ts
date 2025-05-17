@@ -135,7 +135,9 @@ export const getPublicItineraries = async (
     }
 };
 
-export interface SaveItineraryResponse { }
+export interface SaveItineraryResponse {
+    itineraryId: number;
+}
 
 /**
  * 생성된 여행 코스를 저장

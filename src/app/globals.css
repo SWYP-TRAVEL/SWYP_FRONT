@@ -87,3 +87,9 @@ body {
   animation-timing-function: ease-in-out;
   animation-fill-mode: both;
 }
+
+@layer base {
+  img {
+    display: inline-block;
+  }
+}

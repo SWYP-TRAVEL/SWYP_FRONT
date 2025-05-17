@@ -1,7 +1,6 @@
 'use client';
 
 import ChipGroupSingle from '@/components/ChipGroupSingle';
-import FullScreenLoader from '@/components/FullScreenLoader';
 import AlertModal from '@/components/modals/AlertModal';
 import ConfirmModal from '@/components/modals/ConfirmModal';
 import Text from '@/components/Text';

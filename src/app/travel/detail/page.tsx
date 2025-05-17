@@ -3,6 +3,7 @@
 import Button from '@/components/Button';
 import ConfirmSaveItinerary from '@/components/ConfirmSaveItinerary';
 import ConfirmModal from '@/components/modals/ConfirmModal';
+import SavePdfButton from '@/components/SavePdfButton';
 import DayScheduleCard from '@/components/ScheduleCard';
 import Text from '@/components/Text';
 import UserExperienceRate from '@/components/UserExperienceRate';
@@ -11,9 +12,9 @@ import { saveItinerary } from '@/lib/api/itinerary';
 import { saveUserExperience } from '@/lib/api/user';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useRecommendTravelDetailStore } from '@/store/useRecommendTravelStore';
+import { toast } from '@/store/useToastStore';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import { toast } from '@/store/useToastStore';
 
 const TravelSchedulePage: React.FC = () => {
     const router = useRouter();
@@ -28,6 +29,7 @@ const TravelSchedulePage: React.FC = () => {
 
     const [rating, setRating] = useState(0); // [사용자 경험 평가] 별점
     const [feedback, setFeedback] = useState(''); // [사용자 경험 평가] 이용후기
+    const [createdId, setCreatedId] = useState('');
 
     const checkedRef = React.useRef(checked);
 
@@ -65,13 +67,14 @@ const TravelSchedulePage: React.FC = () => {
             const result = await saveItinerary(itinerary);
 
             if (result) {
+                setCreatedId(result.itineraryId.toString());
                 toast.success('여행 일정이 마이페이지에 저장되었어요.');
                 if (user && !user.hasSubmittedExperience) {
                     // 저장까지 마친 사용자에 한해서 사용경험 모달 띄움 한 계정당 한번씩만 노출되게끔
                     userExperienceModal.open();
                     return;
                 }
-                goToTravelDetail(); // TODO:
+                goToTravelDetail();
             }
         } catch (err) {
             toast.error('여행 일정 저장에 실패했어요. 다시 한 번 시도해 주세요.');
@@ -104,7 +107,7 @@ const TravelSchedulePage: React.FC = () => {
             const saveUserExperienceRes = await saveUserExperience(params);
             if (saveUserExperienceRes.success) {
                 toast.success('소중한 의견이 제출되었어요. 감사합니다.');
-                goToTravelDetail(); // TODO:
+                goToTravelDetail();
                 if (user) {
                     // 저장까지 마친 사용자에 한해서 사용경험 모달 띄움 한 계정당 한번씩만 노출되게끔
                     user.hasSubmittedExperience = true;
@@ -132,31 +135,34 @@ const TravelSchedulePage: React.FC = () => {
         </ConfirmModal>
     ))
 
-    // TODO: 
-    const goToTravelDetail = () => { };
+    const goToTravelDetail = () => {
+        router.push(`/travel/detail/${createdId}`);
+    };
 
     return (
         <div className='flex h-[calc(100vh-60px)] max-w-[100vw] overflow-hidden'>
             <div className='flex flex-col w-[980px] items-start py-[60px] px-[40px] gap-5 overflow-y-auto box-border'>
-                {/* 해당페이지의 헤더 */}
-                <section className='flex flex-col w-full mb-5'>
-                    <Text textStyle='headline1' className='mb-[8px] text-gray-600'>
-                        {itinerary?.title || '여행 일정'}
-                    </Text>
-                    <Text textStyle='title2' className='font-bold mb-[40px]'>{`휴식이 필요한 ${user ? user.userName : ''}님을 위한 ${itinerary?.title || '여행코스'}`}</Text>
-                    <Text textStyle='title3' className='font-bold'>일정</Text>
-                </section>
+                <div id="pdf-target" >
+                    {/* 해당페이지의 헤더 */}
+                    <section className='flex flex-col w-full mb-5'>
+                        <Text textStyle='headline1' className='mb-[8px] text-gray-600'>
+                            {itinerary?.title || '여행 일정'}
+                        </Text>
+                        <Text textStyle='title2' className='font-bold mb-[40px]'>{`휴식이 필요한 ${user ? user.userName : ''}님을 위한 ${itinerary?.title || '여행코스'}`}</Text>
+                        <Text textStyle='title3' className='font-bold'>일정</Text>
+                    </section>
 
-                {/* 세부일정의 카드 UI 영역 */}
-                <section className='w-full flex flex-col gap-5'>
-                    {itinerary?.dailyScheduleDtos.map((schedule, index) => (
-                        <DayScheduleCard
-                            key={`${index}-${JSON.stringify(schedule.attractions)}`}
-                            dailySchedule={schedule}
-                        />
-                    ))}
-                </section>
+                    {/* 세부일정의 카드 UI 영역 */}
+                    <section className='w-full flex flex-col gap-5'>
+                        {itinerary?.dailyScheduleDtos.map((schedule, index) => (
+                            <DayScheduleCard
+                                key={`${index}-${JSON.stringify(schedule.attractions)}`}
+                                dailySchedule={schedule}
+                            />
+                        ))}
+                    </section>
 
+                </div>
                 {/* 저장 버튼 영역 */}
                 <div className='w-full flex justify-end mt-5'>
                     <Button
