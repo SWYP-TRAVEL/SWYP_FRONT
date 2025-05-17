@@ -38,8 +38,7 @@ export function useLogin() {
           hasSubmittedExperience: payload.hasSubmittedExperience
         };
         loginState(user);
-        console.log(user);
-        console.log(payload);
+
         router.push('/userinputs');
         window.removeEventListener('message', handleMessage);
         popupRef.current?.close();

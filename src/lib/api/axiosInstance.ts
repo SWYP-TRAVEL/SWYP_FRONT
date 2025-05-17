@@ -60,14 +60,12 @@ axiosInstance.interceptors.response.use(
       const newAccessToken = await reissueToken();
 
       if (newAccessToken) {
-        console.log(newAccessToken)
         console.log("✅ 토큰 재발급 성공, 요청 재시도");
 
         // ✅ 이 시점에는 상태가 업데이트되었으므로, 다시 읽어와서 적용
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return axiosInstance(originalRequest);
       } else {
-        console.log("Test")
         console.error("❌ 토큰 재발급 실패, 로그아웃 처리");
         useAuthStore.getState().logout();
         window.location.href = "/main";

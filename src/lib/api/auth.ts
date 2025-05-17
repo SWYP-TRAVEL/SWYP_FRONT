@@ -31,7 +31,6 @@ export const kakaoLogin = async (code: string): Promise<KakaoLoginResponse> => {
                 code,
             },
         );
-        console.log(response.data);
         return response.data;
     } catch (error: any) {
         throw new Error(error.response?.data.message || "카카오 로그인 실패");
@@ -100,11 +99,9 @@ export const reissueToken = async (): Promise<KakaoLoginResponse | null> => {
         if (response.status === 200) {
             const { accessToken, userName, expiresIn, hasSubmittedExperience } = response.data;
 
-            useAuthStore.getState().login({
-                userName,
+            useAuthStore.getState().refresh({
                 accessToken,
                 expiresIn,
-                hasSubmittedExperience
             });
 
             console.log("🔄 토큰 재발급 성공");
