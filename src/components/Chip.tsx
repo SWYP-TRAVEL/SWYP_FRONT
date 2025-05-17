@@ -37,8 +37,8 @@ export default function Chip({
           <Image
             src={imageSrc}
             alt="chip icon"
-            width={20}
-            height={20}
+            width={24}
+            height={24}
             className="mr-2"
           />
         )}
