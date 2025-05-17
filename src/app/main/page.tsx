@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { getPublicItineraries, PublicItinerary } from "@/lib/api/itinerary";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
+import Image from "next/image";
 
 export default function Main() {
   const [cards, setCards] = useState<PublicItinerary[]>([]);
@@ -131,7 +132,7 @@ export default function Main() {
             isLoggedIn ? router.push("/userinputs") : openPopupAndHandleLogin()
           }
         >
-          <img src="/icons/kakao.png" alt="kakao icon" />
+          <Image src="/icons/kakao.png" alt="kakao icon" width={28} height={28} />
           <Text textStyle="headline1" className="ml-2 font-semibold">
             {isLoggedIn ? "시작하기" : "카카오로 시작하기"}
           </Text>
