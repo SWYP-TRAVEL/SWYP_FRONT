@@ -31,7 +31,7 @@ export const kakaoLogin = async (code: string): Promise<KakaoLoginResponse> => {
                 code,
             },
         );
-        console.log(resonse.data);
+        console.log(response.data);
         return response.data;
     } catch (error: any) {
         throw new Error(error.response?.data.message || "카카오 로그인 실패");
