@@ -37,7 +37,7 @@ export function useLogin() {
           profileImage: payload.profileImage,
           hasSubmittedExperience: payload.hasSubmittedExperience
         };
-
+        loginState(user);
         console.log(user);
         console.log(payload);
         router.push('/userinputs');
