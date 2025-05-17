@@ -26,6 +26,7 @@ export default function MyPage() {
     const router = useRouter();
     const logout = useAuthStore((state) => state.logout);
     const displayedCourses = isExpanded ? courseList : courseList.slice(0, 3);
+    const { isLoggedIn, user } = useAuthStore();
 
     useEffect(() => {
         const fetchItineraries = async () => {
@@ -127,7 +128,7 @@ export default function MyPage() {
                 />
                 <div className="flex flex-col justify-center">
                     <Text as="p" textStyle="headline1" className="font-semibold text-left text-[18px] text-[#404040] font-pretendard leading-[144.5%] tracking-[-0.004px]">
-                        안유정
+                        {user?.userName}
                     </Text>
                     <Text as="p" textStyle="label1" className="text-gray-500">
                         카카오 계정 연결 2025.05.10

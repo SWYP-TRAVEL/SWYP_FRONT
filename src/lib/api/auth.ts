@@ -82,8 +82,6 @@ export const fetchItineraries = async (limit: number): Promise<Itinerary[]> => {
 export const getAdminToken = async (): Promise<KakaoLoginResponse> => {
     try {
         const response = await axiosInstance.get<KakaoLoginResponse>("/auth/admin");
-        response.data.expiresIn = Date.now() + 10 * 1000;
-
         return response.data;
     } catch (error: any) {
         throw new Error(error.response?.data.message || "관리자 토큰 정보를 불러오지 못했습니다.");
