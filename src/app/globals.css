@@ -69,3 +69,21 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none; /* Chrome, Safari */
 }
+
+@keyframes bounce-char {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-bounce-char {
+  animation-name: bounce-char;
+  animation-duration: 1.2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+}

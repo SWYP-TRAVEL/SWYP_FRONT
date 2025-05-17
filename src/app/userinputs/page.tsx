@@ -18,14 +18,12 @@ export default function UserInputs() {
   const router = useRouter();
   /**
    * 상태 선언
-   * isLoading : 여행지 추천 로딩 상태 값
    * isTextLoading : 텍스트 추천 로딩 상태 값
    * companion : 유저입력 동행자타입
    * duration : 유저입력 여행기간
    * travelDescription : 유저입력 여행스타일
    * isButtonDisabled : [다음] 버튼의 비활성화 여부
    */
-  const [isLoading, setIsLoading] = useState(false);
   const [isTextLoading, setIsTextLoading] = useState(false);
   const [companion, setCompanion] = useState('');
   const [duration, setDuration] = useState('');
@@ -50,7 +48,6 @@ export default function UserInputs() {
    */
   const handleTravelRecommend = async () => {
     try {
-      setIsLoading(true);
       const today = new Date();
 
       const yyyy = today.getFullYear();
@@ -75,8 +72,6 @@ export default function UserInputs() {
       setErrMessage(err.message);
       errModal.open();
       return false;
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -103,6 +98,7 @@ export default function UserInputs() {
   const onClickAutoFillInput = async () => {
     try {
       setIsTextLoading(true);
+      setTravelDescription('');
       const result = await getRecommendText(travelDescription);
       setTravelDescription(result);
     } catch (err: any) {
@@ -187,37 +183,39 @@ export default function UserInputs() {
 
         {/* 여행 스타일 입력 */}
         <div className="mt-[60px]">
-          <Text textStyle="title3" className="block mb-4 font-bold">
+          <Text textStyle="title3" className="block mb-2 font-bold">
             어떤 여행을 꿈꾸고 계신가요? <span className="text-semantic-primary-normal">*</span>
+          </Text>
+          <Text textStyle='body1' className='block mb-4 text-semantic-label-alternative'>
+            마음 상태나 원하는 여행 분위기, 스타일 등을 자유롭게 적어주세요!
           </Text>
           <div className="relative">
             <TextField
               disabled={isTextLoading}
               value={travelDescription}
               onChange={setTravelDescription}
-              placeholder="요즘 지쳐서 조용하고 힐링되는 여행이었으면 좋겠어요, 자연 쪽으로 가고 싶어요 등"
+              placeholder={!isTextLoading ? "요즘 지쳐서 조용하고 힐링되는 여행이었으면 좋겠어요, 자연 쪽으로 가고 싶어요 등" : ""}
               variant="outlined"
             />
-            {isTextLoading && (<div className="absolute right-3 top-1/2 -translate-y-1/2">
-              <svg
-                className="w-5 h-5 animate-spin text-gray-400"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                />
-              </svg>
-            </div>)}
+            {isTextLoading && (
+              <div className="absolute left-4 top-7 -translate-y-1/2 text-sm text-gray-500 flex">
+                {"문구를 생성중이에요 ...".split("").map((char, i) => (
+                  <span
+                    key={i}
+                    className="inline-block animate-bounce-char"
+                    style={{ animationDelay: `${i * 0.1}s` }}
+                  >
+                    {char}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
           <div className="mt-2">
             <button
               className='flex items-center px-4 py-2 text-semantic-label-alternative border border-semantic-line-normalneutral rounded-[20px] bg-component-fill-alternative hover:bg-[#9A77FF1A] hover:border-[#9A77FF1A] active:text-semantic-primary-normal active:ring-2 active:ring-semantic-primary-normal ring-offset-0'
               onClick={onClickAutoFillInput}
+              disabled={isTextLoading}
             >
               <img src='./icons/AI.svg' alt='추천을위한 별모양 아이콘' />
               <Text as='p' className='ml-2 font-normal'>잘 모르겠어요. 추천해주세요!</Text>
@@ -239,7 +237,6 @@ export default function UserInputs() {
           </button>
         </div>
       </section>
-      {isLoading ? <FullScreenLoader /> : null}
     </>
   );
 }

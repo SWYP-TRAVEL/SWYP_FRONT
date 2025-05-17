@@ -17,10 +17,11 @@ export default function LayoutSelector({ children }: LayoutSelectorProps) {
     const pathname = usePathname();
     const isMapPage = DUAL_LAYOUT_PATHS.some((path) => pathname.startsWith(path));
     const isLoading = useLoadingStore((state) => state.isLoading);
+    const loadingType = useLoadingStore((state) => state.loadingType);
 
     return (
         <>
-            {isLoading ? <FullScreenLoader /> : null}
+            {(isLoading && loadingType === 'fullscreen') ? <FullScreenLoader /> : null}
             {isMapPage
                 ? <MapLayout>{children}</MapLayout>
                 : <AppLayout>{children}</AppLayout>
