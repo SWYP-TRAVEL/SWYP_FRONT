@@ -19,6 +19,14 @@ export default function Main() {
   const { isLoggedIn } = useAuthStore();
 
   const router = useRouter();
+  const isValidUrl = (url: string): boolean => {
+    try {
+      new URL(url);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  };
 
   useEffect(() => {
     const fetchItineraries = async () => {
@@ -105,7 +113,7 @@ export default function Main() {
                   distanceInfo="알 수 없음"
                   onClick={() => router.push("/travel/detail/" + card.id)}
                   imageUrl={
-                    card.image_url
+                    card.image_url && isValidUrl(card.image_url)
                       ? card.image_url
                       : "https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=5dc87836-b647-45ef-ae17-e3247f91b8b4"
                   }
