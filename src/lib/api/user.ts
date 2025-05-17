@@ -48,3 +48,24 @@ export const getUserItineraries = async (): Promise<Itinerary[]> => {
         throw new Error(error.response?.data.message || "여행 일정 목록을 불러오지 못했습니다.");
     }
 };
+
+
+/**
+ * 마이페이지 - 사용자 여행 일정 조회
+ * @param userId 사용자 ID
+ * @returns Itinerary[]
+ */
+
+export interface UserDetail {
+    id: number,
+    username: string
+}
+
+export const getUserItinerariesById = async (userId: number): Promise<UserDetail> => {
+    try {
+        const response = await axiosInstance.get<UserDetail>(`/user/${userId}`);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data.message || "여행 일정 목록을 불러오지 못했습니다.");
+    }
+};
