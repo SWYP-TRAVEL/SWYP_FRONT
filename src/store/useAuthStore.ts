@@ -6,6 +6,7 @@ export interface User {
   accessToken: string;
   expiresIn?: number;
   profileImage?: string;
+  hasSubmittedExperience?: boolean;
 }
 
 interface AuthState {
