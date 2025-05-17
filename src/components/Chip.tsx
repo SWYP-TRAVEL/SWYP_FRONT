@@ -17,25 +17,33 @@ export default function Chip({
 }: ChipProps) {
 
   return (
-    <button
-      onClick={onClick}
+    <div
       className={`
-      flex items-center px-4 py-2 rounded-full border transition-all text-sm font-medium
+      p-[2px] rounded-full inline-block
       ${selected
-          ? 'border-[#9A77FF] text-[#9A77FF] bg-[#F1EBFF]'
-          : 'border-gray-200 text-gray-700 bg-white hover:border-[#9A77FF] hover:text-[#9A77FF]'}
+          ? 'bg-gradient-to-r from-[#9A77FF] to-[#214BFF]'
+          : 'bg-white border border-[#E8E8EA]'}
     `}
     >
-      {imageSrc ?
-        <Image
-          src={imageSrc}
-          alt="chip icon"
-          width={20}
-          height={20}
-          className="mr-2"
-        />
-        : null}
-      {children}
-    </button>
+      <button
+        onClick={onClick}
+        className={`
+        flex items-center px-4 py-2 rounded-full transition-all text-sm
+        bg-white w-full h-full
+        ${selected ? 'text-[#214BFF] font-semibold' : 'text-gray-700 font-medium'}
+      `}
+      >
+        {imageSrc && (
+          <Image
+            src={imageSrc}
+            alt="chip icon"
+            width={20}
+            height={20}
+            className="mr-2"
+          />
+        )}
+        {children}
+      </button>
+    </div>
   );
 }

@@ -219,19 +219,19 @@ export default function UserInputs() {
               className='flex items-center px-4 py-2 text-semantic-label-alternative border border-semantic-line-normalneutral rounded-[20px] bg-component-fill-alternative hover:bg-[#9A77FF1A] hover:border-[#9A77FF1A] active:text-semantic-primary-normal active:ring-2 active:ring-semantic-primary-normal ring-offset-0'
               onClick={onClickAutoFillInput}
             >
-              <img src='./icons/stars.svg' alt='추천을위한 별모양 아이콘' />
+              <img src='./icons/AI.svg' alt='추천을위한 별모양 아이콘' />
               <Text as='p' className='ml-2 font-normal'>잘 모르겠어요. 추천해주세요!</Text>
             </button>
           </div>
         </div>
 
         {/* 버튼 */}
-        <div className="mt-[60px]">
+        <div className="my-[60px]">
           {/* TODO: 이미지 요소가 들어가는 버튼 => Button component에 녹일 수 있는지? */}
           <button
             disabled={isButtonDisabled}
             className={`flex justify-between w-[186px] text-[18px] px-5 py-3 rounded-[25px] font-semibold text-semantic-static-white 
-              ${isButtonDisabled ? 'bg-[#D9D9D9] cursor-not-allowed' : 'bg-semantic-primary-normal'}`}
+              ${isButtonDisabled ? 'bg-[#D9D9D9] cursor-not-allowed' : 'bg-semantic-primary-normal hover:bg-[#7C49FF]'}`}
             onClick={onClickNext}
           >
             다음

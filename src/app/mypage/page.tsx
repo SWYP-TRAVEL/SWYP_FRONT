@@ -85,6 +85,7 @@ export default function MyPage() {
             onCancel={onClickUnlink}
             confirmText="유지하기"
             onConfirm={confirmUnlinkModal.close}
+            onClose={confirmUnlinkModal.close}
         />
     ))
 

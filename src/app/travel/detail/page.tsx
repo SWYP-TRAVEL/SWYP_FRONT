@@ -13,6 +13,7 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { useRecommendTravelDetailStore } from '@/store/useRecommendTravelStore';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { toast } from '@/store/useToastStore';
 
 const TravelSchedulePage: React.FC = () => {
     const router = useRouter();
@@ -64,11 +65,16 @@ const TravelSchedulePage: React.FC = () => {
             const result = await saveItinerary(itinerary);
 
             if (result) {
-                // TODO: 저장까지 마친 사용자에 한해서 사용경험 모달 띄움 한 계정당 한번씩만 노출되게끔
-                // router.push("/mypage");
-                userExperienceModal.open();
+                toast.success('여행 일정이 마이페이지에 저장되었어요.');
+                if (user && !user.hasSubmittedExperience) {
+                    // 저장까지 마친 사용자에 한해서 사용경험 모달 띄움 한 계정당 한번씩만 노출되게끔
+                    userExperienceModal.open();
+                    return;
+                }
+                goToTravelDetail(); // TODO:
             }
         } catch (err) {
+            toast.error('여행 일정 저장에 실패했어요. 다시 한 번 시도해 주세요.');
             console.error("일정 저장 중 오류 발생:", err);
         }
     };
@@ -97,7 +103,12 @@ const TravelSchedulePage: React.FC = () => {
             const params = { rating, feedback };
             const saveUserExperienceRes = await saveUserExperience(params);
             if (saveUserExperienceRes.success) {
-                // TODO: 저장까지 마친 사용자에 한해서 사용경험 모달 띄움 한 계정당 한번씩만 노출되게끔
+                toast.success('소중한 의견이 제출되었어요. 감사합니다.');
+                goToTravelDetail(); // TODO:
+                if (user) {
+                    // 저장까지 마친 사용자에 한해서 사용경험 모달 띄움 한 계정당 한번씩만 노출되게끔
+                    user.hasSubmittedExperience = true;
+                }
             }
         } catch (err) {
             console.error(err);
@@ -120,6 +131,9 @@ const TravelSchedulePage: React.FC = () => {
             />
         </ConfirmModal>
     ))
+
+    // TODO: 
+    const goToTravelDetail = () => { };
 
     return (
         <div className='flex h-[calc(100vh-60px)] max-w-[100vw] overflow-hidden'>
