@@ -4,6 +4,7 @@ import QueryProvider from '@/components/QueryProvider';
 import "./globals.css";
 import LayoutSelector from '@/components/layout/LayoutSelector';
 import { ModalProvider } from '@/providers/ModalProvider';
+import ToastContainer from '@/components/ToastContainer';
 
 export const metadata: Metadata = {
   title: 'Momentier',
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <ModalProvider>
             <LayoutSelector>
               {children}
+              <ToastContainer />
             </LayoutSelector>
           </ModalProvider>
         </QueryProvider>
