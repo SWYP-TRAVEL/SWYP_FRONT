@@ -31,13 +31,9 @@ export function useLogin() {
       const { type, payload, error } = event.data || {};
       if (type === 'KAKAO_LOGIN_SUCCESS') {
         loginState({
-          userName: payload.userName,
-          accessToken: payload.accessToken,
-          expiresIn: payload.expiresIn,
-          profileImage: payload.profileImage, // 혹시 있으면 추가
-          hasSubmittedExperience: payload.hasSubmittedExperience
+          ...payload
         });
-        console.log(payload.userName);
+        console.log(payload);
         router.push('/userinputs');
         window.removeEventListener('message', handleMessage);
         // popupRef.current?.close();
