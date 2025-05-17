@@ -6,6 +6,7 @@ import { getItineraryDetail } from "@/lib/api/itinerary";
 import { useParams } from "next/navigation";
 import { usePublicTravelDetailStore } from "@/store/useRecommendTravelStore";
 import DayScheduleCard_confirmVer from "@/components/ScheduleCard_confirmVer";
+import AlertBox from "@/components/modals/tooltip";
 
 const TravelSchedulePage: React.FC = () => {
     const { id: itineraryId } = useParams();
@@ -56,13 +57,20 @@ const TravelSchedulePage: React.FC = () => {
     return (
         <div className="flex h-[calc(100vh-60px)] max-w-[100vw] overflow-hidden">
             <div className="flex flex-col w-[980px] items-start py-[60px] px-[40px] gap-5 overflow-y-auto box-border">
-                <section className="flex flex-col w-full mb-5">
-                    <Text textStyle="headline1" className="mb-[8px] text-gray-600">
-                        {itinerary?.title || "여행 일정"}
-                    </Text>
-                    <Text textStyle="title2" className="font-bold mb-[40px]">{`휴식이 필요한 유정님을 위한 ${itinerary?.title || "여행코스"}`}</Text>
+                <section className="flex flex-col w-full mb-5 gap-[40px]">
+                    <AlertBox
+                        message="보기 전용 페이지 입니다."
+                        description="이 페이지는 일정 확인만 가능하며, 맞춤형 여행일정 생성 및 편집은 카카오 로그인 후에 이용 가능합니다."
+                    />
+                    <div className="flex flex-col">
+                        <Text textStyle="headline1" className="mb-[8px] text-gray-600 font-semibold">
+                            {itinerary?.title || "여행 일정"}
+                        </Text>
+                        <Text textStyle="title2" className="font-bold">{`휴식이 필요한 유정님을 위한 ${itinerary?.title || "여행코스"}`}</Text>
+                    </div>
                     <Text textStyle="title3" className="font-bold">일정</Text>
                 </section>
+
 
                 <section className="w-full flex flex-col gap-5">
                     {itinerary?.dailyScheduleDtos.map((schedule, index) => (

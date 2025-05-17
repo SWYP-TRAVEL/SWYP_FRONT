@@ -29,7 +29,7 @@ const AlertBox: FC<AlertBoxProps> = ({ message, description }) => {
                             {message}
                         </Text>
                     </div>
-                    <Text as="p" textStyle="label1" className="text-[#858588] ml-[21px]">
+                    <Text as="p" textStyle="label1" className="text-[#858588]">
                         {description}
                     </Text>
                 </div>

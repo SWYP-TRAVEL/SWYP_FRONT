@@ -113,6 +113,7 @@ export default function MyPage() {
                     alt="chip icon"
                     width={20}
                     height={20}
+                    onClick={() => router.back()}
                 />
                 <Text as="h1" textStyle="heading1" className="font-bold">
                     마이페이지
