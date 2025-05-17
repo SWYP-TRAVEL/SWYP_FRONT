@@ -30,17 +30,23 @@ export function useLogin() {
     const handleMessage = (event: MessageEvent) => {
       const { type, payload, error } = event.data || {};
       if (type === 'KAKAO_LOGIN_SUCCESS') {
-        loginState({
-          ...payload
-        });
+        const user = {
+          userName: payload.userName ?? '',
+          accessToken: payload.accessToken,
+          expiresIn: payload.expiresIn,
+          profileImage: payload.profileImage,
+          hasSubmittedExperience: payload.hasSubmittedExperience
+        };
+
+        console.log(user);
         console.log(payload);
         router.push('/userinputs');
         window.removeEventListener('message', handleMessage);
-        // popupRef.current?.close();
+        popupRef.current?.close();
       } else if (type === 'KAKAO_LOGIN_FAILURE') {
         alert('로그인 실패: ' + error);
         window.removeEventListener('message', handleMessage);
-        // popupRef.current?.close();
+        popupRef.current?.close();
       }
     };
 
