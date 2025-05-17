@@ -6,6 +6,7 @@ import { useLogin } from "@/hooks/useLogin";
 import { useEffect, useRef, useState } from "react";
 import { getPublicItineraries, PublicItinerary } from "@/lib/api/itinerary";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function Main() {
   const [cards, setCards] = useState<PublicItinerary[]>([]);
@@ -15,6 +16,8 @@ export default function Main() {
   const sliderRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
   const { openPopupAndHandleLogin } = useLogin();
+  const { isLoggedIn } = useAuthStore();
+
   const router = useRouter();
 
   useEffect(() => {
@@ -116,11 +119,13 @@ export default function Main() {
       <section className="mt-8 flex justify-center">
         <button
           className="flex px-5 py-[13px] bg-[#FFE812] rounded-full cursor-pointer"
-          onClick={openPopupAndHandleLogin}
+          onClick={() =>
+            isLoggedIn ? router.push("/usrinputs") : openPopupAndHandleLogin()
+          }
         >
           <img src="/icons/kakao.png" alt="kakao icon" />
           <Text textStyle="headline1" className="ml-2 font-semibold">
-            카카오로 시작하기
+            {isLoggedIn ? "시작하기" : "카카오로 시작하기"}
           </Text>
         </button>
       </section>

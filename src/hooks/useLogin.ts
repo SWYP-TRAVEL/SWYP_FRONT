@@ -36,6 +36,7 @@ export function useLogin() {
           expiresIn: payload.expiresIn,
           profileImage: payload.profileImage, // 혹시 있으면 추가
         });
+        console.log(payload.userName);
         router.push('/userinputs');
         window.removeEventListener('message', handleMessage);
         popupRef.current?.close();
