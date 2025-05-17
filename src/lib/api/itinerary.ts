@@ -167,7 +167,8 @@ export const getRecommendText = async (params: string = '') => {
         const response = await axiosInstance.get<string>('/itinerary/recommend/text', {
             params: {
                 input: params
-            }
+            },
+            loadingType: 'none'
         });
         return response.data;
     } catch (err: any) {
