@@ -23,7 +23,7 @@ export default function KakaoRedirectPage() {
                         },
                         "*"
                     );
-                    window.close();
+                    //window.close();
                 })
                 .catch((err) => {
                     window.opener?.postMessage(
@@ -33,7 +33,7 @@ export default function KakaoRedirectPage() {
                         },
                         "*"
                     );
-                    window.close();
+                    //window.close();
                 });
 
             return;
@@ -53,7 +53,7 @@ export default function KakaoRedirectPage() {
                         },
                         "*"
                     );
-                    window.close();
+                    //window.close();
                 })
                 .catch((err) => {
                     window.opener?.postMessage(
@@ -63,7 +63,7 @@ export default function KakaoRedirectPage() {
                         },
                         "*"
                     );
-                    window.close();
+                    //window.close();
                 });
         }
     }, []);
