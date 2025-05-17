@@ -120,7 +120,7 @@ export default function Main() {
         <button
           className="flex px-5 py-[13px] bg-[#FFE812] rounded-full cursor-pointer"
           onClick={() =>
-            isLoggedIn ? router.push("/usrinputs") : openPopupAndHandleLogin()
+            isLoggedIn ? router.push("/userinputs") : openPopupAndHandleLogin()
           }
         >
           <img src="/icons/kakao.png" alt="kakao icon" />
