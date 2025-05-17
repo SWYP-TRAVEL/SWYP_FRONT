@@ -116,7 +116,7 @@ export const createItinerary = async (
 export interface PublicItinerary {
     id: number;
     title: string;
-    image_url: string[];
+    image_url: string;
 }
 
 /**
