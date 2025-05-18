@@ -153,8 +153,8 @@ const TravelSchedulePage: React.FC = () => {
 
             />
             <div className="flex h-[calc(100vh-60px)] max-w-[100vw] overflow-hidden">
-                <div className="flex flex-col w-[980px] items-start py-[60px] px-[40px] gap-5 overflow-y-auto box-border">
-                    <div id="pdf-target" >
+                <div className="overflow-y-auto box-border">
+                    <div id="pdf-target" className="flex flex-col w-[980px] items-start py-[60px] px-[40px] gap-5  ">
                         <section className="flex flex-col w-full mb-5 gap-[40px]">
                             {!isOwner && (
                                 <AlertBox
