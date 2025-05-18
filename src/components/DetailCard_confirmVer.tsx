@@ -38,17 +38,17 @@ const DetailCard: React.FC<DetailCardProps> = ({
 
                     <div className="flex items-center gap-2">
                         <img src="/icons/Location.svg" alt="address icon" className="w-5 h-5" />
-                        <Text textStyle="body1" className="text-gray-700 truncate">{address}</Text>
+                        <Text textStyle="body1" className="text-[#364153] truncate">{address}</Text>
                     </div>
 
                     <div className="flex items-center gap-2">
                         <img src="/icons/Clock.svg" alt="hours icon" className="w-5 h-5" />
-                        <Text textStyle="body1" className="text-gray-700 truncate">{hours}</Text>
+                        <Text textStyle="body1" className="text-[#364153] truncate">{hours}</Text>
                     </div>
 
                     <div className="flex items-center gap-2">
                         <img src="/icons/Star.svg" alt="rating icon" className="w-5 h-5" />
-                        <Text textStyle="body1" className="text-gray-700 truncate">{rating}</Text>
+                        <Text textStyle="body1" className="text-[#364153] truncate">{rating}</Text>
                     </div>
                 </div>
 
