@@ -62,7 +62,7 @@ const DayScheduleCard: React.FC<DayScheduleCardProps> = ({ dailySchedule }) => {
                                     {place.travelWalkTime && (
                                         <div className="flex items-center gap-2">
                                             <img src="/icons/Walk.svg" alt="walk icon" className="w-5 h-5" />
-                                            <span className="text-gray-700">{place.travelWalkTime}</span>
+                                            <span className="text-[#a2a3e4]">{place.travelWalkTime}</span>
                                         </div>
                                     )}
 
@@ -73,7 +73,7 @@ const DayScheduleCard: React.FC<DayScheduleCardProps> = ({ dailySchedule }) => {
                                     {place.travelCarTime && (
                                         <div className="flex items-center gap-2">
                                             <img src="/icons/Car.svg" alt="car icon" className="w-5 h-5" />
-                                            <span className="text-gray-700">{place.travelCarTime}</span>
+                                            <span className="text-[#a2a3e4]">{place.travelCarTime}</span>
                                         </div>
                                     )}
 
@@ -83,7 +83,7 @@ const DayScheduleCard: React.FC<DayScheduleCardProps> = ({ dailySchedule }) => {
 
                                     {place.travelDistance && (
                                         <div className="flex items-center gap-2">
-                                            <span className="text-gray-700">{place.travelDistance}</span>
+                                            <span className="text-[#a2a3e4]">{place.travelDistance}</span>
                                         </div>
                                     )}
                                 </div>
