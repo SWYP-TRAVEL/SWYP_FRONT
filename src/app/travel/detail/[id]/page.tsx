@@ -143,12 +143,6 @@ const TravelSchedulePage: React.FC = () => {
 
     return (
         <>
-            {/* <Script
-                src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.5/kakao.min.js"
-                integrity="sha384-dok87au0gKqJdxs7msEdBPNnKSRT+/mhTVzq+qOhcL464zXwvcrpjeWvyj1kCdq6"
-                crossOrigin="anonymous"
-                onLoad={onLoadKakao}
-            /> */}
             <Script
                 src="https://developers.kakao.com/sdk/js/kakao.js"
                 strategy="afterInteractive"
@@ -167,7 +161,7 @@ const TravelSchedulePage: React.FC = () => {
                             )}
                             <div className="relative flex flex-col">
                                 <div className="flex flex-col">
-                                    <Text textStyle="headline1" className="mb-[8px] text-gray-600 font-semibold">
+                                    <Text textStyle="headline1" className="mb-[8px] text-[#858588] font-semibold">
                                         {itinerary?.title || "여행 일정"}
                                     </Text>
                                     <Text textStyle="title2" className="font-bold">
