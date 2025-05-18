@@ -69,9 +69,12 @@ const TravelSchedulePage: React.FC = () => {
     const handleCopyUrl = () => {
         const fullUrl = `${window.location.origin}${pathname}`;
         shareModal.close();
-        navigator.clipboard.writeText(fullUrl)
-            .then(() => toast.success('링크를 클립보드에 복사했어요.'))
-            .catch(() => toast.error('링크 복사에 실패했어요.'));
+        try {
+            navigator.clipboard.writeText(fullUrl);
+            toast.success('링크를 클립보드에 복사했어요.');
+        } catch (err) {
+            toast.error('링크 복사에 실패했어요.');
+        }
     };
 
     const handleShareKakao = () => {
