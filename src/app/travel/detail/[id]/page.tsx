@@ -4,13 +4,21 @@ import React, { useEffect, useState } from "react";
 import Text from "@/components/Text";
 import { getItineraryDetail } from "@/lib/api/itinerary";
 import { getUserItinerariesById } from "@/lib/api/user";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { usePublicTravelDetailStore } from "@/store/useRecommendTravelStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import DayScheduleCard_confirmVer from "@/components/ScheduleCard_confirmVer";
 import AlertBox from "@/components/modals/tooltip";
+import { useModal } from "@/hooks/useModal";
+import DefaultModal from "@/components/modals/DefaultModal";
+import SavePdfButton from "@/components/SavePdfButton";
+import Image from "next/image";
+import { toast } from '@/store/useToastStore';
+import Script from 'next/script';
 
 const TravelSchedulePage: React.FC = () => {
+    const pathname = usePathname();
+
     const { id: itineraryId } = useParams();
     const { itinerary, setItinerary, clearItinerary } = usePublicTravelDetailStore();
     const { user } = useAuthStore();
@@ -52,6 +60,71 @@ const TravelSchedulePage: React.FC = () => {
         return () => clearItinerary();
     }, [itineraryId, setItinerary, clearItinerary, user]);
 
+    const onLoadKakao = () => {
+        const KAKAO_API_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY;
+        const Kakao = (window as any).Kakao;
+        Kakao.init(KAKAO_API_KEY)
+    }
+
+    const handleCopyUrl = () => {
+        const fullUrl = `${window.location.origin}${pathname}`;
+        shareModal.close();
+        navigator.clipboard.writeText(fullUrl)
+            .then(() => toast.success('링크를 클립보드에 복사했어요.'))
+            .catch(() => toast.error('링크 복사에 실패했어요.'));
+    };
+
+    const handleShareKakao = () => {
+        const fullUrl = `${window.location.origin}${pathname}`;
+        const Kakao = (window as any).Kakao;
+        Kakao.Share.sendDefault({
+            objectType: 'text',
+            text: '어디로 떠날지 고민 중이라면, 모먼티어가 도와드릴게요',
+            link: {
+                mobileWebUrl: fullUrl,
+                webUrl: fullUrl,
+            },
+        });
+        shareModal.close();
+
+    }
+
+    const shareModal = useModal(() => (
+        <DefaultModal
+            title="이제 일정을 공유해볼까요?"
+            description={`완성된 일정을 원하는 방식으로 공유해보세요.\n 필요 없다면 건너뛰어도 괜찮아요!`}
+            onClose={shareModal.close}
+        >
+            <div className="flex mt-[36px] justify-between px-[34px] py-[55px]">
+                <button
+                    className='flex flex-col justify-center items-center text-[#C1C1C1]'
+                    onClick={handleShareKakao}>
+                    <Image
+                        src="/icons/kakao_round.png"
+                        alt='kakaoTalk'
+                        width={60}
+                        height={60}
+                        className='mb-2.5'
+                    />
+                    카카오톡 공유
+                </button>
+                <button
+                    className='flex flex-col justify-center items-center text-[#C1C1C1]'
+                    onClick={handleCopyUrl}>
+                    <Image
+                        src="/icons/URL.svg"
+                        alt='URL'
+                        width={60}
+                        height={60}
+                        className='mb-2.5'
+                    />
+                    URL 공유
+                </button>
+                <SavePdfButton onClickButton={shareModal.close} />
+            </div>
+        </DefaultModal>
+    ))
+
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-full">
@@ -69,44 +142,60 @@ const TravelSchedulePage: React.FC = () => {
     }
 
     return (
-        <div className="flex h-[calc(100vh-60px)] max-w-[100vw] overflow-hidden">
-            <div className="flex flex-col w-[980px] items-start py-[60px] px-[40px] gap-5 overflow-y-auto box-border">
-                <section className="flex flex-col w-full mb-5 gap-[40px]">
-                    {!isOwner && (
-                        <AlertBox
-                            message="보기 전용 페이지 입니다."
-                            description="이 페이지는 일정 확인만 가능하며, 맞춤형 여행일정 생성 및 편집은 카카오 로그인 후에 이용 가능합니다."
-                        />
-                    )}
-                    <div className="relative flex flex-col">
-                        <div className="flex flex-col">
-                            <Text textStyle="headline1" className="mb-[8px] text-gray-600 font-semibold">
-                                {itinerary?.title || "여행 일정"}
-                            </Text>
-                            <Text textStyle="title2" className="font-bold">
-                                {`휴식이 필요한 유정님을 위한 ${itinerary?.title || "여행코스"}`}
-                            </Text>
-                        </div>
-                        <img
-                            src="/icons/Share.svg"
-                            alt="공유 아이콘"
-                            className="absolute top-0 right-0 w-[28px] h-[28px] object-cover"
-                        />
+        <>
+            {/* <Script
+                src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.5/kakao.min.js"
+                integrity="sha384-dok87au0gKqJdxs7msEdBPNnKSRT+/mhTVzq+qOhcL464zXwvcrpjeWvyj1kCdq6"
+                crossOrigin="anonymous"
+                onLoad={onLoadKakao}
+            /> */}
+            <Script
+                src="https://developers.kakao.com/sdk/js/kakao.js"
+                strategy="afterInteractive"
+                onLoad={onLoadKakao}
+
+            />
+            <div className="flex h-[calc(100vh-60px)] max-w-[100vw] overflow-hidden">
+                <div className="flex flex-col w-[980px] items-start py-[60px] px-[40px] gap-5 overflow-y-auto box-border">
+                    <div id="pdf-target" >
+                        <section className="flex flex-col w-full mb-5 gap-[40px]">
+                            {!isOwner && (
+                                <AlertBox
+                                    message="보기 전용 페이지 입니다."
+                                    description="이 페이지는 일정 확인만 가능하며, 맞춤형 여행일정 생성 및 편집은 카카오 로그인 후에 이용 가능합니다."
+                                />
+                            )}
+                            <div className="relative flex flex-col">
+                                <div className="flex flex-col">
+                                    <Text textStyle="headline1" className="mb-[8px] text-gray-600 font-semibold">
+                                        {itinerary?.title || "여행 일정"}
+                                    </Text>
+                                    <Text textStyle="title2" className="font-bold">
+                                        {`휴식이 필요한 ${user ? user.userName : ''}님을 위한 ${itinerary?.title || "여행코스"}`}
+                                    </Text>
+                                </div>
+                                <button onClick={shareModal.open}>
+                                    <img
+                                        src="/icons/Share.svg"
+                                        alt="공유 아이콘"
+                                        className="absolute top-0 right-0 w-[28px] h-[28px] object-cover"
+                                    />
+                                </button>
+                            </div>
+                            <Text textStyle="title3" className="font-bold">일정</Text>
+                        </section>
+                        <section className="w-full flex flex-col gap-5">
+                            {itinerary?.dailyScheduleDtos.map((schedule, index) => (
+                                <DayScheduleCard_confirmVer
+                                    key={`${index}-${JSON.stringify(schedule.attractions)}`}
+                                    dailySchedule={schedule}
+                                />
+                            ))}
+                        </section>
                     </div>
-                    <Text textStyle="title3" className="font-bold">일정</Text>
-                </section>
-
-
-                <section className="w-full flex flex-col gap-5">
-                    {itinerary?.dailyScheduleDtos.map((schedule, index) => (
-                        <DayScheduleCard_confirmVer
-                            key={`${index}-${JSON.stringify(schedule.attractions)}`}
-                            dailySchedule={schedule}
-                        />
-                    ))}
-                </section>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 
