@@ -1,6 +1,6 @@
 'use client';
 
-import html2canvas from 'html2canvas-pro';
+import domtoimage from 'dom-to-image';
 import jsPDF from 'jspdf';
 import Image from 'next/image';
 
@@ -9,41 +9,58 @@ export default function SavePdfButton({ onClickButton }: { onClickButton: () => 
     const element = document.getElementById('pdf-target');
     if (!element) return;
 
-    // ✅ 폰트 로딩 기다리기
-    await document.fonts.ready;
+    // ✅ PNG 이미지로 변환
+    domtoimage.toPng(element, {
+      quality: 1,
+      bgcolor: '#FFFFFF',
+    })
+      .then((dataUrl) => {
+        // ✅ PDF 생성
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
 
-    const canvas = await html2canvas(element, {
-      scale: 2,
-      useCORS: true,
-    });
+        // ✅ Image 객체 생성
+        const img = new window.Image();
+        img.crossOrigin = "anonymous";
+        img.src = dataUrl;
 
-    const imgData = canvas.toDataURL('image/png');
+        img.onload = () => {
+          // ✅ 실제 크기 계산 (DOM 사이즈와 PDF 비율 맞춤)
+          const ratio = img.width / img.height;
+          const imgWidth = pdfWidth;
+          const imgHeight = pdfWidth / ratio;
 
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
+          // ✅ 페이지 넘기기 처리
+          const totalPages = Math.ceil(imgHeight / pdfHeight);
 
-    const imgProps = pdf.getImageProperties(imgData);
-    const imgWidth = pdfWidth;
-    const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+          for (let page = 0; page < totalPages; page++) {
+            if (page > 0) pdf.addPage();
+            const position = -(pdfHeight * page);
 
-    let heightLeft = imgHeight;
-    let position = 0;
+            // ✅ 페이지 별로 이미지 잘라서 넣기
+            pdf.addImage(
+              dataUrl,
+              'PNG',
+              0,
+              position,
+              imgWidth,
+              imgHeight
+            );
+          }
 
-    // 첫 페이지
-    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-    heightLeft -= pdfHeight;
+          // ✅ PDF 다운로드
+          pdf.save('my-document.pdf');
+          onClickButton();
+        };
 
-    // 다음 페이지들
-    while (heightLeft > 0) {
-      position -= pdfHeight;
-      pdf.addPage();
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pdfHeight;
-    }
-
-    pdf.save('my-document.pdf');
-    onClickButton();
+        img.onerror = (error) => {
+          console.error("이미지 로딩 실패: ", error);
+        };
+      })
+      .catch((error) => {
+        console.error('PDF 생성 중 에러 발생:', error);
+      });
   };
 
   return (
