@@ -1,13 +1,22 @@
 "use client";
 
+import { useRecommendTravelDetailStore } from "@/store/useRecommendTravelStore";
+import { useEffect } from "react";
+
 type DayScheduleCardSkeletonProps = {
     count: number;
 }
 
 const DayScheduleCardSkeleton = ({ count }: DayScheduleCardSkeletonProps) => {
+    const clearItinerary = useRecommendTravelDetailStore((state) => state.clearItinerary);
+
+    useEffect(() => {
+        clearItinerary();
+    }, [clearItinerary]);
 
     return (
         <>
+
             <div className='h-[54px] rounded-[11px] animate-pulse bg-[#E8E8EA] flex items-center justify-end px-[24px] mb-2'>
                 <img src="/icons/Chevron Down.svg" alt="expand" className="w-[28px] h-[28px]" />
             </div>
