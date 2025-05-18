@@ -3,15 +3,16 @@
 import Button from '@/components/Button';
 import ConfirmSaveItinerary from '@/components/ConfirmSaveItinerary';
 import ConfirmModal from '@/components/modals/ConfirmModal';
-import SavePdfButton from '@/components/SavePdfButton';
 import DayScheduleCard from '@/components/ScheduleCard';
+import DayScheduleCardSkeleton from '@/components/ScheduleCard_Skeleton';
 import Text from '@/components/Text';
 import UserExperienceRate from '@/components/UserExperienceRate';
 import { useModal } from '@/hooks/useModal';
-import { saveItinerary } from '@/lib/api/itinerary';
+import { createItinerary, saveItinerary } from '@/lib/api/itinerary';
 import { saveUserExperience } from '@/lib/api/user';
 import { useAuthStore } from '@/store/useAuthStore';
-import { useRecommendTravelDetailStore } from '@/store/useRecommendTravelStore';
+import { useLoadingStore } from '@/store/useLoadingStore';
+import { useRecommendTravelDetailStore, useUserInputStore } from '@/store/useRecommendTravelStore';
 import { toast } from '@/store/useToastStore';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -23,7 +24,8 @@ const TravelSchedulePage: React.FC = () => {
     const updateItinerary = useRecommendTravelDetailStore((state) => state.updateItinerary);
     const user = useAuthStore((state) => state.user);
 
-    const [isLoading, setIsLoading] = useState(false);
+    const isLoading = useLoadingStore((state) => state.isLoading);
+    const loadingType = useLoadingStore((state) => state.loadingType);
 
     const [checked, setCheckd] = useState(false); // [상세일정 저장] 퍼블릭 공개여부
 
@@ -32,6 +34,25 @@ const TravelSchedulePage: React.FC = () => {
     const [createdId, setCreatedId] = useState('');
 
     const checkedRef = React.useRef(checked);
+
+    const userInputs = useUserInputStore((state) => state.inputs);
+
+    useEffect(() => {
+        if (!userInputs) {
+            router.push('/travel/recommend')
+            return;
+        }
+
+        const getItinerary = async () => {
+            const { requestCount, ...params } = userInputs;
+            const result = await createItinerary(params);
+            if (result) {
+                useRecommendTravelDetailStore.getState().setItinerary(result);
+            }
+        }
+
+        getItinerary();
+    }, [])
 
     useEffect(() => {
         checkedRef.current = checked;
@@ -87,8 +108,6 @@ const TravelSchedulePage: React.FC = () => {
             if (!itinerary?.dailyScheduleDtos || isLoading) {
                 return;
             }
-
-            setIsLoading(false);
         };
 
         fetchData();
@@ -139,6 +158,29 @@ const TravelSchedulePage: React.FC = () => {
         router.push(`/travel/detail/${createdId}`);
     };
 
+    if (isLoading && loadingType === 'skeleton') return (
+        <div className='flex h-[calc(100vh-60px)] max-w-[100vw] overflow-hidden'>
+            <div className='flex flex-col w-[980px] items-start py-[60px] px-[40px] gap-5 overflow-y-auto box-border'>
+                {/* 해당페이지의 헤더 */}
+                <section className='flex flex-col w-full mb-5'>
+                    <div className='w-[98px] h-[26px] animate-pulse bg-[#E8E8EA] mb-[8px]'></div>
+                    <div className='w-[541px] h-[38px] animate-pulse bg-[#E8E8EA] mb-[40px]'></div>
+                    <div className='w-[41px] h-[32px] animate-pulse bg-[#E8E8EA]'></div>
+                </section>
+
+                {/* 세부일정의 카드 UI 영역 */}
+                <section className='w-full flex flex-col gap-5'>
+                    <DayScheduleCardSkeleton count={3} />
+                    <DayScheduleCardSkeleton count={1} />
+                </section>
+                {/* 저장 버튼 영역 */}
+                <div className='w-full flex justify-end mt-5'>
+                    <div className='mx-auto rounded-[25px] h-[48px] w-[180px] animate-pulse bg-[#C7C8C9]'></div>
+                </div>
+            </div>
+        </div>
+    );
+
     return (
         <div className='flex h-[calc(100vh-60px)] max-w-[100vw] overflow-hidden'>
             <div className='flex flex-col w-[980px] items-start py-[60px] px-[40px] gap-5 overflow-y-auto box-border'>
@@ -173,8 +215,8 @@ const TravelSchedulePage: React.FC = () => {
                         일정 저장하기
                     </Button>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 

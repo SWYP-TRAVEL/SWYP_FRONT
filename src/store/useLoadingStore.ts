@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type LoadingType = 'none' | 'fullscreen' | 'inline';
+type LoadingType = 'none' | 'fullscreen' | 'inline' | 'skeleton';
 
 interface LoadingStore {
   isLoading: boolean;

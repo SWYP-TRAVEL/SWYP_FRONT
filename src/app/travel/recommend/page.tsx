@@ -23,7 +23,6 @@ export default function TravelRecommendPage() {
   const user = useAuthStore((state) => state.user);
 
   // 화면 내 상태 정의 영역
-  const [isLoading, setIsLoading] = useState(false);
   const [selectedTravel, setSelectedTravel] = useState<RecommendResponse | null>(null);
   const [errMessage, setErrMessage] = useState('');
 
@@ -41,8 +40,6 @@ export default function TravelRecommendPage() {
   // 카드 클릭 시 컨펌 모달 => 일정 생성하기 클릭 이벤트
   const onConfirmCreateItinerary = async () => {
     try {
-      setIsLoading(true);
-
       const params = {
         travelWith: userInputs?.travelWith || "",
         startDate: userInputs?.startDate || "",
@@ -52,23 +49,18 @@ export default function TravelRecommendPage() {
         latitude: selectedTravel?.latitude || 0,
         longitude: selectedTravel?.longitude || 0,
       };
-      const result = await createItinerary(params);
 
-      if (result) {
-        useRecommendTravelDetailStore.getState().setItinerary(result);
-        router.push("/travel/detail");
-      }
+      useUserInputStore.getState().setInputs({ ...params, requestCount: userInputs?.requestCount || 0 })
+      router.push("/travel/detail");
     } catch (err) {
       console.error("일정 생성 중 오류 발생:", err);
     }
-    setIsLoading(false);
   };
 
   // 다른 추천 클릭 이벤트
   const onClickOtherItinerary = async () => {
     try {
       if (!userInputs) return;
-      setIsLoading(true);
       const { requestCount, ...params } = userInputs;
       const result = await getRecommendedDestinations(params);
       useRecommendTravelListStore.getState().setItems(result);
@@ -76,8 +68,6 @@ export default function TravelRecommendPage() {
     } catch (err: any) {
       setErrMessage(err.message);
       errModal.open();
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -142,7 +132,6 @@ export default function TravelRecommendPage() {
           </Text>
         </div>
       </main>
-      {isLoading ? <FullScreenLoader /> : null}
     </>
   );
 }

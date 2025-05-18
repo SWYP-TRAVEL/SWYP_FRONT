@@ -59,7 +59,11 @@ export default function UserInputs() {
         travelWith: companion,
         description: travelDescription,
         duration: Number(duration),
-        startDate: formattedToday
+        startDate: formattedToday,
+        // 아래는 추가된 항목
+        theme: '',
+        latitude: 0,
+        longitude: 0
       };
       const result = await getRecommendedDestinations(params);
       // store 저장

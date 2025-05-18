@@ -105,7 +105,8 @@ export const createItinerary = async (
 ): Promise<ItineraryDetail> => {
     try {
         const response = await axiosInstance.get<ItineraryDetail>("/itinerary/create", {
-            params: data
+            params: data,
+            loadingType: 'skeleton'
         });
         return mergeItineraryByDate(response.data);
     } catch (error: any) {
