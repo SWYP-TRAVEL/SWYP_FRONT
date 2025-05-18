@@ -48,7 +48,7 @@ export interface UnlinkResponse {
  */
 export const unlinkKakaoAccount = async (): Promise<UnlinkResponse> => {
     try {
-        const response = await axiosInstance.delete<UnlinkResponse>("/auth/unlink");
+        const response = await axiosInstance.post<UnlinkResponse>("/auth/unlink");
         return response.data;
     } catch (error: any) {
         throw new Error(error.response?.data.message || "카카오 계정 탈퇴에 실패했습니다.");
