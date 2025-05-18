@@ -54,14 +54,17 @@ const DetailCard: React.FC<DetailCardProps> = ({
 
                 <div className="w-[280px] h-[160px] overflow-hidden rounded-2xl">
                     <img
-                        src={
-                            imageUrl && imageUrl.trim() !== ""
-                                ? `/api/proxy?url=${encodeURIComponent(imageUrl)}`
-                                : `/api/proxy?url=${encodeURIComponent("https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=5dc87836-b647-45ef-ae17-e3247f91b8b4")}`
+                        src={imageUrl && imageUrl.trim() !== ""
+                            ? `/api/proxy?url=${encodeURIComponent(imageUrl)}`
+                            : `/api/proxy?url=${encodeURIComponent("https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=5dc87836-b647-45ef-ae17-e3247f91b8b4")}`
                         }
                         alt={title}
                         crossOrigin="anonymous"
                         className="object-cover w-full h-full"
+                        onError={(e) => {
+                            console.error("Image Load Failed:", e);
+                            e.currentTarget.src = "https://via.placeholder.com/300?text=Image+Not+Found";
+                        }}
                     />
                 </div>
             </div>
