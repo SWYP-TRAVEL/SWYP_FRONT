@@ -73,7 +73,7 @@ const TravelSchedulePage: React.FC = () => {
             navigator.clipboard.writeText(fullUrl);
             toast.success('링크를 클립보드에 복사했어요.');
         } catch (err) {
-            toast.error('링크 복사에 실패했어요.');
+            toast.error('곧 URL 링크복사 기능을 추가할게요.');
         }
     };
 
