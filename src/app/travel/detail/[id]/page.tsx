@@ -61,10 +61,9 @@ const TravelSchedulePage: React.FC = () => {
     }, [itineraryId, setItinerary, clearItinerary, user]);
 
     const onLoadKakao = () => {
-        console.log(window.kakao.init)
-        // const Kakao = (window as any).kakao;
-        // Kakao.init("KEY....")
-        // console.log('트루가 아니면 공유기능 못씀 : ', Kakao.isInitialized());
+        const KAKAO_API_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY;
+        const Kakao = (window as any).Kakao;
+        Kakao.init(KAKAO_API_KEY)
     }
 
     const handleCopyUrl = () => {
@@ -76,15 +75,16 @@ const TravelSchedulePage: React.FC = () => {
     };
 
     const handleShareKakao = () => {
-        // const fullUrl = `${window.location.origin}${pathname}`;
-        // Kakao.Share.sendDefault({
-        //     objectType: 'text',
-        //     text: '어디로 떠날지 고민 중이라면, 모먼티어가 도와드릴게요',
-        //     link: {
-        //         mobileWebUrl: fullUrl,
-        //         webUrl: fullUrl,
-        //     },
-        // });
+        const fullUrl = `${window.location.origin}${pathname}`;
+        const Kakao = (window as any).Kakao;
+        Kakao.Share.sendDefault({
+            objectType: 'text',
+            text: '어디로 떠날지 고민 중이라면, 모먼티어가 도와드릴게요',
+            link: {
+                mobileWebUrl: fullUrl,
+                webUrl: fullUrl,
+            },
+        });
         shareModal.close();
 
     }
@@ -143,11 +143,17 @@ const TravelSchedulePage: React.FC = () => {
 
     return (
         <>
-            <Script
+            {/* <Script
                 src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.5/kakao.min.js"
                 integrity="sha384-dok87au0gKqJdxs7msEdBPNnKSRT+/mhTVzq+qOhcL464zXwvcrpjeWvyj1kCdq6"
                 crossOrigin="anonymous"
                 onLoad={onLoadKakao}
+            /> */}
+            <Script
+                src="https://developers.kakao.com/sdk/js/kakao.js"
+                strategy="afterInteractive"
+                onLoad={onLoadKakao}
+
             />
             <div className="flex h-[calc(100vh-60px)] max-w-[100vw] overflow-hidden">
                 <div className="flex flex-col w-[980px] items-start py-[60px] px-[40px] gap-5 overflow-y-auto box-border">
