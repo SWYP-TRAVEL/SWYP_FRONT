@@ -4,7 +4,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import Image from 'next/image';
 
-export default function SavePdfButton() {
+export default function SavePdfButton({ onClickButton }: { onClickButton: () => void }) {
   const handleDownloadPDF = async () => {
     const element = document.getElementById('pdf-target');
     if (!element) return;
@@ -43,6 +43,7 @@ export default function SavePdfButton() {
     }
 
     pdf.save('my-document.pdf');
+    onClickButton();
   };
 
   return (
