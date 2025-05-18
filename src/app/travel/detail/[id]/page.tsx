@@ -25,6 +25,9 @@ const TravelSchedulePage: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isOwner, setIsOwner] = useState(false);
 
+    // 📌 여행 코스 제목 생성
+    const travelTitle = `휴식이 필요한 ${user ? user.userName : ''}님을 위한 ${itinerary?.title || "여행코스"}`;
+
     useEffect(() => {
         const fetchData = async () => {
             if (!itineraryId) {
@@ -123,7 +126,7 @@ const TravelSchedulePage: React.FC = () => {
                     />
                     URL 공유
                 </button>
-                <SavePdfButton onClickButton={shareModal.close} />
+                <SavePdfButton onClickButton={shareModal.close} fileName={travelTitle} />
             </div>
         </DefaultModal>
     ))
@@ -165,10 +168,10 @@ const TravelSchedulePage: React.FC = () => {
                             <div className="relative flex flex-col">
                                 <div className="flex flex-col">
                                     <Text textStyle="headline1" className="mb-[8px] text-[#858588] font-semibold">
-                                        {itinerary?.title || "여행 일정"}
+                                        {travelTitle}
                                     </Text>
                                     <Text textStyle="title2" className="font-bold">
-                                        {`휴식이 필요한 ${user ? user.userName : ''}님을 위한 ${itinerary?.title || "여행코스"}`}
+                                        {travelTitle}
                                     </Text>
                                 </div>
                                 <button onClick={shareModal.open}>
