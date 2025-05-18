@@ -7,11 +7,17 @@ import { persist } from "zustand/middleware";
 
 
 interface UserInput {
+  // 사용자 정보 입력 화면에서 넘기는 값
   travelWith: string;
   description: string;
   duration: number;
   startDate: string;
   requestCount: number;
+  // 추천 리스트 화면에서 넘기는 값
+  theme: string;
+  latitude: number;
+  longitude: number;
+
 }
 
 interface UserInputStore {

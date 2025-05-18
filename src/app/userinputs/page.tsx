@@ -1,7 +1,6 @@
 'use client';
 
 import ChipGroupSingle from '@/components/ChipGroupSingle';
-import FullScreenLoader from '@/components/FullScreenLoader';
 import AlertModal from '@/components/modals/AlertModal';
 import ConfirmModal from '@/components/modals/ConfirmModal';
 import Text from '@/components/Text';
@@ -60,7 +59,11 @@ export default function UserInputs() {
         travelWith: companion,
         description: travelDescription,
         duration: Number(duration),
-        startDate: formattedToday
+        startDate: formattedToday,
+        // 아래는 추가된 항목
+        theme: '',
+        latitude: 0,
+        longitude: 0
       };
       const result = await getRecommendedDestinations(params);
       // store 저장

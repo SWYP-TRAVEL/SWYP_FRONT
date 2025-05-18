@@ -80,6 +80,6 @@ export default axiosInstance;
 
 declare module 'axios' {
   export interface AxiosRequestConfig {
-    loadingType?: 'fullscreen' | 'inline' | 'none';
+    loadingType?: 'fullscreen' | 'inline' | 'none' | 'skeleton';
   }
 }
