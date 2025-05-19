@@ -1,6 +1,14 @@
 import Text from "./Text";
 
-export default function FullScreenLoader() {
+type FullScreenLoaderProps = {
+  title?: string;
+  subTitle?: string;
+}
+
+export default function FullScreenLoader({
+  title = '모먼티어가 맞춤 여행지를 열심히 고르고 있어요!',
+  subTitle = '잠시만 기다려주세요'
+}: FullScreenLoaderProps) {
   return (
     <div className="fixed inset-0 flex flex-col items-center justify-center bg-semantic-static-white z-50">
       <div className="flex space-x-2 mb-4">
@@ -17,12 +25,8 @@ export default function FullScreenLoader() {
         ))}
       </div>
 
-      <Text textStyle="title2" as="p" className="font-bold mt-[84px]">
-        모먼티어가 맞춤 여행지를 열심히 고르고 있어요!
-      </Text>
-      <Text textStyle="heading2" className="font-semibold text-[#8c8c8c] mt-[20px]">
-        잠시만 기다려주세요
-      </Text>
+      <Text textStyle="title2" as="p" className="font-bold mt-[84px]">{title}</Text>
+      <Text textStyle="heading2" className="font-semibold text-[#8c8c8c] mt-[20px]">{subTitle}</Text>
 
       <style jsx>{`
         @keyframes bounce-dot {
