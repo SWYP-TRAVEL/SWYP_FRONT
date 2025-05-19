@@ -34,6 +34,8 @@ const TravelSchedulePage: React.FC = () => {
     const [createdId, setCreatedId] = useState('');
 
     const checkedRef = React.useRef(checked);
+    const ratingRef = React.useRef(rating);
+    const feedbackRef = React.useRef(feedback);
 
     const userInputs = useUserInputStore((state) => state.inputs);
 
@@ -56,7 +58,9 @@ const TravelSchedulePage: React.FC = () => {
 
     useEffect(() => {
         checkedRef.current = checked;
-    }, [checked]);
+        ratingRef.current = rating;
+        feedbackRef.current = feedback;
+    }, [checked, rating, feedback]);
 
     const confirmSaveModal = useModal(() => (
         <ConfirmModal
@@ -122,7 +126,10 @@ const TravelSchedulePage: React.FC = () => {
     const onConfirmUserExperience = async () => {
         try {
             userExperienceModal.close();
-            const params = { rating, feedback };
+            const params = {
+                rating: ratingRef.current,
+                feedback: feedbackRef.current
+            };
             const saveUserExperienceRes = await saveUserExperience(params);
             if (saveUserExperienceRes.success) {
                 toast.success('소중한 의견이 제출되었어요. 감사합니다.');
