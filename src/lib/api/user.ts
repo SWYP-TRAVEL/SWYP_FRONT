@@ -20,7 +20,7 @@ export interface ExperienceResponse {
 export const saveUserExperience = async (content: ExperienceRequest): Promise<ExperienceResponse> => {
     try {
         const response = await axiosInstance.post<ExperienceResponse>("/user/experience", {
-            content,
+            ...content,
         });
 
         return response.data;
