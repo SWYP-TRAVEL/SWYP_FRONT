@@ -185,7 +185,8 @@ export const changeAttraction = async (
     try {
         const response = await axiosInstance.post<Attraction>(
             "/itinerary/change/attraction",
-            data
+            data,
+            { loadingType: 'none' }
         );
         return response.data;
     } catch (error: any) {

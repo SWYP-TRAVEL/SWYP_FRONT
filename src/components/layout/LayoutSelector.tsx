@@ -22,6 +22,7 @@ export default function LayoutSelector({ children }: LayoutSelectorProps) {
     return (
         <>
             {(isLoading && loadingType === 'fullscreen') ? <FullScreenLoader /> : null}
+            {(isLoading && loadingType === 'login') ? <FullScreenLoader title='로그인 처리중입니다.' /> : null}
             {isMapPage
                 ? <MapLayout>{children}</MapLayout>
                 : <AppLayout>{children}</AppLayout>

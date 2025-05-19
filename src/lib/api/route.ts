@@ -27,7 +27,8 @@ export const getRouteTime = async (
                 startLongitude: data.startLongitude,
                 endLatitude: data.endLatitude,
                 endLongitude: data.endLongitude
-            }
+            },
+            loadingType: 'none'
         });
         return response.data;
     } catch (error: any) {

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Text from "./Text";
 import { Attraction } from "@/lib/api/itinerary";
 import { useRecommendTravelDetailStore } from "@/store/useRecommendTravelStore";
@@ -26,6 +26,7 @@ const DetailCard: React.FC<DetailCardProps> = ({
     attractionData,
 }) => {
     const updateAttraction = useRecommendTravelDetailStore((state) => state.updateAttraction);
+    const [isLoading, setIsLoading] = useState(false);
     console.log(title, '===>', hours)
     const handleUpdateClick = async () => {
         try {
@@ -39,8 +40,10 @@ const DetailCard: React.FC<DetailCardProps> = ({
                 coverImage: imageUrl,
             };
 
+            setIsLoading(true);
             const response = await changeAttraction(updatedAttraction);
             updateAttraction(attractionData, response);
+            setIsLoading(false);
         } catch (error) {
             console.error("업데이트 실패:", error);
         }
@@ -51,6 +54,50 @@ const DetailCard: React.FC<DetailCardProps> = ({
             updateAttraction(attractionData, attractionData.previousData);
         }
     };
+    if (isLoading) {
+        return (
+            <div className='rounded-[16px] animate-pulse bg-[#F9F9F9] mb-2 flex'>
+                <div className="flex p-6 gap-4">
+                    <div className="w-6 h-full flex flex-col items-center gap-2">
+                        <img
+                            src="/icons/Handle Desktop.svg"
+                            alt="icon"
+                            className="w-6 h-6 object-contain"
+                        />
+                    </div>
+
+                    <div className="flex flex-col justify-between gap-2 w-[456px] h-[160px]">
+                        <div className="bg-[#EEEEEE] rounded-[4px] w-[45%] h-[30px]"></div>
+                        <div className="w-[55%] bg-[#EEEEEE] h-[26px] rounded-[4px]"></div>
+                        <div className="flex items-center">
+                            <div className='bg-[#EEEEEE] h-[20px] w-[20px] rounded-[4px] mr-1.5'></div>
+                            <div className="bg-[#EEEEEE] h-[20px] w-[70%] rounded-[4px]"></div>
+                        </div>
+                        <div className="flex items-center">
+                            <div className='bg-[#EEEEEE] h-[20px] w-[20px] rounded-[4px] mr-1.5'></div>
+                            <div className="bg-[#EEEEEE] h-[20px] w-[70%] rounded-[4px]"></div>
+                        </div>
+                        <div className="flex items-center">
+                            <div className='bg-[#EEEEEE] h-[20px] w-[20px] rounded-[4px] mr-1.5'></div>
+                            <div className="bg-[#EEEEEE] h-[20px] w-[70%] rounded-[4px]"></div>
+                        </div>
+                    </div>
+
+                    <div className="w-[280px] h-[160px] overflow-hidden rounded-2xl">
+                        <div className='w-full h-full bg-[#EEEEEE]'></div>
+                    </div>
+
+                    <div className="w-6 h-full flex flex-col items-center gap-2">
+                        <img
+                            src="/icons/Re_Request.svg"
+                            alt="icon"
+                            className="w-6 h-6 object-contain cursor-pointer"
+                        />
+                    </div>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="flex flex-col border-2 border-transparent rounded-2xl shadow-lg bg-[#F8F8F8] w-[880px] h-[208px] hover:border-[#9A77FF] transition-colors duration-200">
