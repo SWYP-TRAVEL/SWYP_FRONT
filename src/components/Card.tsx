@@ -65,7 +65,7 @@ export default function Card({
     >
       <div
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${imageUrl})` }}
+        style={{ backgroundImage: `url(${`/api/proxy?url=${encodeURIComponent(imageUrl)}`})` }}
       />
       <div className="absolute inset-0 bg-black/30" />
 
