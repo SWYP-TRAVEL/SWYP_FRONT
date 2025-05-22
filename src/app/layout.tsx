@@ -5,6 +5,7 @@ import "./globals.css";
 import LayoutSelector from '@/components/layout/LayoutSelector';
 import { ModalProvider } from '@/providers/ModalProvider';
 import ToastContainer from '@/components/ToastContainer';
+import ClientLayout from '@/components/layout/ClientLayout';
 
 export const metadata: Metadata = {
   title: 'Momentier',
@@ -19,14 +20,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ko">
       <body>
-        <QueryProvider>
-          <ModalProvider>
-            <LayoutSelector>
-              {children}
-              <ToastContainer />
-            </LayoutSelector>
-          </ModalProvider>
-        </QueryProvider>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );
