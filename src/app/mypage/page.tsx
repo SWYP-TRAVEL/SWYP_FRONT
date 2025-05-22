@@ -11,6 +11,7 @@ import { getUserItineraries, Itinerary } from "@/lib/api/user";
 import { unlinkKakaoAccount } from "@/lib/api/auth";
 import { useModal } from "@/hooks/useModal";
 import ConfirmModal from "@/components/modals/ConfirmModal";
+import { getMyInfo } from "@/lib/api/user";
 
 export default function MyPage() {
     const [courseList, setCourseList] = useState<Itinerary[]>([]);
@@ -18,6 +19,7 @@ export default function MyPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [isExpanded, setIsExpanded] = useState(false);
+    const [createdAt, setCreatedAt] = useState<string | null>(null);
 
     const scrollRef = useRef<HTMLDivElement>(null);
     const isDragging = useRef(false);
@@ -37,8 +39,27 @@ export default function MyPage() {
                 console.error("여행 일정을 불러오는 중 오류 발생:", err.message);
             }
         };
+
+        const fetchMyInfo = async () => {
+            try {
+                const info = await getMyInfo();
+                setCreatedAt(info.createdAt);
+            } catch (e) {
+                console.error("유저 정보 조회 실패:", e);
+            }
+        };
+
         fetchItineraries();
+        fetchMyInfo();
     }, []);
+
+    const formatDate = (isoDate: string) => {
+        const date = new Date(isoDate);
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        return `${yyyy}.${mm}.${dd}`;
+    };
 
     const handleToggle = () => {
         setIsExpanded((prev) => !prev);
@@ -133,7 +154,7 @@ export default function MyPage() {
                         {user?.userName}
                     </Text>
                     <Text as="p" textStyle="label1" className="text-gray-500">
-                        카카오 계정 연결 2025.05.10
+                        카카오 계정 연결 {formatDate(createdAt ?? new Date().toISOString())}
                     </Text>
                 </div>
             </div>
