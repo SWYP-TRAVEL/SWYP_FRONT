@@ -15,6 +15,7 @@ import SavePdfButton from "@/components/SavePdfButton";
 import Image from "next/image";
 import { toast } from '@/store/useToastStore';
 import Script from 'next/script';
+import Tooltip from "@/components/ToolTip";
 
 const TravelSchedulePage: React.FC = () => {
     const pathname = usePathname();
@@ -174,13 +175,15 @@ const TravelSchedulePage: React.FC = () => {
                                         {travelTitle}
                                     </Text>
                                 </div>
-                                <button onClick={shareModal.open}>
-                                    <img
-                                        src="/icons/Share.svg"
-                                        alt="공유 아이콘"
-                                        className="absolute top-0 right-0 w-[28px] h-[28px] object-cover"
-                                    />
-                                </button>
+                                <Tooltip text="여행 일정을 공유할 수 있어요!" direction="top">
+                                    <button onClick={shareModal.open}>
+                                        <img
+                                            src="/icons/Share.svg"
+                                            alt="공유 아이콘"
+                                            className="absolute top-0 right-0 w-[28px] h-[28px] object-cover"
+                                        />
+                                    </button>
+                                </Tooltip>
                             </div>
                             <Text textStyle="title3" className="font-bold">일정</Text>
                         </section>
