@@ -15,18 +15,19 @@ import SavePdfButton from "@/components/SavePdfButton";
 import Image from "next/image";
 import { toast } from '@/store/useToastStore';
 import Script from 'next/script';
+import Tooltip from "@/components/ToolTip";
 
 const TravelSchedulePage: React.FC = () => {
     const pathname = usePathname();
 
     const { id: itineraryId } = useParams();
     const { itinerary, setItinerary, clearItinerary } = usePublicTravelDetailStore();
-    const { user } = useAuthStore();
+    const { user, isLoggedIn } = useAuthStore();
     const [isLoading, setIsLoading] = useState(true);
     const [isOwner, setIsOwner] = useState(false);
 
     // 📌 여행 코스 제목 생성
-    const travelTitle = `휴식이 필요한 ${user ? user.userName : ''}님을 위한 ${itinerary?.title || "여행코스"}`;
+    const travelTitle = isLoggedIn ? `${itinerary?.title || "여행코스"}` : `휴식이 필요한 ${user ? user.userName : ''}님을 위한 ${itinerary?.title || "여행코스"}`;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -174,13 +175,17 @@ const TravelSchedulePage: React.FC = () => {
                                         {travelTitle}
                                     </Text>
                                 </div>
-                                <button onClick={shareModal.open}>
-                                    <img
-                                        src="/icons/Share.svg"
-                                        alt="공유 아이콘"
-                                        className="absolute top-0 right-0 w-[28px] h-[28px] object-cover"
-                                    />
-                                </button>
+                                {isLoggedIn && (
+                                    <Tooltip text="여행 일정을 공유할 수 있어요!" direction="top">
+                                        <button onClick={shareModal.open}>
+                                            <img
+                                                src="/icons/Share.svg"
+                                                alt="공유 아이콘"
+                                                className="absolute top-0 right-0 w-[28px] h-[28px] object-cover"
+                                            />
+                                        </button>
+                                    </Tooltip>
+                                )}
                             </div>
                             <Text textStyle="title3" className="font-bold">일정</Text>
                         </section>

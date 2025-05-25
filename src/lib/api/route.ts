@@ -10,7 +10,9 @@ export interface RouteTimeRequest {
 export interface RouteTimeResponse {
     walkingDuration: number;
     drivingDuration: number;
+    distance: string;
 }
+
 
 /**
  * 두 지점 간 소요 시간 조회

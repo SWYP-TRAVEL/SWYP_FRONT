@@ -33,7 +33,9 @@ const TravelSchedulePage: React.FC = () => {
     const [feedback, setFeedback] = useState(''); // [사용자 경험 평가] 이용후기
     const [createdId, setCreatedId] = useState(''); // 상세일정 저장 시 생성되는 id
 
-    const checkedRef = useRef(checked);
+    const checkedRef = React.useRef(checked);
+    const ratingRef = React.useRef(rating);
+    const feedbackRef = React.useRef(feedback);
 
     const userInputs = useUserInputStore((state) => state.inputs);
 
@@ -64,7 +66,9 @@ const TravelSchedulePage: React.FC = () => {
     // public 저장여부 부수효과
     useEffect(() => {
         checkedRef.current = checked;
-    }, [checked]);
+        ratingRef.current = rating;
+        feedbackRef.current = feedback;
+    }, [checked, rating, feedback]);
 
     //  부수효과
     useEffect(() => {
@@ -127,7 +131,10 @@ const TravelSchedulePage: React.FC = () => {
     const onConfirmUserExperience = async () => {
         try {
             userExperienceModal.close();
-            const params = { rating, feedback };
+            const params = {
+                rating: ratingRef.current,
+                feedback: feedbackRef.current
+            };
             const saveUserExperienceRes = await saveUserExperience(params);
             if (saveUserExperienceRes.success) {
                 toast.success('소중한 의견이 제출되었어요. 감사합니다.');

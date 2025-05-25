@@ -57,6 +57,10 @@ export default function Card({
     width: width ?? CARD_WIDTHS[size],
   };
 
+  const resolvedImageUrl = imageUrl?.trim()
+    ? `/api/proxy?url=${encodeURIComponent(imageUrl)}`
+    : `/api/proxy?url=${encodeURIComponent("https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=5dc87836-b647-45ef-ae17-e3247f91b8b4")}`;
+
   return (
     <Component
       className={`${CARD_STYLES[size]} relative overflow-hidden cursor-pointer`}
@@ -65,7 +69,7 @@ export default function Card({
     >
       <div
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${imageUrl})` }}
+        style={{ backgroundImage: `url(${resolvedImageUrl})` }}
       />
       <div className="absolute inset-0 bg-black/30" />
 

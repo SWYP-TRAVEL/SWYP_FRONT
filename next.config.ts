@@ -10,9 +10,6 @@ const nextConfig = {
       },
     ];
   },
-  experimental: {
-    turbo: false, // Turbopack 비활성화
-  },
   basePath: "",
   assetPrefix: isStorybookExport ? "/SWYP_FRONT/" : "",
   images: {

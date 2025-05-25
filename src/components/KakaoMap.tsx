@@ -24,11 +24,11 @@ const KakaoMap: React.FC = () => {
         : usePublicTravelDetailStore((state) => state.itinerary);
 
     const colorCycle = [
-        "#FF0000",
-        "#FF7F00",
-        "#FFFF00",
-        "#00FF00",
-        "#0000FF",
+        "#9A77FF",
+        "#7779FF",
+        "#77ABFF",
+        "#C477FF",
+        "#E477FF",
         "#4B0082",
         "#8B00FF",
     ];

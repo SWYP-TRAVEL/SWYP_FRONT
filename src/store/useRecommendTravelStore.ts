@@ -90,7 +90,7 @@ const calculateScheduleTimes = async (places: Attraction[]): Promise<Attraction[
         nextPlace.longitude
       ) {
         try {
-          const { walkingDuration, drivingDuration } = await getRouteTime({
+          const { walkingDuration, drivingDuration, distance } = await getRouteTime({
             startLatitude: currentPlace.latitude,
             startLongitude: currentPlace.longitude,
             endLatitude: nextPlace.latitude,
@@ -99,6 +99,7 @@ const calculateScheduleTimes = async (places: Attraction[]): Promise<Attraction[
 
           if (walkingDuration) updatedPlace.travelWalkTime = `${walkingDuration}분`;
           if (drivingDuration) updatedPlace.travelCarTime = `${drivingDuration}분`;
+          if (distance) updatedPlace.travelDistance = `${distance}`
           updatedPlace.travelDistance = '거리 정보 추후 업데이트';
         } catch (error) {
           console.error("경로 계산 실패:", error);
