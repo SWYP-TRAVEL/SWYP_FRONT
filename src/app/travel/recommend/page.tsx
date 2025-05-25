@@ -44,13 +44,15 @@ export default function TravelRecommendPage() {
         travelWith: userInputs?.travelWith || "",
         startDate: userInputs?.startDate || "",
         duration: userInputs?.duration || -1,
-        description: userInputs?.description || "",
         theme: selectedTravel?.theme || '',
         latitude: selectedTravel?.latitude || 0,
         longitude: selectedTravel?.longitude || 0,
       };
 
-      useUserInputStore.getState().setInputs({ ...params, requestCount: userInputs?.requestCount || 0 })
+      const temp = userInputs;
+      if (!temp) return;
+
+      useUserInputStore.getState().setInputs({ ...temp, ...params, requestCount: userInputs?.requestCount || 0 })
       router.push("/travel/detail");
     } catch (err) {
       console.error("일정 생성 중 오류 발생:", err);
@@ -62,7 +64,12 @@ export default function TravelRecommendPage() {
     try {
       if (!userInputs) return;
       const { requestCount, ...params } = userInputs;
-      const result = await getRecommendedDestinations(params);
+      const reqParams = {
+        feeling: params.wantedDto.feeling,
+        atmosphere: params.wantedDto.atmosphere,
+        activities: params.wantedDto.activities,
+      }
+      const result = await getRecommendedDestinations(reqParams);
       useRecommendTravelListStore.getState().setItems(result);
       useUserInputStore.getState().setInputs({ ...params, requestCount: userInputs.requestCount + 1 });
     } catch (err: any) {

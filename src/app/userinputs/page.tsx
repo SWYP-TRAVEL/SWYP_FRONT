@@ -57,20 +57,24 @@ export default function UserInputs() {
 
       const formattedToday = `${yyyy}-${mm}-${dd}`;
 
-      const params = {
+      const reqParams = {
+        feeling: feelingDescription,
+        atmosphere: atmosphereDescription,
+        activities: activityDescription,
+      }
+      const additionalParams = {
         travelWith: companion,
-        description: feelingDescription,
         duration: Number(duration),
         startDate: formattedToday,
         // 아래는 추가된 항목
         theme: '',
         latitude: 0,
         longitude: 0
-      };
-      const result = await getRecommendedDestinations(params);
+      }
+      const result = await getRecommendedDestinations(reqParams);
       // store 저장
       useRecommendTravelListStore.getState().setItems(result);
-      useUserInputStore.getState().setInputs({ ...params, requestCount: 0 });
+      useUserInputStore.getState().setInputs({ ...additionalParams, requestCount: 0, wantedDto: reqParams });
 
       return true;
     } catch (err: any) {
