@@ -19,7 +19,7 @@ export default function Chip({
   return (
     <div
       className={`
-      p-[2px] rounded-full inline-block
+      p-[2px] rounded-full inline-block h-[40px]
       ${selected
           ? 'bg-gradient-to-r from-[#9A77FF] to-[#214BFF]'
           : 'bg-white border border-[#E8E8EA]'}

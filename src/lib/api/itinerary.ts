@@ -32,6 +32,12 @@ export interface ItineraryDetail {
     dailyScheduleDtos: DailyScheduleDtos[];
 }
 
+interface GetRecommendTextParams {
+    feeling: string;
+    atmosphere: string;
+    activities: string;
+}
+
 /**
  * 여행 일정 상세 조회
  * @param id 여행 일정 ID
@@ -165,11 +171,13 @@ export const saveItinerary = async (
     }
 };
 
-export const getRecommendText = async (params: string = '') => {
+export const getRecommendText = async (params: GetRecommendTextParams) => {
     try {
-        const response = await axiosInstance.get<string>('/itinerary/recommend/text', {
+        const response = await axiosInstance.get<GetRecommendTextParams>('/itinerary/recommend/text', {
             params: {
-                input: params
+                feeling: params.feeling,
+                atmosphere: params.atmosphere,
+                activities: params.activities,
             },
             loadingType: 'none'
         });
@@ -185,7 +193,8 @@ export const changeAttraction = async (
     try {
         const response = await axiosInstance.post<Attraction>(
             "/itinerary/change/attraction",
-            data
+            data,
+            { loadingType: 'none' }
         );
         return response.data;
     } catch (error: any) {

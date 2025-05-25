@@ -2,6 +2,7 @@
 
 import Button from '@/components/Button';
 import ConfirmSaveItinerary from '@/components/ConfirmSaveItinerary';
+import AlertModal from '@/components/modals/AlertModal';
 import ConfirmModal from '@/components/modals/ConfirmModal';
 import DayScheduleCard from '@/components/ScheduleCard';
 import DayScheduleCardSkeleton from '@/components/ScheduleCard_Skeleton';
@@ -15,13 +16,12 @@ import { useLoadingStore } from '@/store/useLoadingStore';
 import { useRecommendTravelDetailStore, useUserInputStore } from '@/store/useRecommendTravelStore';
 import { toast } from '@/store/useToastStore';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const TravelSchedulePage: React.FC = () => {
     const router = useRouter();
 
     const itinerary = useRecommendTravelDetailStore((state) => state.itinerary);
-    const updateItinerary = useRecommendTravelDetailStore((state) => state.updateItinerary);
     const user = useAuthStore((state) => state.user);
 
     const isLoading = useLoadingStore((state) => state.isLoading);
@@ -31,7 +31,7 @@ const TravelSchedulePage: React.FC = () => {
 
     const [rating, setRating] = useState(0); // [사용자 경험 평가] 별점
     const [feedback, setFeedback] = useState(''); // [사용자 경험 평가] 이용후기
-    const [createdId, setCreatedId] = useState('');
+    const [createdId, setCreatedId] = useState(''); // 상세일정 저장 시 생성되는 id
 
     const checkedRef = React.useRef(checked);
     const ratingRef = React.useRef(rating);
@@ -39,6 +39,7 @@ const TravelSchedulePage: React.FC = () => {
 
     const userInputs = useUserInputStore((state) => state.inputs);
 
+    // 최초 렌더링 부수효과
     useEffect(() => {
         if (!userInputs) {
             router.push('/travel/recommend')
@@ -46,22 +47,40 @@ const TravelSchedulePage: React.FC = () => {
         }
 
         const getItinerary = async () => {
-            const { requestCount, ...params } = userInputs;
-            const result = await createItinerary(params);
-            if (result) {
-                useRecommendTravelDetailStore.getState().setItinerary(result);
+            try {
+                const { requestCount, ...params } = userInputs;
+                const result = await createItinerary(params);
+                if (result) {
+                    useRecommendTravelDetailStore.getState().setItinerary(result);
+                } else {
+                    handleErrorState();
+                }
+            } catch (err) {
+                handleErrorState();
             }
         }
 
         getItinerary();
     }, [])
 
+    // public 저장여부 부수효과
     useEffect(() => {
         checkedRef.current = checked;
         ratingRef.current = rating;
         feedbackRef.current = feedback;
     }, [checked, rating, feedback]);
 
+    //  부수효과
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!itinerary?.dailyScheduleDtos || isLoading) {
+                return;
+            }
+        };
+        fetchData();
+    }, [itinerary]);
+
+    // 상세일정 저장 모달
     const confirmSaveModal = useModal(() => (
         <ConfirmModal
             title='이대로 세부 일정을 저장할까요?'
@@ -78,6 +97,7 @@ const TravelSchedulePage: React.FC = () => {
         </ConfirmModal>
     ));
 
+    // 상세일정 저장 컨펌
     const onConfirmCreateItinerary = async () => {
         confirmSaveModal.close();
 
@@ -105,21 +125,6 @@ const TravelSchedulePage: React.FC = () => {
             toast.error('여행 일정 저장에 실패했어요. 다시 한 번 시도해 주세요.');
             console.error("일정 저장 중 오류 발생:", err);
         }
-    };
-
-    useEffect(() => {
-        const fetchData = async () => {
-            if (!itinerary?.dailyScheduleDtos || isLoading) {
-                return;
-            }
-        };
-
-        fetchData();
-    }, [itinerary]);
-
-    const handleSave = () => {
-        console.log('✅ 저장된 일정:', itinerary?.dailyScheduleDtos);
-        confirmSaveModal.open();
     };
 
     // 사용자 경험 모달 [확인]
@@ -161,9 +166,30 @@ const TravelSchedulePage: React.FC = () => {
         </ConfirmModal>
     ))
 
+    // 저장 시 최종저장화면으로 이동
     const goToTravelDetail = () => {
         router.push(`/travel/detail/${createdId}`);
     };
+
+    // 엣지케이스 핸들링
+    const handleErrorState = (err: string = '') => {
+        errModal.open();
+    };
+
+    const onCloseErrModal = () => {
+        errModal.close();
+        router.replace('/travel/recommend')
+    };
+
+    // 엣지케이스 모달
+    const errModal = useModal(() => (
+        <AlertModal
+            title='정보를 불러오는데 실패했습니다!'
+            description='상세일정을 불러오는데 실패했습니다. 다시 실행해 주세요!'
+            buttonText='확인'
+            onClose={onCloseErrModal}
+        />
+    ))
 
     if (isLoading && loadingType === 'skeleton') return (
         <div className='flex h-[calc(100vh-60px)] max-w-[100vw] overflow-hidden'>
@@ -203,12 +229,14 @@ const TravelSchedulePage: React.FC = () => {
 
                     {/* 세부일정의 카드 UI 영역 */}
                     <section className='w-full flex flex-col gap-5'>
-                        {itinerary?.dailyScheduleDtos.map((schedule, index) => (
-                            <DayScheduleCard
-                                key={`${index}-${JSON.stringify(schedule.attractions)}`}
-                                dailySchedule={schedule}
-                            />
-                        ))}
+                        {itinerary ?
+                            itinerary.dailyScheduleDtos.map((schedule, index) => (
+                                <DayScheduleCard
+                                    key={`${index}-${JSON.stringify(schedule.attractions)}`}
+                                    dailySchedule={schedule}
+                                />
+                            ))
+                            : null}
                     </section>
 
                 </div>
@@ -217,7 +245,7 @@ const TravelSchedulePage: React.FC = () => {
                     <Button
                         variant='gradation'
                         className='text-white font-semibold text-[16px] leading-[24px] tracking-[0.091px] mx-auto'
-                        onClick={handleSave}
+                        onClick={confirmSaveModal.open}
                     >
                         일정 저장하기
                     </Button>
