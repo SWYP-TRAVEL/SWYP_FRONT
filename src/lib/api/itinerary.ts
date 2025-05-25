@@ -58,10 +58,9 @@ export const getItineraryDetails = async (id: number): Promise<ItineraryDetail[]
 
 
 export interface RecommendRequest {
-    travelWith: string;
-    startDate: string;
-    duration: number;
-    description: string;
+    feeling: string;
+    atmosphere: string;
+    activities: string;
 }
 
 export interface RecommendResponse {
@@ -95,10 +94,14 @@ export interface CreateItineraryRequest {
     travelWith: string;
     startDate: string;
     duration: number;
-    description: string;
     theme: string;
     latitude: number;
     longitude: number;
+    wantedDto: {
+        feeling: string;
+        atmosphere: string;
+        activities: string;
+    }
 }
 
 /**
@@ -110,10 +113,11 @@ export const createItinerary = async (
     data: CreateItineraryRequest
 ): Promise<ItineraryDetail> => {
     try {
-        const response = await axiosInstance.get<ItineraryDetail>("/itinerary/create", {
-            params: data,
-            loadingType: 'skeleton'
-        });
+        const response = await axiosInstance.post<ItineraryDetail>(
+            "/itinerary/create",
+            data,
+            { loadingType: 'skeleton' }
+        );
         return mergeItineraryByDate(response.data);
     } catch (error: any) {
         throw new Error(error.response?.data.message || "여행 일정을 생성하지 못했습니다.");
