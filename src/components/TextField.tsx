@@ -14,7 +14,7 @@ export default function TextField({
   ...otherProps
 }: TextFieldProps) {
   const baseClass =
-    "w-full p-4 text-sm rounded-xl outline-none resize-none transition-colors";
+    "w-full h-[66px] p-[20px] text-sm rounded-xl outline-none resize-none transition-colors";
 
   const variantClass =
     variant === "filled"
