@@ -20,19 +20,21 @@ export default function UserInputs() {
    * isTextLoading : 텍스트 추천 로딩 상태 값
    * companion : 유저입력 동행자타입
    * duration : 유저입력 여행기간
-   * travelDescription : 유저입력 여행스타일
+   * feelingDescription : 유저입력 여행스타일 - 기분
    * isButtonDisabled : [다음] 버튼의 비활성화 여부
    */
   const [isTextLoading, setIsTextLoading] = useState(false);
   const [companion, setCompanion] = useState('');
   const [duration, setDuration] = useState('');
-  const [travelDescription, setTravelDescription] = useState('');
+  // 여행지 추천 텍스트
+  const [feelingDescription, setFeelingDescription] = useState('');
+  const [atmosphereDescription, setAtmosphereDescription] = useState('');
+  const [activityDescription, setActivityDescription] = useState('');
   const isButtonDisabled = useMemo(() => {
     if (companion === '') return true;
     if (duration === '') return true;
-    if (travelDescription === '') return true;
     return false;
-  }, [companion, duration, travelDescription]);
+  }, [companion, duration]);
   const [errMessage, setErrMessage] = useState('');
 
   useEffect(() => {
@@ -57,7 +59,7 @@ export default function UserInputs() {
 
       const params = {
         travelWith: companion,
-        description: travelDescription,
+        description: feelingDescription,
         duration: Number(duration),
         startDate: formattedToday,
         // 아래는 추가된 항목
@@ -101,9 +103,18 @@ export default function UserInputs() {
   const onClickAutoFillInput = async () => {
     try {
       setIsTextLoading(true);
-      setTravelDescription('');
-      const result = await getRecommendText(travelDescription);
-      setTravelDescription(result);
+      const params = {
+        feeling: feelingDescription,
+        atmosphere: atmosphereDescription,
+        activities: activityDescription,
+      }
+      setFeelingDescription('');
+      setAtmosphereDescription('');
+      setActivityDescription('');
+      const result = await getRecommendText(params);
+      setFeelingDescription(result.feeling);
+      setAtmosphereDescription(result.atmosphere);
+      setActivityDescription(result.activities);
     } catch (err: any) {
       setErrMessage(err.message);
       errModal.open();
@@ -131,7 +142,7 @@ export default function UserInputs() {
         <UserInputSummary
           companion={companionText}
           period={durationText}
-          inputText={travelDescription}
+          inputText={feelingDescription}
         />
       </ConfirmModal>
     )
@@ -187,17 +198,15 @@ export default function UserInputs() {
         {/* 여행 스타일 입력 */}
         <div className="mt-[60px]">
           <Text textStyle="title3" className="block mb-2 font-bold">
-            어떤 여행을 꿈꾸고 계신가요? <span className="text-semantic-primary-normal">*</span>
+            여행을 떠나고 싶은 이유가 있나요?
           </Text>
-          <Text textStyle='body1' className='block mb-4 text-semantic-label-alternative'>
-            마음 상태나 원하는 여행 분위기, 스타일 등을 자유롭게 적어주세요!
-          </Text>
+          {/* <Text textStyle='body1' className='block mb-4 text-semantic-label-alternative'>마음 상태나 원하는 여행 분위기, 스타일 등을 자유롭게 적어주세요!</Text> */}
           <div className="relative">
             <TextField
               disabled={isTextLoading}
-              value={travelDescription}
-              onChange={setTravelDescription}
-              placeholder={!isTextLoading ? "요즘 지쳐서 조용하고 힐링되는 여행이었으면 좋겠어요, 자연 쪽으로 가고 싶어요 등" : ""}
+              value={feelingDescription}
+              onChange={setFeelingDescription}
+              placeholder={!isTextLoading ? "요즘 너무 지쳐있어요, 새로운 기분 전환이 필요해요 등" : ""}
               variant="outlined"
             />
             {isTextLoading && (
@@ -214,29 +223,95 @@ export default function UserInputs() {
               </div>
             )}
           </div>
-          <div className="mt-2">
-            <button
-              className='flex items-center px-4 py-2 text-semantic-label-alternative border border-semantic-line-normalneutral rounded-[20px] bg-component-fill-alternative hover:bg-[#9A77FF1A] hover:border-[#9A77FF1A] active:text-semantic-primary-normal active:ring-2 active:ring-semantic-primary-normal ring-offset-0'
-              onClick={onClickAutoFillInput}
+        </div>
+        <div className="mt-[28px]">
+          <Text textStyle="title3" className="block mb-2 font-bold">
+            어떤 분위기의 여행지를 원하시나요?
+          </Text>
+          <div className="relative">
+            <TextField
               disabled={isTextLoading}
-            >
-              <img src='./icons/AI.svg' alt='추천을위한 별모양 아이콘' />
-              <Text as='p' className='ml-2 font-normal'>잘 모르겠어요. 추천해주세요!</Text>
-            </button>
+              value={atmosphereDescription}
+              onChange={setAtmosphereDescription}
+              placeholder={!isTextLoading ? "자연 속 조용한 곳, 북적이는 도시 분위기 등" : ""}
+              variant="outlined"
+            />
+            {isTextLoading && (
+              <div className="absolute left-4 top-7 -translate-y-1/2 text-sm text-gray-500 flex">
+                {"문구를 생성중이에요 ...".split("").map((char, i) => (
+                  <span
+                    key={i}
+                    className="inline-block animate-bounce-char"
+                    style={{ animationDelay: `${i * 0.1}s` }}
+                  >
+                    {char}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
+        </div>
+        <div className="mt-[28px]">
+          <Text textStyle="title3" className="block mb-2 font-bold">
+            이번 여행에서 꼭 해보고 싶은 게 있다면요?
+          </Text>
+          <div className="relative">
+            <TextField
+              disabled={isTextLoading}
+              value={activityDescription}
+              onChange={setActivityDescription}
+              placeholder={!isTextLoading ? "푹 쉬기, 신나는 액티비티, 다양한 맛집 투어 등" : ""}
+              variant="outlined"
+            />
+            {isTextLoading && (
+              <div className="absolute left-4 top-7 -translate-y-1/2 text-sm text-gray-500 flex">
+                {"문구를 생성중이에요 ...".split("").map((char, i) => (
+                  <span
+                    key={i}
+                    className="inline-block animate-bounce-char"
+                    style={{ animationDelay: `${i * 0.1}s` }}
+                  >
+                    {char}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="mt-2">
+          <button
+            className='flex items-center px-4 py-2 text-semantic-label-alternative border border-semantic-line-normalneutral rounded-[20px] bg-component-fill-alternative hover:bg-[#9A77FF1A] hover:border-[#9A77FF1A] active:text-semantic-primary-normal active:ring-2 active:ring-semantic-primary-normal ring-offset-0'
+            onClick={onClickAutoFillInput}
+            disabled={isTextLoading}
+          >
+            <img src='./icons/AI.svg' alt='추천을위한 별모양 아이콘' />
+            <Text as='p' className='ml-2 font-normal'>잘 모르겠어요. 추천해주세요!</Text>
+          </button>
         </div>
 
         {/* 버튼 */}
         <div className="my-[60px]">
-          {/* TODO: 이미지 요소가 들어가는 버튼 => Button component에 녹일 수 있는지? */}
           <button
             disabled={isButtonDisabled}
-            className={`flex justify-between w-[186px] text-[18px] px-5 py-3 rounded-[25px] font-semibold text-semantic-static-white 
+            className={`
+            relative overflow-hidden bg-[linear-gradient(125.9deg,_#9A77FF_23.39%,_#214BFF_104.52%)]
+            hover:text-white transition-colors
+            before:absolute before:inset-0 before:z-0
+            before:opacity-0 hover:before:opacity-100
+            before:bg-[linear-gradient(125.9deg,_#9A77FF_23.39%,_#4D6FFF_104.52%)]
+            before:transition-opacity
+            after:absolute after:inset-0 after:z-0
+            after:bg-black after:opacity-0 hover:after:opacity-20
+            after:transition-opacity
+              w-[186px] text-[18px] px-5 py-3 rounded-[25px] font-semibold text-semantic-static-white 
               ${isButtonDisabled ? 'bg-[#D9D9D9] cursor-not-allowed' : 'bg-semantic-primary-normal hover:bg-[#7C49FF]'}`}
             onClick={onClickNext}
           >
-            다음
-            <img src="./icons/Arrow Right White.svg" alt="오른쪽을 가리키는 화살표" />
+            <Text textStyle='body1' className='relative z-10 flex justify-between'>
+              다음
+              <img src="./icons/Arrow Right White.svg" alt="오른쪽을 가리키는 화살표" />
+            </Text>
           </button>
         </div>
       </section>
