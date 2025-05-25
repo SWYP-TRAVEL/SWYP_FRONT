@@ -250,3 +250,11 @@ const mergeItineraryByDate = (itinerary: ItineraryDetail): ItineraryDetail => {
     };
 };
 
+export const deleteItinerary = async (id: number): Promise<boolean> => {
+    try {
+        const response = await axiosInstance.delete<boolean>(`/itinerary/${id}`);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data.message || "여행 일정 삭제에 실패했습니다.");
+    }
+}
