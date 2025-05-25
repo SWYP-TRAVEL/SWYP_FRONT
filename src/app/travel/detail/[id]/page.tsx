@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Text from "@/components/Text";
-import { getItineraryDetail } from "@/lib/api/itinerary";
+import { deleteItinerary, getItineraryDetail } from "@/lib/api/itinerary";
 import { getUserItinerariesById } from "@/lib/api/user";
 import { useParams, usePathname } from "next/navigation";
 import { usePublicTravelDetailStore } from "@/store/useRecommendTravelStore";
@@ -16,8 +16,12 @@ import Image from "next/image";
 import { toast } from '@/store/useToastStore';
 import Script from 'next/script';
 import Tooltip from "@/components/ToolTip";
+import Button from "@/components/Button";
+import ConfirmModal from "@/components/modals/ConfirmModal";
+import { useRouter } from 'next/navigation';
 
 const TravelSchedulePage: React.FC = () => {
+    const router = useRouter();
     const pathname = usePathname();
 
     const { id: itineraryId } = useParams();
@@ -132,6 +136,36 @@ const TravelSchedulePage: React.FC = () => {
         </DefaultModal>
     ))
 
+    const onConfirmDeleteItinerary = async () => {
+        try {
+            const result = deleteItinerary(Number(itineraryId))
+            if (!result) {
+                toast.error('일정 삭제에 실패했어요. 다시 시도해주세요')
+                return
+            }
+            toast.success('일정 삭제를 완료했어요. 메인화면으로 이동할게요')
+            router.replace('/main')
+        } catch (err) {
+            toast.error('일정 삭제에 실패했어요. 다시 시도해주세요')
+        }
+    }
+
+    // 상세일정 저장 모달
+    const confirmDeleteModal = useModal(() => (
+        <ConfirmModal
+            title='일정을 삭제할까요?'
+            description='한번 삭제한 이후에는 복구할 수 없어요.'
+            cancelText='취소하기'
+            onCancel={confirmDeleteModal.close}
+            confirmText='삭제하기'
+            onConfirm={onConfirmDeleteItinerary}
+        >
+            <div className="p-5 bg-component-fill-alternative rounded-xl space-y-3">
+                <Text as='p' textStyle='body1'>{itinerary?.title}</Text>
+            </div>
+        </ConfirmModal>
+    ));
+
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-full">
@@ -198,6 +232,16 @@ const TravelSchedulePage: React.FC = () => {
                             ))}
                         </section>
                     </div>
+                    {isOwner ?
+                        (<div className="mt-[52px]">
+                            <Button
+                                variant='gradation'
+                                className='text-white font-semibold text-[16px] leading-[24px] tracking-[0.091px] mx-auto'
+                                onClick={confirmDeleteModal.open}
+                            >일정 삭제하기</Button>
+                        </div>)
+                        : null
+                    }
                 </div>
             </div>
         </>
