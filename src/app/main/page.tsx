@@ -8,6 +8,7 @@ import { getPublicItineraries, PublicItinerary } from "@/lib/api/itinerary";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
 import Image from "next/image";
+import Button from "@/components/Button";
 
 export default function Main() {
   const [cards, setCards] = useState<PublicItinerary[]>([]);
@@ -126,17 +127,24 @@ export default function Main() {
       </section>
 
       <section className="mt-8 flex justify-center">
-        <button
-          className="flex px-5 py-[13px] bg-[#FFE812] rounded-full cursor-pointer"
-          onClick={() =>
-            isLoggedIn ? router.push("/userinputs") : openPopupAndHandleLogin()
-          }
-        >
-          <Image src="/icons/kakao.png" alt="kakao icon" width={28} height={28} />
-          <Text textStyle="headline1" className="ml-2 font-semibold">
-            {isLoggedIn ? "시작하기" : "카카오로 시작하기"}
-          </Text>
-        </button>
+        {
+          !isLoggedIn ?
+            (<button
+              className="flex px-5 py-[13px] bg-[#FFE812] rounded-full cursor-pointer"
+              onClick={() =>
+                isLoggedIn ? router.push("/userinputs") : openPopupAndHandleLogin()
+              }
+            >
+              <Image src="/icons/kakao.png" alt="kakao icon" width={28} height={28} />
+              <Text textStyle="headline1" className="ml-2 font-semibold">
+                {isLoggedIn ? "시작하기" : "카카오로 시작하기"}
+              </Text>
+            </button>)
+            :
+            <Button variant="gradation">
+              시작하기
+            </Button>
+        }
       </section>
     </div>
   );
