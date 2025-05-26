@@ -64,7 +64,7 @@ export default function SavePdfButton({ onClickButton, fileName = 'my-document' 
 
   return (
     <button
-      className='flex flex-col text-[#C1C1C1]'
+      className='flex flex-col w-[80px] h-[90px] justify-center items-center text-[#C1C1C1]'
       onClick={handleDownloadPDF}>
       <Image
         src="/icons/Pdf Download.svg"
