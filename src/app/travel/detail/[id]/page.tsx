@@ -49,10 +49,11 @@ const TravelSchedulePage: React.FC = () => {
                     // 사용자 정보 조회 (createBy로 조회)
                     const userData = await getUserItinerariesById(data.createdBy);
 
+                    console.log('로컬에 저장된 유저 ::: ', user)
+                    console.log('서버에서 불러온 유저 ::: ', userData)
+
                     // 로그인된 사용자 정보와 비교
                     if (user && userData.username) {
-                        console.log('로컬에 저장된 유저 ::: ', user)
-                        console.log('서버에서 불러온 유저 ::: ', userData)
                         if (userData.username === user.userName) {
                             setIsOwner(true);
                         }
@@ -110,7 +111,7 @@ const TravelSchedulePage: React.FC = () => {
         >
             <div className="flex mt-[36px] justify-between px-[34px] py-[55px]">
                 <button
-                    className='flex flex-col w-[80px] h-[90px] justify-center items-center text-[#C1C1C1]'
+                    className='flex flex-col w-[80px] h-[90px] justify-center items-center'
                     onClick={handleShareKakao}>
                     <Image
                         src="/icons/kakao_round.png"
@@ -119,7 +120,7 @@ const TravelSchedulePage: React.FC = () => {
                         height={60}
                         className='mb-2.5'
                     />
-                    카카오톡 공유
+                    <Text textStyle="label1" className="text-[#C1C1C1]">카카오톡 공유</Text>
                 </button>
                 <button
                     className='flex flex-col w-[80px] h-[90px] justify-center items-center text-[#C1C1C1]'
@@ -131,7 +132,7 @@ const TravelSchedulePage: React.FC = () => {
                         height={60}
                         className='mb-2.5'
                     />
-                    URL 공유
+                    <Text textStyle="label1" className="text-[#C1C1C1]">URL 공유</Text>
                 </button>
                 <SavePdfButton onClickButton={shareModal.close} fileName={travelTitle} />
             </div>
