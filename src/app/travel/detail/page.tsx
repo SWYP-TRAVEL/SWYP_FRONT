@@ -136,14 +136,16 @@ const TravelSchedulePage: React.FC = () => {
                 feedback: feedbackRef.current
             };
             const saveUserExperienceRes = await saveUserExperience(params);
+            if (user) {
+                // 저장까지 마친 사용자에 한해서 사용경험 모달 띄움 한 계정당 한번씩만 노출되게끔
+                user.hasSubmittedExperience = true;
+            }
             if (saveUserExperienceRes.success) {
                 toast.success('소중한 의견이 제출되었어요. 감사합니다.');
-                goToTravelDetail();
-                if (user) {
-                    // 저장까지 마친 사용자에 한해서 사용경험 모달 띄움 한 계정당 한번씩만 노출되게끔
-                    user.hasSubmittedExperience = true;
-                }
+            } else {
+                toast.error('소중한 의견 제출에 실패했어요. 죄송합니다.');
             }
+            goToTravelDetail();
         } catch (err) {
             console.error(err);
         }

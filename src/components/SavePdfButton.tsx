@@ -3,6 +3,7 @@
 import domtoimage from 'dom-to-image';
 import jsPDF from 'jspdf';
 import Image from 'next/image';
+import Text from './Text';
 
 interface SavePdfButtonProps {
   onClickButton: () => void;
@@ -73,7 +74,7 @@ export default function SavePdfButton({ onClickButton, fileName = 'my-document' 
         height={60}
         className='mb-2.5'
       />
-      PDF 저장
+      <Text textStyle="label1" className="text-[#C1C1C1]">PDF 저장</Text>
     </button>
   );
 }
