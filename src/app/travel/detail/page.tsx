@@ -223,7 +223,7 @@ const TravelSchedulePage: React.FC = () => {
                         <Text textStyle='headline1' className='mb-[8px] text-gray-600'>
                             {itinerary?.title || '여행 일정'}
                         </Text>
-                        <Text textStyle='title2' className='font-bold mb-[40px]'>{`휴식이 필요한 ${user ? user.userName : ''}님을 위한 ${itinerary?.title || '여행코스'}`}</Text>
+                        <Text textStyle='title2' className='font-bold mb-[40px]'>{`${user ? user.userName : ''}님을 위한 ${itinerary?.title || '여행코스'}`}</Text>
                         <Text textStyle='title3' className='font-bold'>일정</Text>
                     </section>
 

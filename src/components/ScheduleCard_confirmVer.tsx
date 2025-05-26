@@ -48,7 +48,7 @@ const DayScheduleCard: React.FC<DayScheduleCardProps> = ({ dailySchedule }) => {
                         <div key={place.name} className="relative flex flex-col gap-2">
                             <DetailCard_confirmVer
                                 title={place.name}
-                                subtitle={`${place.type} / ${place.description}`}
+                                subtitle={place.description}
                                 address={place.address}
                                 hours={place.businessTime}
                                 rating={place.rating}
