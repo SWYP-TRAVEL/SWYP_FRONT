@@ -31,7 +31,7 @@ const TravelSchedulePage: React.FC = () => {
     const [isOwner, setIsOwner] = useState(false);
 
     // 📌 여행 코스 제목 생성
-    const travelTitle = isLoggedIn ? `${itinerary?.title || "여행코스"}` : `휴식이 필요한 ${user ? user.userName : ''}님을 위한 ${itinerary?.title || "여행코스"}`;
+    const travelTitle = isLoggedIn ? `${itinerary?.title || "여행코스"}` : `${user ? user.userName : ''}님을 위한 ${itinerary?.title || "여행코스"}`;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -51,6 +51,8 @@ const TravelSchedulePage: React.FC = () => {
 
                     // 로그인된 사용자 정보와 비교
                     if (user && userData.username) {
+                        console.log('로컬에 저장된 유저 ::: ', user)
+                        console.log('서버에서 불러온 유저 ::: ', userData)
                         if (userData.username === user.userName) {
                             setIsOwner(true);
                         }
@@ -108,7 +110,7 @@ const TravelSchedulePage: React.FC = () => {
         >
             <div className="flex mt-[36px] justify-between px-[34px] py-[55px]">
                 <button
-                    className='flex flex-col justify-center items-center text-[#C1C1C1]'
+                    className='flex flex-col w-[80px] h-[90px] justify-center items-center text-[#C1C1C1]'
                     onClick={handleShareKakao}>
                     <Image
                         src="/icons/kakao_round.png"
@@ -120,7 +122,7 @@ const TravelSchedulePage: React.FC = () => {
                     카카오톡 공유
                 </button>
                 <button
-                    className='flex flex-col justify-center items-center text-[#C1C1C1]'
+                    className='flex flex-col w-[80px] h-[90px] justify-center items-center text-[#C1C1C1]'
                     onClick={handleCopyUrl}>
                     <Image
                         src="/icons/URL.svg"
