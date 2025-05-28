@@ -131,17 +131,16 @@ export default function Main() {
           !isLoggedIn ?
             (<button
               className="flex px-5 py-[13px] bg-[#FFE812] rounded-full cursor-pointer"
-              onClick={() =>
-                isLoggedIn ? router.push("/userinputs") : openPopupAndHandleLogin()
+              onClick={() => openPopupAndHandleLogin()
               }
             >
               <Image src="/icons/kakao.png" alt="kakao icon" width={28} height={28} />
               <Text textStyle="headline1" className="ml-2 font-semibold">
-                {isLoggedIn ? "시작하기" : "카카오로 시작하기"}
+                카카오로 시작하기
               </Text>
             </button>)
             :
-            <Button variant="gradation">
+            <Button onClick={() => router.push("/userinputs")} variant="gradation">
               시작하기
             </Button>
         }

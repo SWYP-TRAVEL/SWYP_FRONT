@@ -102,8 +102,7 @@ const calculateScheduleTimes = async (places: Attraction[]): Promise<Attraction[
 
           if (walkingDuration) updatedPlace.travelWalkTime = `${walkingDuration}분`;
           if (drivingDuration) updatedPlace.travelCarTime = `${drivingDuration}분`;
-          if (distance) updatedPlace.travelDistance = `${distance}`
-          updatedPlace.travelDistance = '거리 정보 추후 업데이트';
+          updatedPlace.travelDistance = `${distance ? distance + "m" : '거리 정보 추후 업데이트'}`;
         } catch (error) {
           console.error("경로 계산 실패:", error);
         }
@@ -138,7 +137,8 @@ export const useRecommendTravelDetailStore = create<RecommendTravelDetailStore>(
        */
       setItinerary: async (itinerary) => {
         if (itinerary?.dailyScheduleDtos) {
-          const updatedSchedules = await updateDailySchedules(itinerary.dailyScheduleDtos);
+          const schedulesWithUUID = assignUUIDToSchedules(itinerary.dailyScheduleDtos);
+          const updatedSchedules = await updateDailySchedules(schedulesWithUUID);
           set({ itinerary: { ...itinerary, dailyScheduleDtos: updatedSchedules } });
         } else {
           set({ itinerary });
@@ -146,12 +146,13 @@ export const useRecommendTravelDetailStore = create<RecommendTravelDetailStore>(
       },
 
       /**
-       * DailyScheduleDtos 업데이트
+       * DailyScheduleDtos 업데이트 (순서만 바꿔줌, 굳이 이렇게 하지말고 idx를 넣어서.. 정렬했어야될듯)
        */
       updateItinerary: async (updatedItinerary) => {
         const itinerary = get().itinerary;
 
         if (itinerary) {
+          //const schedulesWithUUID = assignUUIDToSchedules(updatedItinerary); 그래서 굳이 uuid를 업데이트 할 필요는 없을듯.  
           const updatedSchedules = await updateDailySchedules(updatedItinerary);
           set({
             itinerary: {
@@ -161,6 +162,7 @@ export const useRecommendTravelDetailStore = create<RecommendTravelDetailStore>(
           });
         }
       },
+
 
       /**
        * Attraction 업데이트
@@ -172,16 +174,17 @@ export const useRecommendTravelDetailStore = create<RecommendTravelDetailStore>(
           const updatedSchedules = await Promise.all(
             itinerary.dailyScheduleDtos.map(async (schedule) => {
               const isTargetSchedule = schedule.attractions.some(
-                (attraction) => attraction.name === oldAttraction.name
+                (attraction) => attraction.id === oldAttraction.id
               );
 
               if (!isTargetSchedule) return schedule;
 
               const updatedAttractions = await calculateScheduleTimes(
                 schedule.attractions.map((attraction) =>
-                  attraction.name === oldAttraction.name
+                  attraction.id === oldAttraction.id
                     ? {
                       ...newAttraction,
+                      id: oldAttraction.id,
                       previousData: JSON.parse(JSON.stringify(attraction)),
                     }
                     : attraction
@@ -229,7 +232,8 @@ export const usePublicTravelDetailStore = create<PublicTravelDetailStore>()(
       itinerary: null,
       setItinerary: async (value) => {
         if (value?.dailyScheduleDtos) {
-          const updatedSchedules = await updateDailySchedules(value.dailyScheduleDtos);
+          const schedulesWithUUID = assignUUIDToSchedules(value.dailyScheduleDtos);
+          const updatedSchedules = await updateDailySchedules(schedulesWithUUID);
           set({ itinerary: { ...value, dailyScheduleDtos: updatedSchedules } });
         } else {
           set({ itinerary: value });
@@ -242,3 +246,25 @@ export const usePublicTravelDetailStore = create<PublicTravelDetailStore>()(
     }
   )
 );
+
+const assignUUIDToAttraction = (attraction: Attraction): Attraction => {
+  const generateNumericId = (): number => Date.now() + Math.floor(Math.random() * 10000);
+
+  return {
+    ...attraction,
+    id: attraction.id && typeof attraction.id === 'number' ? attraction.id : generateNumericId(), // 괄호 추가!
+    previousData: attraction.previousData ? assignUUIDToAttraction(attraction.previousData) : undefined
+  };
+};
+
+
+const assignUUIDToAttractions = (attractions: Attraction[]): Attraction[] => {
+  return attractions.map(assignUUIDToAttraction);
+};
+
+const assignUUIDToSchedules = (schedules: DailyScheduleDtos[]): DailyScheduleDtos[] => {
+  return schedules.map(schedule => ({
+    ...schedule,
+    attractions: assignUUIDToAttractions(schedule.attractions)
+  }));
+};
