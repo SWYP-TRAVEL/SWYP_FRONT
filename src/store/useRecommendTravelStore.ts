@@ -102,8 +102,7 @@ const calculateScheduleTimes = async (places: Attraction[]): Promise<Attraction[
 
           if (walkingDuration) updatedPlace.travelWalkTime = `${walkingDuration}분`;
           if (drivingDuration) updatedPlace.travelCarTime = `${drivingDuration}분`;
-          if (distance) updatedPlace.travelDistance = `${distance}`
-          updatedPlace.travelDistance = '거리 정보 추후 업데이트';
+          updatedPlace.travelDistance = `${distance ? distance + "m" : '거리 정보 추후 업데이트'}`;
         } catch (error) {
           console.error("경로 계산 실패:", error);
         }
