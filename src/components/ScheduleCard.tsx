@@ -69,7 +69,7 @@ const DayScheduleCard: React.FC<DayScheduleCardProps> = ({ dailySchedule }) => {
                     className="flex flex-col gap-2"
                 >
                     {dailySchedule.attractions.map((place, index) => (
-                        <Reorder.Item key={place.name} value={place}>
+                        <Reorder.Item key={place.id} value={place}>
                             <div className="relative flex flex-col gap-2">
                                 <DetailCard
                                     title={place.name}

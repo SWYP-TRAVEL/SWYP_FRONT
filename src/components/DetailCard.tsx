@@ -28,7 +28,6 @@ const DetailCard: React.FC<DetailCardProps> = ({
 }) => {
     const updateAttraction = useRecommendTravelDetailStore((state) => state.updateAttraction);
     const [isLoading, setIsLoading] = useState(false);
-    console.log(title, '===>', hours)
     const handleUpdateClick = async () => {
         try {
             const updatedAttraction = {
